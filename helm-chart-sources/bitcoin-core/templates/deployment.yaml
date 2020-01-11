@@ -29,6 +29,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: BITCOIN_DATA
+              value: /data
           ports:
             - name: http
               containerPort: 80
@@ -41,6 +44,9 @@ spec:
             httpGet:
               path: /
               port: http
+          volumeMounts:
+          - mountPath: /data
+            name: data
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -55,3 +61,17 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      volumes:
+      - name: data
+      {{- if .Values.persistence.enabled }}
+        {{- if .Values.persistence.hostPath }}
+        hostPath:
+          path: {{.Values.persistence.hostPath}}
+          type: Directory
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{- else }}{{ template "bitcoin-core.fullname" . }}{{- end }}
+        {{- end }}
+      {{- else }}
+        emptyDir: {}
+      {{ end }}
