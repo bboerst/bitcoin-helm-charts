@@ -37,13 +37,19 @@ spec:
               containerPort: 80
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+            exec:
+              command:
+              - -c
+              - ps -ef | grep bitcoind | grep -v "grep"
+              initialDelaySeconds: 120
+              periodSeconds: 30
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            exec:
+              command:
+              - -c
+              - ps -ef | grep bitcoind | grep -v "grep"
+              initialDelaySeconds: 120
+              periodSeconds: 30
           volumeMounts:
           - mountPath: /data
             name: data
