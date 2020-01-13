@@ -39,15 +39,17 @@ spec:
           livenessProbe:
             exec:
               command:
+              - sh
               - -c
-              - ps -ef | grep bitcoind | grep -v "grep"
+              - ps -ef | grep bitcoind | grep -v grep
               initialDelaySeconds: 120
               periodSeconds: 30
           readinessProbe:
             exec:
               command:
+              - sh
               - -c
-              - ps -ef | grep bitcoind | grep -v "grep"
+              - ps -ef | grep bitcoind | grep -v grep
               initialDelaySeconds: 120
               periodSeconds: 30
           volumeMounts:
