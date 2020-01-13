@@ -7,10 +7,10 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - name: proxied-tcp-8333
+      port: 8333
+      targetPort: 8333
       protocol: TCP
-      name: http
   selector:
     app.kubernetes.io/name: {{ include "bitcoin-core.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

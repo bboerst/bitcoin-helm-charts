@@ -32,17 +32,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
-  port: 80
-
-ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: bitcoin-core.local
-      paths: []
+  type: LoadBalancer
 
 persistence:
   enabled: false

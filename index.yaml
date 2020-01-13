@@ -3,11 +3,11 @@ entries:
   bitcoin-core:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-01-12T21:05:25.187087-08:00"
+    created: "2020-01-13T08:30:49.400023-08:00"
     description: A Helm chart for bitcoin-core
-    digest: 8b3883b689926b24a67b094a02295faa494facf362bbda938f1ad1c464090c9e
+    digest: 9875568b5e71c643b47f2edb7eac3f8f28ff4a2aafb8505b7bff9e2c628fdc39
     name: bitcoin-core
     urls:
     - https://helm.boerst.com/bitcoin-core-0.19.0.1.tgz
     version: 0.19.0.1
-generated: "2020-01-12T21:05:25.186423-08:00"
+generated: "2020-01-13T08:30:49.398933-08:00"
