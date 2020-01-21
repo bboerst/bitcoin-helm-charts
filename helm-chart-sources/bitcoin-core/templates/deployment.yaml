@@ -6,6 +6,8 @@ metadata:
 {{ include "bitcoin-core.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: {{ .Values.strategyType }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "bitcoin-core.name" . }}
