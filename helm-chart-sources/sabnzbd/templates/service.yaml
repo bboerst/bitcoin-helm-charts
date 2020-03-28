@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sabnzbd.fullname" . }}
+  labels:
+{{ include "sabnzbd.labels" . | indent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: proxied-tcp-8080
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: {{ include "sabnzbd.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
