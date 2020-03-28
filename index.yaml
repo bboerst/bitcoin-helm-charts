@@ -3,9 +3,9 @@ entries:
   bitcoin-core:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-03-28T09:30:11.264779-07:00"
+    created: "2020-03-28T12:12:28.260531-07:00"
     description: A Helm chart for bitcoin-core
-    digest: 39941bd51641fa88be16f0c983caf01f22ded850511fc41cc80de0b50402e2b5
+    digest: 21910fcf69d19e4ee17a65a7a2cdcc97fc68a88ccc99436468ef83a92d3ff19e
     name: bitcoin-core
     urls:
     - https://bboerst.github.io/helm-charts/bitcoin-core-0.19.0.1.tgz
@@ -13,9 +13,9 @@ entries:
   rsyslog:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-03-28T09:30:11.265171-07:00"
+    created: "2020-03-28T12:12:28.261707-07:00"
     description: A Helm chart for rsyslog
-    digest: 4013174b823a5a6924dbe1b6d49cf2b49c7cd7c20ffa052a7362bc48866ead8e
+    digest: bb5298452ca5884d0eaf261363acaa52b79a4d18b684809bff0b10d6e8837b1e
     name: rsyslog
     urls:
     - https://bboerst.github.io/helm-charts/rsyslog-0.1.0.tgz
@@ -23,11 +23,20 @@ entries:
   sabnzbd:
   - apiVersion: v1
     appVersion: 2.3.9
-    created: "2020-03-28T09:30:11.265504-07:00"
+    created: "2020-03-28T12:12:28.262777-07:00"
+    description: A Helm chart for sabnzbd
+    digest: 7faa7f06cdb5c1c2cf730b0d036b23a3af3b14b96b8f99bde3c83a68ae2f2771
+    name: sabnzbd
+    urls:
+    - https://bboerst.github.io/helm-charts/sabnzbd-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v1
+    appVersion: 2.3.9
+    created: "2020-03-28T12:12:28.262372-07:00"
     description: A Helm chart for sabnzbd
     digest: d0468fd67c16a1a89b9e51ac3b156d38d6a520f7ad8b9cfd7bc98a88802c1e47
     name: sabnzbd
     urls:
     - https://bboerst.github.io/helm-charts/sabnzbd-1.0.0.tgz
     version: 1.0.0
-generated: "2020-03-28T09:30:11.264188-07:00"
+generated: "2020-03-28T12:12:28.259954-07:00"
