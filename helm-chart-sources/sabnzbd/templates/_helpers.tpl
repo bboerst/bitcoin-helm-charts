@@ -32,20 +32,7 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Common labels
-*/}}
-{{- define "sabnzbd.labels" -}}
-app.kubernetes.io/name: {{ include "sabnzbd.name" . }}
-helm.sh/chart: {{ include "sabnzbd.chart" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end -}}
-
-{{/*
-Create the name of the service account to use
+Create the name of the service account
 */}}
 {{- define "sabnzbd.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
@@ -53,4 +40,43 @@ Create the name of the service account to use
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
+{{- end -}}
+
+{{- define "sabnzbd.serviceAccountNameTest" -}}
+{{- if .Values.serviceAccount.create -}}
+    {{ default (print (include "sabnzbd.fullname" .) "-test") .Values.serviceAccount.nameTest }}
+{{- else -}}
+    {{ default "default" .Values.serviceAccount.nameTest }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Allow the release namespace to be overridden for multi-namespace deployments in combined charts
+*/}}
+{{- define "sabnzbd.namespace" -}}
+  {{- if .Values.namespaceOverride -}}
+    {{- .Values.namespaceOverride -}}
+  {{- else -}}
+    {{- .Release.Namespace -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Common labels
+*/}}
+{{- define "sabnzbd.labels" -}}
+helm.sh/chart: {{ include "sabnzbd.chart" . }}
+{{ include "sabnzbd.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
+{{/*
+Selector labels
+*/}}
+{{- define "sabnzbd.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "sabnzbd.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
