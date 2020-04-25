@@ -13,8 +13,8 @@
 ##
 image:
   registry: docker.io
-  repository: bitnami/wordpress
-  tag: 5.4.0-debian-10-r25
+  repository: wordpress
+  tag: 5.4-fpm-alpine
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -30,6 +30,9 @@ image:
   ##
   debug: false
 
+enableTemplateSecrets: false
+secretsConfigMapName: wordpress
+
 ## String to partially override wordpress.fullname template (will maintain the release name)
 ##
 # nameOverride:
@@ -41,7 +44,7 @@ image:
 ## User of the application
 ## ref: https://github.com/bitnami/bitnami-docker-wordpress#environment-variables
 ##
-wordpressUsername: user
+# wordpressUsername: user
 
 ## Application password
 ## Defaults to a random 10-character alphanumeric string if not set
@@ -52,32 +55,32 @@ wordpressUsername: user
 ## Admin email
 ## ref: https://github.com/bitnami/bitnami-docker-wordpress#environment-variables
 ##
-wordpressEmail: user@example.com
+# wordpressEmail: user@example.com
 
 ## First name
 ## ref: https://github.com/bitnami/bitnami-docker-wordpress#environment-variables
 ##
-wordpressFirstName: FirstName
+# wordpressFirstName: FirstName
 
 ## Last name
 ## ref: https://github.com/bitnami/bitnami-docker-wordpress#environment-variables
 ##
-wordpressLastName: LastName
+# wordpressLastName: LastName
 
 ## Blog name
 ## ref: https://github.com/bitnami/bitnami-docker-wordpress#environment-variables
 ##
-wordpressBlogName: User's Blog!
+# wordpressBlogName: User's Blog!
 
 ## Table prefix
 ## ref: https://github.com/bitnami/bitnami-docker-wordpress#environment-variables
 ##
-wordpressTablePrefix: wp_
+# wordpressTablePrefix: wp_
 
 ## Scheme to generate application URLs
 ## ref: https://github.com/bitnami/bitnami-docker-wordpress#environment-variables
 ##
-wordpressScheme: http
+# wordpressScheme: http
 
 ## Skip wizard installation (only if you use an external database that already contains WordPress data)
 ## ref: https://github.com/bitnami/bitnami-docker-wordpress#connect-wordpress-docker-container-to-an-existing-database
@@ -103,7 +106,7 @@ allowEmptyPassword: true
 ## Set Apache allowOverride to None
 ## ref: https://github.com/bitnami/bitnami-docker-wordpress#environment-variables
 ##
-allowOverrideNone: false
+allowOverrideNone: true
 
 ## Persist the custom changes of the htaccess. It depends on the value of
 ## `.Values.allowOverrideNone`, when `yes` it will persist `/opt/bitnami/wordpress/wordpress-htaccess.conf`
@@ -260,7 +263,7 @@ service:
   ## Enable client source IP preservation
   ## ref http://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
   ##
-  externalTrafficPolicy: Cluster
+  externalTrafficPolicy: Local
   annotations: {}
   ## Limits which cidr blocks can connect to service's load balancer
   ## Only valid if service.type: LoadBalancer
