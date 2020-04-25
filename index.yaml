@@ -3,9 +3,9 @@ entries:
   bitcoin-core:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-04-25T07:58:22.838145-07:00"
+    created: "2020-04-25T12:45:18.807957-07:00"
     description: A Helm chart for bitcoin-core
-    digest: a1a3f18ae9973964f68eba1f829e5af942a0e4374d6637e9590f3ec295145ebf
+    digest: 131047a1fa6061efdaa104736c2f04ee9a349f393bf42e6ed163f43540d07342
     name: bitcoin-core
     urls:
     - https://bboerst.github.io/helm-charts/bitcoin-core-0.19.0.1.tgz
@@ -13,9 +13,9 @@ entries:
   rsyslog:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-04-25T07:58:22.838501-07:00"
+    created: "2020-04-25T12:45:18.808316-07:00"
     description: A Helm chart for rsyslog
-    digest: a56c76834616f623102945fcb534b7d8ee76c7a91cbc75ef54a6bec6395f4cb6
+    digest: 192ae28c253265924c449ac1a7ddb440e3567f0af443f19adbf8232e07f94824
     name: rsyslog
     urls:
     - https://bboerst.github.io/helm-charts/rsyslog-0.1.0.tgz
@@ -23,16 +23,16 @@ entries:
   sabnzbd:
   - apiVersion: v1
     appVersion: 2.3.9
-    created: "2020-04-25T07:58:22.840234-07:00"
+    created: "2020-04-25T12:45:18.809924-07:00"
     description: A Helm chart for sabnzbd
-    digest: d99cb12fe5fdc0edf09a8ed761721769cd58b73e4e618b9a13195a389cb203eb
+    digest: 6eae15276741f988ef1aadce7f51496dc670ee4f5b3cfb958edb0d109689f811
     name: sabnzbd
     urls:
     - https://bboerst.github.io/helm-charts/sabnzbd-1.2.0.tgz
     version: 1.2.0
   - apiVersion: v1
     appVersion: 2.3.9
-    created: "2020-04-25T07:58:22.839846-07:00"
+    created: "2020-04-25T12:45:18.809595-07:00"
     description: A Helm chart for sabnzbd
     digest: 7faa7f06cdb5c1c2cf730b0d036b23a3af3b14b96b8f99bde3c83a68ae2f2771
     name: sabnzbd
@@ -41,7 +41,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: 2.3.9
-    created: "2020-04-25T07:58:22.83916-07:00"
+    created: "2020-04-25T12:45:18.809005-07:00"
     description: A Helm chart for sabnzbd
     digest: d0468fd67c16a1a89b9e51ac3b156d38d6a520f7ad8b9cfd7bc98a88802c1e47
     name: sabnzbd
@@ -51,7 +51,31 @@ entries:
   wordpress:
   - apiVersion: v1
     appVersion: 5.4.0
-    created: "2020-04-25T07:58:22.84375-07:00"
+    created: "2020-04-25T12:45:18.815845-07:00"
+    description: Web publishing platform for building blogs and websites.
+    digest: 2d4b4386483fb2412396135acabbd86e315cb130354cb1b02bdd2e48f2915b83
+    engine: gotpl
+    home: http://www.wordpress.com/
+    keywords:
+    - wordpress
+    - cms
+    - blog
+    - http
+    - web
+    - application
+    - php
+    maintainers:
+    - email: brian@boerst.com
+      name: Brian Boerst
+    name: wordpress
+    sources:
+    - https://github.com/bboerst/helm-chart-sources/wordpress
+    urls:
+    - https://bboerst.github.io/helm-charts/wordpress-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v1
+    appVersion: 5.4.0
+    created: "2020-04-25T12:45:18.813732-07:00"
     description: Web publishing platform for building blogs and websites.
     digest: eb63c0e3a361798b5e34be1002e06b1781e17f19da98923e17d8430754f8f8d4
     engine: gotpl
@@ -73,4 +97,4 @@ entries:
     urls:
     - https://bboerst.github.io/helm-charts/wordpress-1.0.0.tgz
     version: 1.0.0
-generated: "2020-04-25T07:58:22.837558-07:00"
+generated: "2020-04-25T12:45:18.807326-07:00"
