@@ -3,7 +3,7 @@ entries:
   bitcoin-core:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-12-11T20:29:51.819559-05:00"
+    created: "2020-12-11T20:31:25.803132-05:00"
     description: A Helm chart for bitcoin-core
     digest: 36bcf269e54a233c89a9c90a0dd43fcf2280fc9bddf7a9439eb5354d2e728526
     name: bitcoin-core
@@ -13,7 +13,16 @@ entries:
   dydx-liquidator:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-12-11T20:29:51.82011-05:00"
+    created: "2020-12-11T20:31:25.8044-05:00"
+    description: A Helm chart for dydx-liquidator
+    digest: 3459d865a54df2ee975e17b513399417b1c090a25083d393632ac90872dcc45c
+    name: dydx-liquidator
+    urls:
+    - https://bboerst.github.io/helm-charts/dydx-liquidator-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-12-11T20:31:25.803856-05:00"
     description: A Helm chart for dydx-liquidator
     digest: 874bfd594ac0c336c17d812351699a627881250e2b156eb827917028d7fbcd4d
     name: dydx-liquidator
@@ -23,7 +32,7 @@ entries:
   rsyslog:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-12-11T20:29:51.822169-05:00"
+    created: "2020-12-11T20:31:25.805128-05:00"
     description: A Helm chart for rsyslog
     digest: 9930a21e92dee332697f8c25a99f633c977df38955220c83b54ee04ae89cdfb9
     name: rsyslog
@@ -33,7 +42,7 @@ entries:
   sabnzbd:
   - apiVersion: v1
     appVersion: 2.3.9
-    created: "2020-12-11T20:29:51.838143-05:00"
+    created: "2020-12-11T20:31:25.807563-05:00"
     description: A Helm chart for sabnzbd
     digest: ca6926e585adb03555cefd26c4ccb0925c083df0c66a63b4e06eaa8bf2aa6ad2
     name: sabnzbd
@@ -42,7 +51,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: 2.3.9
-    created: "2020-12-11T20:29:51.83736-05:00"
+    created: "2020-12-11T20:31:25.806714-05:00"
     description: A Helm chart for sabnzbd
     digest: 7faa7f06cdb5c1c2cf730b0d036b23a3af3b14b96b8f99bde3c83a68ae2f2771
     name: sabnzbd
@@ -51,7 +60,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: 2.3.9
-    created: "2020-12-11T20:29:51.836534-05:00"
+    created: "2020-12-11T20:31:25.805803-05:00"
     description: A Helm chart for sabnzbd
     digest: d0468fd67c16a1a89b9e51ac3b156d38d6a520f7ad8b9cfd7bc98a88802c1e47
     name: sabnzbd
@@ -61,7 +70,7 @@ entries:
   tiddlywiki:
   - apiVersion: v1
     appVersion: 5.1.22
-    created: "2020-12-11T20:29:51.839615-05:00"
+    created: "2020-12-11T20:31:25.80833-05:00"
     description: A Helm chart for tiddlywiki
     digest: a02b1498abbb88b4a350c82713a41d21b993ae5dacdaa3ced8a003d404a7b96a
     name: tiddlywiki
@@ -71,7 +80,7 @@ entries:
   wordpress:
   - apiVersion: v1
     appVersion: 5.4.0
-    created: "2020-12-11T20:29:51.868007-05:00"
+    created: "2020-12-11T20:31:25.827151-05:00"
     dependencies:
     - condition: mariadb.enabled
       name: mariadb
@@ -101,7 +110,7 @@ entries:
     version: 1.0.2
   - apiVersion: v1
     appVersion: 5.4.0
-    created: "2020-12-11T20:29:51.859399-05:00"
+    created: "2020-12-11T20:31:25.821922-05:00"
     dependencies:
     - condition: mariadb.enabled
       name: mariadb
@@ -131,7 +140,7 @@ entries:
     version: 1.0.1
   - apiVersion: v1
     appVersion: 5.4.0
-    created: "2020-12-11T20:29:51.853032-05:00"
+    created: "2020-12-11T20:31:25.817834-05:00"
     dependencies:
     - condition: mariadb.enabled
       name: mariadb
@@ -159,4 +168,4 @@ entries:
     urls:
     - https://bboerst.github.io/helm-charts/wordpress-1.0.0.tgz
     version: 1.0.0
-generated: "2020-12-11T20:29:51.816405-05:00"
+generated: "2020-12-11T20:31:25.802254-05:00"
