@@ -33,24 +33,24 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: WALLET_ADDRESS
-              value: {{ include ".Values.walletAddress" . | quote }}
+              value: {{ .Values.walletAddress | quote }}
             - name: WALLET_PRIVATE_KEY
               valueFrom:
                 secretKeyRef:
                   name: {{ include ".Values.secretName" . }}
                   key: walletPrivateKey
             - name: ETHEREUM_NODE_URL
-              value: {{ include ".Values.ethereumNodeUrl" . | quote }}
+              value: {{ .Values.ethereumNodeUrl | quote }}
             - name: SOLO_LIQUIDATIONS_ENABLED
-              value: {{ include ".Values.soloLiquidationsEnabled" . | quote }}
+              value: {{ .Values.soloLiquidationsEnabled | quote }}
             - name: SOLO_EXPIRATIONS_ENABLED
-              value: {{ include ".Values.soloExpirationsEnabled" . | quote }}
+              value: {{ .Values.soloExpirationsEnabled | quote }}
             - name: PERP_LIQUIDATIONS_ENABLED
-              value: {{ include ".Values.perpLiquidationsEnabled" . | quote }}
+              value: {{ .Values.perpLiquidationsEnabled | quote }}
             - name: ACCOUNT_POLL_INTERVAL_MS
-              value: {{ include ".Values.accountPollIntervalMs" . | quote }}
+              value: {{ .Values.accountPollIntervalMs | quote }}
             - name: MARKET_POLL_INTERVAL_MS
-              value: {{ include ".Values.marketPollIntervalMs" . | quote }}
+              value: {{ .Values.marketPollIntervalMs | quote }}
           volumeMounts:
           - mountPath: /data
             name: data
