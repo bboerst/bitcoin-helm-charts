@@ -15,6 +15,8 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+secretName: dydx-liquidator
+
 walletAddress: "0x2Ef2fb71C67e4602818Ef4E8120A9CeE95f91AcD"
 ethereumNodeUrl: "http://10.1.40.200:8545"
 soloLiquidationsEnabled: "true"
