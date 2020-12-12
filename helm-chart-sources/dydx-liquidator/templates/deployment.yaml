@@ -33,44 +33,24 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: WALLET_ADDRESS
-              value: {{ include "dydx-liquidator.walletAddress" . | quote }}
+              value: {{ include ".Values.walletAddress" . | quote }}
             - name: WALLET_PRIVATE_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "dydx-liquidator.secretName" . }}
+                  name: {{ include ".Values.secretName" . }}
                   key: walletPrivateKey
             - name: ETHEREUM_NODE_URL
-              value: {{ include "dydx-liquidator.ethereumNodeUrl" . | quote }}
+              value: {{ include ".Values.ethereumNodeUrl" . | quote }}
             - name: SOLO_LIQUIDATIONS_ENABLED
-              value: {{ include "dydx-liquidator.soloLiquidationsEnabled" . | quote }}
+              value: {{ include ".Values.soloLiquidationsEnabled" . | quote }}
             - name: SOLO_EXPIRATIONS_ENABLED
-              value: {{ include "dydx-liquidator.soloExpirationsEnabled" . | quote }}
+              value: {{ include ".Values.soloExpirationsEnabled" . | quote }}
             - name: PERP_LIQUIDATIONS_ENABLED
-              value: {{ include "dydx-liquidator.perpLiquidationsEnabled" . | quote }}
+              value: {{ include ".Values.perpLiquidationsEnabled" . | quote }}
             - name: ACCOUNT_POLL_INTERVAL_MS
-              value: {{ include "dydx-liquidator.accountPollIntervalMs" . | quote }}
+              value: {{ include ".Values.accountPollIntervalMs" . | quote }}
             - name: MARKET_POLL_INTERVAL_MS
-              value: {{ include "dydx-liquidator.marketPollIntervalMs" . | quote }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            exec:
-              command:
-              - sh
-              - -c
-              - ps -ef | grep bitcoind | grep -v grep
-              initialDelaySeconds: 120
-              periodSeconds: 30
-          readinessProbe:
-            exec:
-              command:
-              - sh
-              - -c
-              - ps -ef | grep bitcoind | grep -v grep
-              initialDelaySeconds: 120
-              periodSeconds: 30
+              value: {{ include ".Values.marketPollIntervalMs" . | quote }}
           volumeMounts:
           - mountPath: /data
             name: data
