@@ -37,7 +37,7 @@ spec:
             - name: WALLET_PRIVATE_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ include ".Values.secretName" . }}
+                  name: {{ .Values.secretName }}
                   key: walletPrivateKey
             - name: ETHEREUM_NODE_URL
               value: {{ .Values.ethereumNodeUrl | quote }}
