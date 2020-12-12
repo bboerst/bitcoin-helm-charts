@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dydx-liquidator.fullname" . }}
+  labels:
+{{ include "dydx-liquidator.labels" . | indent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: proxied-tcp-8333
+      port: 8333
+      targetPort: 8333
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: {{ include "dydx-liquidator.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

@@ -3,17 +3,27 @@ entries:
   bitcoin-core:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-05-06T19:02:21.181741-07:00"
+    created: "2020-12-11T20:03:25.178254-05:00"
     description: A Helm chart for bitcoin-core
     digest: 36bcf269e54a233c89a9c90a0dd43fcf2280fc9bddf7a9439eb5354d2e728526
     name: bitcoin-core
     urls:
     - https://bboerst.github.io/helm-charts/bitcoin-core-0.19.0.1.tgz
     version: 0.19.0.1
+  dydx-liquidator:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-12-11T20:03:25.178784-05:00"
+    description: A Helm chart for dydx-liquidator
+    digest: bde843d393dbbd37b04ab886b797dd80a2453a98761ceefc9890a731ea448c82
+    name: dydx-liquidator
+    urls:
+    - https://bboerst.github.io/helm-charts/dydx-liquidator-0.1.0.tgz
+    version: 0.1.0
   rsyslog:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-05-06T19:02:21.182703-07:00"
+    created: "2020-12-11T20:03:25.179246-05:00"
     description: A Helm chart for rsyslog
     digest: 9930a21e92dee332697f8c25a99f633c977df38955220c83b54ee04ae89cdfb9
     name: rsyslog
@@ -23,7 +33,7 @@ entries:
   sabnzbd:
   - apiVersion: v1
     appVersion: 2.3.9
-    created: "2020-05-06T19:02:21.18435-07:00"
+    created: "2020-12-11T20:03:25.181049-05:00"
     description: A Helm chart for sabnzbd
     digest: ca6926e585adb03555cefd26c4ccb0925c083df0c66a63b4e06eaa8bf2aa6ad2
     name: sabnzbd
@@ -32,7 +42,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: 2.3.9
-    created: "2020-05-06T19:02:21.183993-07:00"
+    created: "2020-12-11T20:03:25.180534-05:00"
     description: A Helm chart for sabnzbd
     digest: 7faa7f06cdb5c1c2cf730b0d036b23a3af3b14b96b8f99bde3c83a68ae2f2771
     name: sabnzbd
@@ -41,7 +51,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: 2.3.9
-    created: "2020-05-06T19:02:21.183353-07:00"
+    created: "2020-12-11T20:03:25.179705-05:00"
     description: A Helm chart for sabnzbd
     digest: d0468fd67c16a1a89b9e51ac3b156d38d6a520f7ad8b9cfd7bc98a88802c1e47
     name: sabnzbd
@@ -51,7 +61,7 @@ entries:
   tiddlywiki:
   - apiVersion: v1
     appVersion: 5.1.22
-    created: "2020-05-06T19:02:21.184698-07:00"
+    created: "2020-12-11T20:03:25.181554-05:00"
     description: A Helm chart for tiddlywiki
     digest: a02b1498abbb88b4a350c82713a41d21b993ae5dacdaa3ced8a003d404a7b96a
     name: tiddlywiki
@@ -61,10 +71,16 @@ entries:
   wordpress:
   - apiVersion: v1
     appVersion: 5.4.0
-    created: "2020-05-06T19:02:21.194496-07:00"
+    created: "2020-12-11T20:03:25.193145-05:00"
+    dependencies:
+    - condition: mariadb.enabled
+      name: mariadb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      tags:
+      - wordpress-database
+      version: 7.x.x
     description: Web publishing platform for building blogs and websites.
     digest: 5f403cd734e5da830fefc1e6a340bc2ad5113feeeb1022e2af370fed5e2ba27f
-    engine: gotpl
     home: http://www.wordpress.com/
     keywords:
     - wordpress
@@ -85,10 +101,16 @@ entries:
     version: 1.0.2
   - apiVersion: v1
     appVersion: 5.4.0
-    created: "2020-05-06T19:02:21.191772-07:00"
+    created: "2020-12-11T20:03:25.189931-05:00"
+    dependencies:
+    - condition: mariadb.enabled
+      name: mariadb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      tags:
+      - wordpress-database
+      version: 7.x.x
     description: Web publishing platform for building blogs and websites.
     digest: 2d4b4386483fb2412396135acabbd86e315cb130354cb1b02bdd2e48f2915b83
-    engine: gotpl
     home: http://www.wordpress.com/
     keywords:
     - wordpress
@@ -109,10 +131,16 @@ entries:
     version: 1.0.1
   - apiVersion: v1
     appVersion: 5.4.0
-    created: "2020-05-06T19:02:21.18889-07:00"
+    created: "2020-12-11T20:03:25.18547-05:00"
+    dependencies:
+    - condition: mariadb.enabled
+      name: mariadb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      tags:
+      - wordpress-database
+      version: 7.x.x
     description: Web publishing platform for building blogs and websites.
     digest: eb63c0e3a361798b5e34be1002e06b1781e17f19da98923e17d8430754f8f8d4
-    engine: gotpl
     home: http://www.wordpress.com/
     keywords:
     - wordpress
@@ -131,4 +159,4 @@ entries:
     urls:
     - https://bboerst.github.io/helm-charts/wordpress-1.0.0.tgz
     version: 1.0.0
-generated: "2020-05-06T19:02:21.181128-07:00"
+generated: "2020-12-11T20:03:25.174605-05:00"

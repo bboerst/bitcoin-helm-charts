@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "dydx-liquidator.fullname" . }}-test-connection"
+  labels:
+{{ include "dydx-liquidator.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "dydx-liquidator.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
