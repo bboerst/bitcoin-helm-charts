@@ -1,5 +1,0 @@
-apiVersion: v1
-appVersion: "5.1.22"
-description: A Helm chart for tiddlywiki
-name: tiddlywiki
-version: 1.0.0
