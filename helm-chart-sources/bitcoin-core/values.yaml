@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: ruimarinho/bitcoin-core
-  tag: 0.21.1-alpine
+  tag: 0.21.1
   pullPolicy: IfNotPresent
 
 strategyType: Recreate
