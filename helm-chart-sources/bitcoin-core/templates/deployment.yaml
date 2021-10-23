@@ -31,6 +31,10 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+          {{  range .Values.arguments }}
+            - {{ . }}
+          {{ end }}
           env:
             - name: BITCOIN_DATA
               value: /data
@@ -43,16 +47,16 @@ spec:
               command:
               - sh
               - -c
-              - ps -ef | grep bitcoind | grep -v grep
-            initialDelaySeconds: 120
+              - grep -r bitcoind /proc/1/cmdline
+            initialDelaySeconds: 10
             periodSeconds: 30
           readinessProbe:
             exec:
               command:
               - sh
               - -c
-              - ps -ef | grep bitcoind | grep -v grep
-            initialDelaySeconds: 120
+              - grep -r bitcoind /proc/1/cmdline
+            initialDelaySeconds: 10
             periodSeconds: 30
           volumeMounts:
           - mountPath: /data
