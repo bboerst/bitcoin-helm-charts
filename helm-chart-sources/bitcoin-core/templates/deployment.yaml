@@ -44,16 +44,16 @@ spec:
               - sh
               - -c
               - ps -ef | grep bitcoind | grep -v grep
-              initialDelaySeconds: 120
-              periodSeconds: 30
+            initialDelaySeconds: 120
+            periodSeconds: 30
           readinessProbe:
             exec:
               command:
               - sh
               - -c
               - ps -ef | grep bitcoind | grep -v grep
-              initialDelaySeconds: 120
-              periodSeconds: 30
+            initialDelaySeconds: 120
+            periodSeconds: 30
           volumeMounts:
           - mountPath: /data
             name: data

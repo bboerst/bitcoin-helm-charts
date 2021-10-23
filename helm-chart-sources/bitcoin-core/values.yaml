@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: bboerst/docker-bitcoin-core
-  tag: 0.19.0.1-arm64
+  repository: ruimarinho/bitcoin-core
+  tag: 0.21.1-alpine
   pullPolicy: IfNotPresent
 
 strategyType: Recreate
