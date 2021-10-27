@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ template "tor.name" . }}
+    chart: {{ template "tor.chart" . }}
+    heritage: {{ .Release.Service }}
+    {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: controller
+
+    {{- if .Values.deploymentLabels }}
+{{ toYaml .Values.deploymentLabels | indent 4 }}
+    {{- end }}
+  name: {{ template "tor.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "tor.name" . }}
+    {{- if .Values.useComponentLabel }}
+      {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: tor
+    {{- end }}
+  template:
+    metadata:
+      {{- if or .Values.podAnnotations .Values.podAnnotationConfigChecksum }}
+      annotations:
+      {{- range $key, $value := .Values.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- if .Values.podAnnotationConfigChecksum }}
+        checksum/config: {{ tpl (toYaml .Values) . | sha256sum }}
+      {{- end }}
+      {{- end }}
+      labels:
+        app: {{ template "tor.name" . }}
+        component: "{{ .Values.name }}"
+        {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: tor
+        {{- if .Values.podLabels }}
+{{ toYaml .Values.podLabels | indent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "tor.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - name: torrc
+              mountPath: /etc/tor/torrc
+              subPath: torrc
+            - mountPath: /var/lib/tor
+              name: data
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          ports:
+          {{- range $key, $value := .Values.containerPort }}
+            - name: {{ $key }}
+              containerPort: {{ $value }}
+              protocol: TCP
+          {{- end }}
+          {{- range $port := .Values.service.ports.tcp }}
+            - name: "{{ $port }}-tcp"
+              containerPort: {{ $port }}
+              protocol: TCP
+          {{- end }}
+          {{- range $port := .Values.service.ports.udp }}
+            - name: "{{ $port }}-udp"
+              containerPort: {{ $port }}
+              protocol: UDP
+          {{- end }}
+      volumes:
+      - name: torrc
+        secret:
+        {{ if .Values.existingTorrcSecret }}
+          secretName: {{ .Values.existingTorrcSecret }}
+        {{ else }}
+          secretName: {{ .Release.Name }}-torrc-file
+        {{ end}}
+      - name: data
+      {{- if .Values.persistence.enabled }}
+        {{- if .Values.persistence.hostPath }}
+        hostPath:
+          path: {{ .Values.persistence.hostPath }}
+          type: Directory
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{- else }}{{ template "tor.fullname" . }}{{- end }}
+          {{- end }}
+        {{- else }}
+        emptyDir: {}
+      {{ end }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

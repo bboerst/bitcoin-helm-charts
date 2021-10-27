@@ -11,6 +11,10 @@ spec:
       port: 8333
       targetPort: 8333
       protocol: TCP
+    - name: rpc
+      port: 8332
+      targetPort: 8332
+      protocol: TCP
   selector:
     app.kubernetes.io/name: {{ include "bitcoin-core.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

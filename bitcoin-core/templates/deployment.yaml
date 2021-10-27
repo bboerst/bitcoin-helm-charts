@@ -25,6 +25,7 @@ spec:
       serviceAccountName: {{ template "bitcoin-core.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 300
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -36,8 +37,10 @@ spec:
             - {{ . }}
           {{ end }}
           env:
-            - name: BITCOIN_DATA
-              value: /data
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
           ports:
             - name: http
               containerPort: 80
@@ -59,7 +62,7 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 30
           volumeMounts:
-          - mountPath: /data
+          - mountPath: /data/.bitcoin/
             name: data
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

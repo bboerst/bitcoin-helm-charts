@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: ruimarinho/bitcoin-core
-  tag: 0.21.1
+  repository: lncm/bitcoind
+  tag: v22.0
   pullPolicy: IfNotPresent
 
 strategyType: Recreate
@@ -23,7 +23,47 @@ serviceAccount:
   name:
 
 arguments:
+  # Send trace/debug info to console instead of debug.log file
   - -printtoconsole
+
+  # Bind to given address and always listen on it (defaults to 127.0.0.1, enable if using tor)
+  # - -bind=$(MY_POD_IP)
+
+  # Accept command line and JSON-RPC commands
+  # - -server
+
+  # Accept connections from outside (enable if using tor)
+  # - -listen
+
+  # Allow rpc connections
+  # - -rpcallowip=10.0.0.0/8
+
+  # Tor control port to use if onion listening enabled (enable if using tor)
+  # Must use IP address of tor service until https://github.com/bitcoin/bitcoin/pull/22288 is released - expected in bitcoin 0.22.1
+  # Once PR mentioned above is released, switch to tor service name (ex: -torcontrol=tor-1.tor.svc.cluster.local:9050)
+  # - -torcontrol=10.43.125.139:9051
+
+  # Tor control port password (if using a tor 'control password' for controller auth)
+  # - -torpassword=<the plain text/unhashed password>
+
+  # Connect through SOCKS5 proxy (example connecting to a tor proxy installed on same cluster)
+  # - -proxy=tor-1.tor.svc.cluster.local:9050
+
+  # Maintain a full transaction index
+  - -txindex
+
+  # Do not load the wallet and disable wallet RPC calls
+  - -disablewallet
+
+  # Useful for setting up and debugging a tor proxy
+  # - -debug=tor
+
+  ### The following flags work well when running on a RaspberryPi
+  # - -dbcache=100
+  # - -maxorphantx=10
+  # - -maxmempool=50
+  # - -maxconnections=40
+  # - -maxuploadtarget=5000
 
 podSecurityContext: {}
   # fsGroup: 2000
