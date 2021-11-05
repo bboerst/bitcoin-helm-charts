@@ -77,7 +77,54 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: LoadBalancer
+  enabled: true
+
+  annotations: {}
+  labels: {}
+  ## Deprecated, instead simply do not provide a clusterIP value
+  omitClusterIP: false
+  # clusterIP: ""
+
+  ## List of IP addresses at which the controller services are available
+  ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+  ##
+  externalIPs: []
+
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+
+  enableRpc: true
+
+  ## Set external traffic policy to: "Local" to preserve source IP on
+  ## providers supporting it
+  ## Ref: https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-typeloadbalancer
+  externalTrafficPolicy: ""
+
+  # Must be either "None" or "ClientIP" if set. Kubernetes will default to "None".
+  # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+  sessionAffinity: ""
+
+  healthCheckNodePort: 0
+
+  ports:
+    rpc: 8332
+    tcp: {}
+    udp: {}
+
+  targetPorts:
+    rpc: rpc
+
+  type: NodePort
+
+  # type: NodePort
+  # nodePorts:
+  #   rpc: 8332
+  #   tcp: {}
+  #   udp: {}
+  nodePorts:
+    rpc: ""
+    tcp: {}
+    udp: {}
 
 persistence:
   enabled: false
