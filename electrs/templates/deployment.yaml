@@ -27,6 +27,15 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: MY_POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: ELECTRS_ELECTRUM_RPC_ADDR
+            value: "$(MY_POD_IP):50001"
+          - name: ELECTRS_MONITORING_ADDR
+            value: "$(MY_POD_IP):4224"
           args:
           {{  range .Values.arguments }}
             - {{ . }}
@@ -37,6 +46,8 @@ spec:
               subPath: config
             - mountPath: /data/
               name: data
+            - mountPath: /authcookie/
+              name: authcookie
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -68,6 +79,19 @@ spec:
         {{- else }}
         persistentVolumeClaim:
           claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{- else }}{{ template "electrs.fullname" . }}{{- end }}
+        {{- end }}
+      {{- else }}
+        emptyDir: {}
+      {{ end }}
+      - name: authcookie
+      {{- if .Values.cookiePersistence.enabled }}
+        {{- if .Values.cookiePersistence.hostPath }}
+        hostPath:
+          path: {{.Values.cookiePersistence.hostPath}}
+          type: Directory
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.cookiePersistence.existingClaim }}
         {{- end }}
       {{- else }}
         emptyDir: {}
