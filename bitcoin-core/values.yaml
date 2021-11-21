@@ -94,6 +94,7 @@ service:
   loadBalancerSourceRanges: []
 
   enableRpc: true
+  enableP2p: true
 
   ## Set external traffic policy to: "Local" to preserve source IP on
   ## providers supporting it
@@ -108,11 +109,13 @@ service:
 
   ports:
     rpc: 8332
+    p2p: 8333
     tcp: {}
     udp: {}
 
   targetPorts:
     rpc: rpc
+    p2p: p2p
 
   type: NodePort
 
@@ -123,6 +126,7 @@ service:
   #   udp: {}
   nodePorts:
     rpc: ""
+    p2p: ""
     tcp: {}
     udp: {}
 

@@ -69,6 +69,11 @@ spec:
               containerPort: {{ .Values.service.ports.rpc }}
               protocol: TCP
           {{- end }}
+          {{- if .Values.service.enableP2p }}
+            - name: p2p
+              containerPort: {{ .Values.service.ports.p2p }}
+              protocol: TCP
+          {{- end }}
           {{- range $port := .Values.service.ports.tcp }}
             - name: "{{ $port }}-tcp"
               containerPort: {{ $port }}

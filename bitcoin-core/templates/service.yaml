@@ -55,6 +55,15 @@ spec:
       nodePort: {{ .Values.service.nodePorts.rpc }}
       {{- end }}
     {{- end }}
+    {{- if .Values.service.enableP2p }}
+    - name: p2p
+      port: {{ .Values.service.ports.p2p }}
+      protocol: TCP
+      targetPort: {{ .Values.service.targetPorts.p2p }}
+      {{- if (and $setNodePorts (not (empty .Values.service.nodePorts.p2p))) }}
+      nodePort: {{ .Values.service.nodePorts.p2p }}
+      {{- end }}
+    {{- end }}
   {{- range $port := .Values.service.ports.tcp }}
     - name: "{{ $port }}-tcp"
       port: {{ $port }}
