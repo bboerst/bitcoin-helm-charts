@@ -31,6 +31,8 @@ spec:
             - name: config
               mountPath: /data/.env
               subPath: config
+            - mountPath: /authcookie/
+              name: authcookie
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -41,6 +43,19 @@ spec:
         {{ else }}
           secretName: {{ .Release.Name }}-config-file
         {{ end}}
+      - name: authcookie
+      {{- if .Values.cookiePersistence.enabled }}
+        {{- if .Values.cookiePersistence.hostPath }}
+        hostPath:
+          path: {{.Values.cookiePersistence.hostPath}}
+          type: Directory
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.cookiePersistence.existingClaim }}
+        {{- end }}
+      {{- else }}
+        emptyDir: {}
+      {{ end }}
 
       {{- with .Values.nodeSelector }}
       nodeSelector:
