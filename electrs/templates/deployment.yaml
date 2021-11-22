@@ -58,20 +58,21 @@ spec:
           {{  range .Values.arguments }}
             - {{ . }}
           {{ end }}
-          env:
-          - name: MY_POD_IP
-            valueFrom:
-              fieldRef:
-                fieldPath: status.podIP
-          - name: ELECTRS_ELECTRUM_RPC_ADDR
-            value: "$(MY_POD_IP):50001"
-          - name: ELECTRS_MONITORING_ADDR
-            value: "$(MY_POD_IP):4224"
           ports:
           {{- if .Values.service.enableRpc }}
-          - name: rpc
-            containerPort: {{ .Values.service.ports.rpc }}
-            protocol: TCP
+            - name: rpc
+              containerPort: {{ .Values.service.ports.rpc }}
+              protocol: TCP
+          {{- end }}
+          {{- range $port := .Values.service.ports.tcp }}
+            - name: "{{ $port }}-tcp"
+              containerPort: {{ $port }}
+              protocol: TCP
+          {{- end }}
+          {{- range $port := .Values.service.ports.udp }}
+            - name: "{{ $port }}-udp"
+              containerPort: {{ $port }}
+              protocol: UDP
           {{- end }}
           volumeMounts:
             - name: config

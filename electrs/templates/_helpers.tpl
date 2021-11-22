@@ -45,6 +45,14 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
+Selector labels
+*/}}
+{{- define "electrs.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "electrs.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "electrs.serviceAccountName" -}}
@@ -53,4 +61,46 @@ Create the name of the service account to use
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Allow the release namespace to be overridden for multi-namespace deployments in combined charts
+*/}}
+{{- define "electrs.namespace" -}}
+  {{- if .Values.namespaceOverride -}}
+    {{- .Values.namespaceOverride -}}
+  {{- else -}}
+    {{- .Release.Namespace -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Return the appropriate apiVersion for ingress.
+*/}}
+{{- define "electrs.ingress.apiVersion" -}}
+  {{- if and (.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version) -}}
+      {{- print "networking.k8s.io/v1" -}}
+  {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" -}}
+    {{- print "networking.k8s.io/v1beta1" -}}
+  {{- else -}}
+    {{- print "extensions/v1beta1" -}}
+  {{- end -}}
+{{- end -}}
+{{/*
+Return if ingress is stable.
+*/}}
+{{- define "electrs.ingress.isStable" -}}
+  {{- eq (include "electrs.ingress.apiVersion" .) "networking.k8s.io/v1" -}}
+{{- end -}}
+{{/*
+Return if ingress supports ingressClassName.
+*/}}
+{{- define "electrs.ingress.supportsIngressClassName" -}}
+  {{- or (eq (include "electrs.ingress.isStable" .) "true") (and (eq (include "electrs.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) -}}
+{{- end -}}
+{{/*
+Return if ingress supports pathType.
+*/}}
+{{- define "electrs.ingress.supportsPathType" -}}
+  {{- or (eq (include "electrs.ingress.isStable" .) "true") (and (eq (include "electrs.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) -}}
 {{- end -}}
