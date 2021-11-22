@@ -9,6 +9,8 @@ image:
   tag: v0.9.1@sha256:cf196695423fd5139ccde08e6bb1d7b6b1c9093333c879037801af3a18229c32
   pullPolicy: Always
 
+strategyType: Recreate
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -76,16 +78,53 @@ securityContext: {}
 
 service:
   enabled: true
-  type: ClusterIP
-  port: 50001
-  targetPort: 50001
+
   annotations: {}
   labels: {}
-  portName: service
+  ## Deprecated, instead simply do not provide a clusterIP value
+  omitClusterIP: false
+  # clusterIP: ""
 
-cookiePersistence:
-  enabled: false
-  existingClaim: bitcoin-core-authcookie
+  ## List of IP addresses at which the controller services are available
+  ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+  ##
+  externalIPs: []
+
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+
+  enableRpc: true
+
+  ## Set external traffic policy to: "Local" to preserve source IP on
+  ## providers supporting it
+  ## Ref: https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-typeloadbalancer
+  externalTrafficPolicy: ""
+
+  # Must be either "None" or "ClientIP" if set. Kubernetes will default to "None".
+  # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+  sessionAffinity: ""
+
+  healthCheckNodePort: 0
+
+  ports:
+    rpc: 50001
+    tcp: {}
+    udp: {}
+
+  targetPorts:
+    rpc: rpc
+
+  type: NodePort
+
+  # type: NodePort
+  # nodePorts:
+  #   rpc: 50001
+  #   tcp: {}
+  #   udp: {}
+  nodePorts:
+    rpc: ""
+    tcp: {}
+    udp: {}
 
 persistence:
   enabled: false
@@ -106,6 +145,10 @@ persistence:
   # hostPath: /path/to/the/config/folder
   accessMode: ReadWriteOnce
   size: 5Gi
+
+cookiePersistence:
+  enabled: false
+  existingClaim: bitcoin-core-authcookie
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
