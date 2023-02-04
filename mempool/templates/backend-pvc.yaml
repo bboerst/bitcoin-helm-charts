@@ -1,0 +1,26 @@
+{{- if .Values.backend.persistence.enabled -}}
+{{- if not .Values.backend.persistence.existingClaim -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "mempool.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "mempool.name" . }}
+    helm.sh/chart: {{ include "mempool.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  accessModes:
+    - {{ .Values.backend.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.backend.persistence.size | quote }}
+{{- if .Values.backend.persistence.storageClass }}
+{{- if (eq "-" .Values.backend.persistence.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.backend.persistence.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end -}}
+{{- end -}}

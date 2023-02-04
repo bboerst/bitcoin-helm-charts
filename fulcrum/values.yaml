@@ -5,35 +5,23 @@
 replicaCount: 1
 
 image:
-  repository: getumbrel/btc-rpc-explorer
-  tag: v3.2.0@sha256:ae22dae91a00268c8e02b50da332c6ffcb8c12a1f32991a1f85dfc1496a1c673
+  repository: cculianu/fulcrum
+  tag: v1.9.0
   pullPolicy: Always
+
+strategyType: Recreate
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
 config: |
-  BTCEXP_HOST=0.0.0.0
-  # Bitcoin Core
-  BTCEXP_BITCOIND_HOST=bitcoin-core
-  BTCEXP_BITCOIND_PORT=8332
-  BTCEXP_BITCOIND_USER=$BITCOIN_RPC_USER
-  BTCEXP_BITCOIND_PASS=$BITCOIN_RPC_PASS
-  # Electrum
-  # BTCEXP_ADDRESS_API=electrum
-  # BTCEXP_ELECTRUM_SERVERS=tcp://electrs:50001
-  # Log level
-  # DEBUG=btcexp:*,electrumClient
-  # Performance
-  BTCEXP_SLOW_DEVICE_MODE=true
-  BTCEXP_NO_INMEMORY_RPC_CACHE=true
-  # Privacy
-  BTCEXP_PRIVACY_MODE=true
-  BTCEXP_NO_RATES=true
-  # Disable RPC
-  BTCEXP_RPC_ALLOWALL=false
-  BTCEXP_BASIC_AUTH_PASSWORD=
+  # Example config: https://github.com/cculianu/Fulcrum/blob/master/doc/fulcrum-example-config.conf
+  datadir = /data
+  bitcoind = bitcoind:8332
+  rpcuser = fulcrum
+  rpcpassword = hunter1
+  #rpccookie = /authcookie/.cookie
 
 ingress:
   enabled: false
@@ -67,6 +55,8 @@ ingress:
   #       port:
   #         name: use-annotation
 
+arguments:
+  - /data/config.toml
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -88,12 +78,73 @@ securityContext: {}
 
 service:
   enabled: true
-  type: ClusterIP
-  port: 80
-  targetPort: 3002
+
   annotations: {}
   labels: {}
-  portName: service
+  ## Deprecated, instead simply do not provide a clusterIP value
+  omitClusterIP: false
+  # clusterIP: ""
+
+  ## List of IP addresses at which the controller services are available
+  ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+  ##
+  externalIPs: []
+
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+
+  enableRpc: true
+
+  ## Set external traffic policy to: "Local" to preserve source IP on
+  ## providers supporting it
+  ## Ref: https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-typeloadbalancer
+  externalTrafficPolicy: ""
+
+  # Must be either "None" or "ClientIP" if set. Kubernetes will default to "None".
+  # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+  sessionAffinity: ""
+
+  healthCheckNodePort: 0
+
+  ports:
+    rpc: 50001
+    tcp: {}
+    udp: {}
+
+  targetPorts:
+    rpc: rpc
+
+  type: NodePort
+
+  # type: NodePort
+  # nodePorts:
+  #   rpc: 50001
+  #   tcp: {}
+  #   udp: {}
+  nodePorts:
+    rpc: ""
+    tcp: {}
+    udp: {}
+
+persistence:
+  enabled: false
+  ## fulcrum data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  ##
+  ## If you want to reuse an existing claim, you can pass the name of the PVC using
+  ## the existingClaim variable
+  # existingClaim: your-claim
+  ##
+  ## If you want to use a volume on the host machine instead of a PVC:
+  # hostPath: /path/to/the/config/folder
+  accessMode: ReadWriteOnce
+  size: 5Gi
 
 cookiePersistence:
   enabled: false

@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: getumbrel/electrs
-  tag: v0.9.1@sha256:cf196695423fd5139ccde08e6bb1d7b6b1c9093333c879037801af3a18229c32
+  repository: bboerst/electrs
+  tag: v0.9.3
   pullPolicy: Always
 
 strategyType: Recreate
@@ -16,7 +16,6 @@ nameOverride: ""
 fullnameOverride: ""
 
 config: |
-  verbose = 2
   network = "bitcoin"
   db_dir = "/data/db"
   cookie_file = "/authcookie/.cookie"

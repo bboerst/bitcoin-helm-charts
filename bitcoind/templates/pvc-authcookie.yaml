@@ -1,0 +1,26 @@
+{{- if .Values.cookiePersistence.enabled -}}
+{{- if not .Values.cookiePersistence.existingClaim -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: "{{ template "bitcoind.fullname" . }}-authcookie"
+  labels:
+    app.kubernetes.io/name: {{ include "bitcoind.name" . }}
+    helm.sh/chart: {{ include "bitcoind.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  accessModes:
+    - {{ .Values.cookiePersistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.cookiePersistence.size | quote }}
+{{- if .Values.cookiePersistence.storageClass }}
+{{- if (eq "-" .Values.cookiePersistence.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.cookiePersistence.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end -}}
+{{- end -}}

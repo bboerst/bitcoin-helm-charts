@@ -1,0 +1,9 @@
+apiVersion: v1
+appVersion: "v2.4.0"
+description: A Helm chart for mempool
+name: mempool
+version: 2.4.0
+dependencies:
+- name: mariadb
+  version: "11.4.5"
+  repository: "https://charts.bitnami.com/bitnami"

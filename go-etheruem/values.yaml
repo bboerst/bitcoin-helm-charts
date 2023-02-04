@@ -1,23 +1,19 @@
-# Default values for tor.
+# Default values for go-ethereum.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: lncm/tor
-  pullPolicy: Always
+  repository: ethereum/client-go
+  tag: v1.10.13
+  pullPolicy: IfNotPresent
 
-mode: proxy
-mountPath: /tmp
+strategyType: Recreate
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
-
-containerPort:
-  socks: 9050
-  controller: 9051
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -26,38 +22,20 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name:
 
-# torrc is the tor main configurations file (https://github.com/torproject/tor/blob/main/src/config/torrc.sample.in)
-# Remove the | and set this to {} if you're using the existingTorrcSecret parameter below
-torrc: |
-  # Ports
-  SocksPort   0.0.0.0:9050
-  ControlPort 0.0.0.0:9051
-
-  # HashedControlPassword <Refer to https://github.com/lncm/docker-tor#generating-tor-passwords>
-
-  # SSH v3
-  # HiddenServiceDir /var/lib/tor/ssh
-  # HiddenServiceVersion 3
-  # HiddenServicePort 22 127.0.0.1:22
-
-  # Bitcoin P2P v3
-  # HiddenServiceDir /var/lib/tor/bitcoin-p2p
-  # HiddenServiceVersion 3
-  # HiddenServicePort 8333 bitcoin-core.bitcoin.svc.cluster.local:8333
-
-  # Electrs v3
-  # HiddenServiceDir /var/lib/tor/electrs
-  # HiddenServiceVersion 3
-  # HiddenServicePort 50001 electrs.bitcoin.svc.cluster.local:50001
-
-# Use this instead of the torrc value above
-existingTorrcSecret: ""
-
-# Override component label key
-# componentLabelKeyOverride:
-
-# labels to add to the deployment metadata
-deploymentLabels: {}
+arguments:
+  # Enable the --goerli argument to connect to the goerli testnet
+  # - --goerli
+  - --http
+  - --http.addr
+  - 0.0.0.0
+  - --syncmode
+  - full
+  - --cache
+  - 256
+  - --maxpeers
+  - 12
+  - --datadir
+  - /data
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -87,8 +65,10 @@ service:
   loadBalancerIP: ""
   loadBalancerSourceRanges: []
 
-  enableSocks: true
-  enableController: true
+  enableHttpRpc: true
+  enableWsRpc: false
+  enableNodeTcp: true
+  enableUdpDiscovery: false
 
   ## Set external traffic policy to: "Local" to preserve source IP on
   ## providers supporting it
@@ -102,64 +82,40 @@ service:
   healthCheckNodePort: 0
 
   ports:
-    socks: 9050
-    controller: 9051
+    httprpc: 8545
+    wsrpc: 8546
+    nodetcp: 30303
+    udpdiscovery: 30303
     tcp: {}
     udp: {}
 
   targetPorts:
-    socks: socks
-    controller: controller
+    httprpc: httprpc
+    wsrpc: wsrpc
+    nodetcp: nodetcp
+    udpdiscovery: udpdiscovery
 
   type: NodePort
 
   # type: NodePort
   # nodePorts:
-  #   socks: 9050
-  #   controller: 9051
+  #   httprpc: 8545
+  #   wsrpc: 8546
+  #   nodetcp: 30303
+  #   udpdiscovery: 30301
   #   tcp: {}
   #   udp: {}
   nodePorts:
-    socks: ""
-    controller: ""
+    httprpc: ""
+    wsrpc: ""
+    nodetcp: ""
+    udpdiscovery: ""
     tcp: {}
     udp: {}
 
-ingress:
-  enabled: false
-  # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
-  # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-  # ingressClassName: nginx
-  # Values can be templated
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  labels: {}
-  path: /
-
-  # pathType is only for k8s >= 1.1=
-  pathType: Prefix
-
-  hosts:
-    - chart-example.local
-  ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
-  extraPaths: []
-  # - path: /*
-  #   backend:
-  #     serviceName: ssl-redirect
-  #     servicePort: use-annotation
-  ## Or for k8s > 1.19
-  # - path: /*
-  #   pathType: Prefix
-  #   backend:
-  #     service:
-  #       name: ssl-redirect
-  #       port:
-  #         name: use-annotation
-
 persistence:
   enabled: false
-  ## tor data Persistent Volume Storage Class
+  ## go-ethereum data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
@@ -175,7 +131,39 @@ persistence:
   ## If you want to use a volume on the host machine instead of a PVC:
   # hostPath: /path/to/the/config/folder
   accessMode: ReadWriteOnce
-  size: 100M
+  size: 5Gi
+
+  tls: []
+  #  - secretName: go-ethereum-tls
+  #    hosts:
+  #      - go-ethereum.local
+
+# cookiePersistence will mount a persistent volume with the rpc cookie (.cookie). This is
+# useful when using the nfs-client-provisioner and sharing this volume with other apps on the cluster.
+cookiePersistence:
+  enabled: false
+  ## go-ethereum data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  ##
+  ## If you want to reuse an existing claim, you can pass the name of the PVC using
+  ## the existingClaim variable
+  # existingClaim: your-claim
+  ##
+  ## If you want to use a volume on the host machine instead of a PVC:
+  # hostPath: /path/to/the/config/folder
+  accessMode: ReadWriteOnce
+  size: 5Mi
+
+  tls: []
+  #  - secretName: go-ethereum-tls
+  #    hosts:
+  #      - go-ethereum.local
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

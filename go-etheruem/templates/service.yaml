@@ -1,0 +1,111 @@
+
+{{- if .Values.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+{{- if .Values.service.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
+  labels:
+{{- if .Values.service.labels }}
+{{ toYaml .Values.service.labels | indent 4 }}
+{{- end }}
+    app: {{ template "go-ethereum.name" . }}
+    chart: {{ template "go-ethereum.chart" . }}
+    component: "{{ .Values.name }}"
+    heritage: {{ .Release.Service }}
+  name: {{ template "go-ethereum.fullname" . }}
+spec:
+{{- if not .Values.service.omitClusterIP }}
+  {{- with .Values.service.clusterIP }}
+  clusterIP: {{ if eq "-" . }}""{{ else }}{{ . | quote }}{{ end }}
+  {{- end }}
+{{- end }}
+{{- if .Values.service.externalIPs }}
+  externalIPs:
+{{ toYaml .Values.service.externalIPs | indent 4 }}
+{{- end }}
+{{- if .Values.service.loadBalancerIP }}
+  loadBalancerIP: "{{ .Values.service.loadBalancerIP }}"
+{{- end }}
+{{- if .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+{{ toYaml .Values.service.loadBalancerSourceRanges | indent 4 }}
+{{- end }}
+{{- if and (semverCompare ">=1.7-0" .Capabilities.KubeVersion.GitVersion) (.Values.service.externalTrafficPolicy) }}
+  externalTrafficPolicy: "{{ .Values.service.externalTrafficPolicy }}"
+{{- end }}
+{{- if .Values.service.sessionAffinity }}
+  sessionAffinity: "{{ .Values.service.sessionAffinity }}"
+{{- end }}
+{{- if and (semverCompare ">=1.7-0" .Capabilities.KubeVersion.GitVersion) (.Values.service.healthCheckNodePort) }}
+  healthCheckNodePort: {{ .Values.service.healthCheckNodePort }}
+{{- end }}
+  ports:
+    {{- $setNodePorts := (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) }}
+    {{- if .Values.service.enableHttpRpc }}
+    - name: httprpc
+      port: {{ .Values.service.ports.httprpc }}
+      protocol: TCP
+      targetPort: {{ .Values.service.targetPorts.httprpc }}
+      {{- if (and $setNodePorts (not (empty .Values.service.nodePorts.httprpc))) }}
+      nodePort: {{ .Values.service.nodePorts.httprpc }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.service.enableWsRpc }}
+    - name: wsrpc
+      port: {{ .Values.service.ports.wsrpc }}
+      protocol: TCP
+      targetPort: {{ .Values.service.targetPorts.wsrpc }}
+      {{- if (and $setNodePorts (not (empty .Values.service.nodePorts.wsrpc))) }}
+      nodePort: {{ .Values.service.nodePorts.wsrpc }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.service.enableNodeTcp }}
+    - name: nodetcp
+      port: {{ .Values.service.ports.nodetcp }}
+      protocol: TCP
+      targetPort: {{ .Values.service.targetPorts.nodetcp }}
+      {{- if (and $setNodePorts (not (empty .Values.service.nodePorts.nodetcp))) }}
+      nodePort: {{ .Values.service.nodePorts.nodetcp }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.service.enableUdpDiscovery }}
+    - name: udpdiscovery
+      port: {{ .Values.service.ports.udpdiscovery }}
+      protocol: UDP
+      targetPort: {{ .Values.service.targetPorts.udpdiscovery }}
+      {{- if (and $setNodePorts (not (empty .Values.service.nodePorts.udpdiscovery))) }}
+      nodePort: {{ .Values.service.nodePorts.udpdiscovery }}
+      {{- end }}
+    {{- end }}
+  {{- range $port := .Values.service.ports.tcp }}
+    - name: "{{ $port }}-tcp"
+      port: {{ $port }}
+      protocol: TCP
+      targetPort: "{{ $port }}-tcp"
+     {{- if $.Values.service.nodePorts.tcp }}
+      {{- if index $.Values.service.nodePorts.tcp $port }}
+      nodePort: {{ index $.Values.service.nodePorts.tcp $port }}
+      {{- end }}
+     {{- end }}
+  {{- end }}
+  {{- range $port := .Values.service.ports.udp }}
+    - name: "{{ $port }}-udp"
+      port: {{ $port }}
+      protocol: UDP
+      targetPort: "{{ $port }}-udp"
+     {{- if $.Values.service.nodePorts.udp }}
+      {{- if index $.Values.service.nodePorts.udp $port }}
+      nodePort: {{ index $.Values.service.nodePorts.udp $port }}
+      {{- end }}
+     {{- end }}
+  {{- end }}
+  selector:
+    app: {{ template "go-ethereum.name" . }}
+    {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: go-ethereum
+  type: "{{ .Values.service.type }}"
+{{- end }}

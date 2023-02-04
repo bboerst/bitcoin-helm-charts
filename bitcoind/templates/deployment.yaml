@@ -1,0 +1,148 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ template "bitcoind.name" . }}
+    chart: {{ template "bitcoind.chart" . }}
+    heritage: {{ .Release.Service }}
+    {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoin-core
+
+    {{- if .Values.deploymentLabels }}
+{{ toYaml .Values.deploymentLabels | indent 4 }}
+    {{- end }}
+  name: {{ template "bitcoind.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: {{ .Values.strategyType }}
+  selector:
+    matchLabels:
+      app: {{ template "bitcoind.name" . }}
+    {{- if .Values.useComponentLabel }}
+      {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoin-core
+    {{- end }}
+  template:
+    metadata:
+      {{- if or .Values.podAnnotations .Values.podAnnotationConfigChecksum }}
+      annotations:
+      {{- range $key, $value := .Values.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- if .Values.podAnnotationConfigChecksum }}
+        checksum/config: {{ tpl (toYaml .Values) . | sha256sum }}
+      {{- end }}
+      {{- end }}
+      labels:
+        app: {{ template "bitcoind.name" . }}
+        component: "{{ .Values.name }}"
+        {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoin-core
+        {{- if .Values.podLabels }}
+{{ toYaml .Values.podLabels | indent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ template "bitcoind.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 300
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+          {{  range .Values.arguments }}
+            - {{ . }}
+          {{ end }}
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          ports:
+          {{- if .Values.service.enableRpc }}
+            - name: rpc
+              containerPort: {{ .Values.service.ports.rpc }}
+              protocol: TCP
+          {{- end }}
+          {{- if .Values.service.enableP2p }}
+            - name: p2p
+              containerPort: {{ .Values.service.ports.p2p }}
+              protocol: TCP
+          {{- end }}
+          {{- range $port := .Values.service.ports.tcp }}
+            - name: "{{ $port }}-tcp"
+              containerPort: {{ $port }}
+              protocol: TCP
+          {{- end }}
+          {{- range $port := .Values.service.ports.udp }}
+            - name: "{{ $port }}-udp"
+              containerPort: {{ $port }}
+              protocol: UDP
+          {{- end }}
+          livenessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - grep -r bitcoind /proc/1/cmdline
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - grep -r bitcoind /proc/1/cmdline
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          volumeMounts:
+          - mountPath: /data/.bitcoin/
+            name: data
+          - mountPath: /authcookie/
+            name: authcookie
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+      - name: data
+      {{- if .Values.persistence.enabled }}
+        {{- if .Values.persistence.hostPath }}
+        hostPath:
+          path: {{.Values.persistence.hostPath}}
+          type: Directory
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{- else }}{{ template "bitcoind.fullname" . }}{{- end }}
+        {{- end }}
+      {{- else }}
+        emptyDir: {}
+      {{ end }}
+      - name: authcookie
+      {{- if .Values.cookiePersistence.enabled }}
+        {{- if .Values.cookiePersistence.hostPath }}
+        hostPath:
+          path: {{.Values.cookiePersistence.hostPath}}
+          type: Directory
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: {{ if .Values.cookiePersistence.existingClaim }}{{ .Values.cookiePersistence.existingClaim }}{{- else }}{{ template "bitcoind.fullname" . }}-authcookie{{- end }}
+        {{- end }}
+      {{- else }}
+        emptyDir: {}
+      {{ end }}
