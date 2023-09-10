@@ -3,11 +3,10 @@
 # Get the current branch name
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 if [ "$CURRENT_BRANCH" == "HEAD" ]; then
-    CURRENT_BRANCH=$(git branch -a --contains HEAD | grep -E 'remotes/origin/.+' | sed 's/  remotes\/origin\///' | sed 's/->.*//')
+    CURRENT_BRANCH=$(git branch -a --contains HEAD | grep -E 'remotes/origin/.+' | head -n 1 | sed 's/  remotes\/origin\///')
 fi
 
-# Get the base branch name (assuming 'main' as the base branch, adjust if your base branch is different)
-BASE_BRANCH="main"
+BASE_BRANCH="master"
 
 echo "Current Branch: $CURRENT_BRANCH"
 echo "Base Branch: $BASE_BRANCH"
@@ -15,11 +14,24 @@ echo "Base Branch: $BASE_BRANCH"
 # Fetch the base branch to make sure we have all the necessary data
 git fetch origin $BASE_BRANCH
 
+if [ $? -ne 0 ]; then
+    echo "Failed to fetch base branch ($BASE_BRANCH). Please check if the base branch name is correct."
+    exit 1
+fi
+
 # Get the list of changed files compared to the base branch
 CHANGED_FILES=$(git diff origin/$BASE_BRANCH...$CURRENT_BRANCH --name-only)
 
+if [ $? -ne 0 ]; then
+    echo "Failed to get the list of changed files. Please check if the branch names are correct."
+    exit 1
+fi
+
 echo "Changed Files:"
 echo "$CHANGED_FILES"
+
+# Initialize a flag to check if any Chart.yaml file was changed
+CHART_YAML_CHANGED=false
 
 # Loop through the list of changed files
 for FILE in $CHANGED_FILES; do
@@ -31,7 +43,12 @@ for FILE in $CHANGED_FILES; do
     
     # Navigate to the chart directory and run helm lint
     helm lint "$DIR"
-  else
-    echo "No changes detected in Chart.yaml files."
+    
+    # Set the flag to true as a Chart.yaml file was changed
+    CHART_YAML_CHANGED=true
   fi
 done
+
+if [ "$CHART_YAML_CHANGED" == "false" ]; then
+    echo "No changes detected in Chart.yaml files."
+fi
