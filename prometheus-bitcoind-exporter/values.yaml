@@ -1,0 +1,41 @@
+---
+name: bitcoind-exporter
+
+image:
+  name: jvstein/bitcoin-prometheus-exporter
+  tag: v0.7.0
+  pullPolicy: IfNotPresent
+
+annotations: {}
+
+podAnnotations: {}
+
+env:          
+ BITCOIN_RPC_HOST: "CHANGEME"
+ BITCOIN_RPC_PORT: "CHANGEME"
+ BITCOIN_RPC_USER: "CHANGEME"
+ BITCOIN_RPC_PASSWORD: "CHANGEME"
+ METRICS_PORT: "9332"
+ LOG_LEVEL: "INFO"
+
+serviceAccount:
+  create: true
+
+serviceType: ClusterIP
+
+serviceMonitor:
+  enabled: false
+  interval: 10s
+  scrapeTimeout: 10s
+  additionalLabels: {}
+  targetLabels: []
+
+securityContext: {}
+
+containerSecurityContext: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
