@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - '**'
-      
+
 env:
   KIND_VERSION: v0.20.0
   HELM_VERSION: v3.12.3
@@ -48,7 +48,7 @@ jobs:
           environments:
             nightly:
               values:
-                - .github/helmfile_configs/nightly/{{ '{{ .Release.Name }}' }}/values.yaml
+                - .github/helmfile_configs/nightly/{{`{{ .Release.Name }}`}}/values.yaml
 
           releases:
             - name: bitcoind
