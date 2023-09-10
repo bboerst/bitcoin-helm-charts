@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get the list of changed files
-CHANGED_FILES=$(git diff HEAD~1 --name-only)
+CHANGED_FILES=$(git diff HEAD^ --name-only)
 
 # Loop through the list of changed files
 for FILE in $CHANGED_FILES; do
