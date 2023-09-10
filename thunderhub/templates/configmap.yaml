@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "thunderhub.fullname" . }}-config
+  labels:
+    app: {{ template "thunderhub.name" . }}
+    chart: {{ template "thunderhub.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  thubConfig.yaml: |-
+    masterPassword: {{ .Values.masterPassword }}
+    accounts:
+{{ toYaml .Values.accounts | indent 6 }}

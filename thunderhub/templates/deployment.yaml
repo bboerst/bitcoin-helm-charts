@@ -1,0 +1,114 @@
+{{- $servicePort := .Values.service.ports.tcp -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ template "thunderhub.name" . }}
+    chart: {{ template "thunderhub.chart" . }}
+    heritage: {{ .Release.Service }}
+    {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: thunderhub
+
+    {{- if .Values.deploymentLabels }}
+{{ toYaml .Values.deploymentLabels | indent 4 }}
+    {{- end }}
+  name: {{ template "thunderhub.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: {{ .Values.strategyType }}
+  selector:
+    matchLabels:
+      app: {{ template "thunderhub.name" . }}
+    {{- if .Values.useComponentLabel }}
+      {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: thunderhub
+    {{- end }}
+  template:
+    metadata:
+      {{- if or .Values.podAnnotations .Values.podAnnotationConfigChecksum }}
+      annotations:
+      {{- range $key, $value := .Values.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- if .Values.podAnnotationConfigChecksum }}
+        checksum/config: {{ tpl (toYaml .Values) . | sha256sum }}
+      {{- end }}
+      {{- end }}
+      labels:
+        app: {{ template "thunderhub.name" . }}
+        component: "{{ .Values.name }}"
+        {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: thunderhub
+        {{- if .Values.podLabels }}
+{{ toYaml .Values.podLabels | indent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ template "thunderhub.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 300
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+          {{  range .Values.arguments }}
+            - {{ . }}
+          {{ end }}
+          env:
+            - name: ACCOUNT_CONFIG_PATH
+              value: /data/thubConfig.yaml
+          {{- range $key, $val := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+          {{- end }}
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          ports:
+            - name: "{{ $servicePort }}-tcp"
+              containerPort: {{ $servicePort }}
+              protocol: TCP
+          volumeMounts:
+            - name: {{ template "thunderhub.fullname" . }}-config
+              mountPath: /data/thubConfig.yaml
+              subPath: thubConfig.yaml
+          livenessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - grep -r 'npm run start:prod' /proc/1/cmdline
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - grep -r 'npm run start:prod' /proc/1/cmdline
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        - name: {{ template "thunderhub.fullname" . }}-config
+          configMap:
+            name: {{ template "thunderhub.fullname" . }}-config
