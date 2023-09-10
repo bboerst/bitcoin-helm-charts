@@ -61,13 +61,15 @@ jobs:
                 - .github/helmfile_configs/nightly/fulcrum/values.yaml
           EOF
 
+      - name: Deploy and Test Charts using Helmfile
+        run: |
+          helmfile -e nightly sync
+
       - name: Inspect cluster
         run: |
           kubectl get events -A
           kubectl get po -A
           kubectl get svc -A
           kubectl get no
-
-      - name: Deploy and Test Charts using Helmfile
-        run: |
-          helmfile -e nightly sync
+          kubectl logs -l app=bitcoind -n bitcoin
+          kubectl logs -l app=fulcrum -n bitcoin
