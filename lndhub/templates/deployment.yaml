@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lndhub.fullname" . }}
+  labels:
+    {{- include "lndhub.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  strategy:
+    type: Recreate  
+  selector:
+    matchLabels:
+      {{- include "lndhub.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "lndhub.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "lndhub.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ['npm']
+          args: ['start', '--prefix', '/lndhub']
+          # command: ['sleep']
+          # args: ['infinity']          
+          volumeMounts:
+          - mountPath: /lndhub/config.js
+            name: lndhub-config-js
+            subPath: "config.js"
+          - mountPath: /lndhub/tls.cert
+            name: lndhub-tls-cert
+            subPath: "tls.cert"
+          - mountPath: /lndhub/admin.macaroon
+            name: lndhub-admin-macaroon
+            subPath: "admin.macaroon"
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: lndhub-config-js
+          secret:
+            secretName: lndhub-config-js
+        - name: lndhub-tls-cert
+          secret:
+            secretName: lndhub-tls-cert
+        - name: lndhub-admin-macaroon
+          secret:
+            secretName: lndhub-admin-macaroon
+
