@@ -47,16 +47,18 @@ jobs:
           cat > helmfile.yaml <<EOF
           environments:
             nightly:
-              values:
-                - .github/helmfile_configs/nightly/{{`{{ .Release.Name }}`}}/values.yaml
 
           releases:
             - name: bitcoind
               namespace: bitcon
               chart: ./bitcoind
+              values:
+                - .github/helmfile_configs/nightly/bitcoind/values.yaml
             - name: fulcrum
               namespace: bitcon
               chart: ./fulcrum
+              values:
+                - .github/helmfile_configs/nightly/fulcrum/values.yaml
           EOF
 
       - name: Deploy and Test Charts using Helmfile
