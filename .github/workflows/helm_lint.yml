@@ -1,11 +1,12 @@
 name: Helm Lint
 
-on:
+on: 
   push:
     branches:
-      - '**'  # This will match all branches
-    paths:
-      - '**/Chart.yaml'
+      - '**'
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
   helm_lint:
@@ -15,7 +16,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        fetch-depth: 2
+        fetch-depth: 0  # This is to fetch all history for all branches and tags
 
     - name: Set up Helm
       uses: azure/setup-helm@v1
