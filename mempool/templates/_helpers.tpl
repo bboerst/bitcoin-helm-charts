@@ -54,3 +54,45 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Allow the release namespace to be overridden for multi-namespace deployments in combined charts
+*/}}
+{{- define "mempool.namespace" -}}
+  {{- if .Values.namespaceOverride -}}
+    {{- .Values.namespaceOverride -}}
+  {{- else -}}
+    {{- .Release.Namespace -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Return the appropriate apiVersion for ingress.
+*/}}
+{{- define "mempool.ingress.apiVersion" -}}
+  {{- if and (.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version) -}}
+      {{- print "networking.k8s.io/v1" -}}
+  {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" -}}
+    {{- print "networking.k8s.io/v1beta1" -}}
+  {{- else -}}
+    {{- print "extensions/v1beta1" -}}
+  {{- end -}}
+{{- end -}}
+{{/*
+Return if ingress is stable.
+*/}}
+{{- define "mempool.ingress.isStable" -}}
+  {{- eq (include "mempool.ingress.apiVersion" .) "networking.k8s.io/v1" -}}
+{{- end -}}
+{{/*
+Return if ingress supports ingressClassName.
+*/}}
+{{- define "mempool.ingress.supportsIngressClassName" -}}
+  {{- or (eq (include "mempool.ingress.isStable" .) "true") (and (eq (include "mempool.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) -}}
+{{- end -}}
+{{/*
+Return if ingress supports pathType.
+*/}}
+{{- define "mempool.ingress.supportsPathType" -}}
+  {{- or (eq (include "mempool.ingress.isStable" .) "true") (and (eq (include "mempool.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) -}}
+{{- end -}}

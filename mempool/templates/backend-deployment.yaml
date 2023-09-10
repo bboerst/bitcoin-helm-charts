@@ -54,10 +54,16 @@ spec:
             {{- toYaml .Values.backend.securityContext | nindent 12 }}
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
-          command:
-            - ./wait-for {{ template "mempool.name" . }}-mariadb:3306
-            - --timeout=720
-            - -- nginx -g 'daemon off;'
+          # command:
+          #   - ./wait-for-it.sh {{ template "mempool.name" . }}-mariadb:3306
+          #   - --timeout=720
+          #   - --strict
+          #   - -- ./start.sh'
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "pkill -SIGINT node; while ps | grep node; do sleep 1; done"]
+
           args:
           {{ range .Values.backend.arguments }}
             - {{ . }}
@@ -81,12 +87,22 @@ spec:
               value: "{{ .Values.mariadb.auth.username }}"
             - name: "DATABASE_PASSWORD"
               value: "{{ .Values.mariadb.auth.password }}"
-            - name: "CORE_RPC_PASSWORD"
-              value: "{{ .Values.backend.coreRpcPassword }}"
             - name: "STATISTICS_ENABLED"
               value: "{{ .Values.backend.statisticsEnabled }}"
             - name: "MEMPOOL_BACKEND"
-              value: "none"
+              value: "{{ .Values.backend.mempoolBackend.type }}"
+            {{- if eq .Values.backend.mempoolBackend.type "electrum" }}
+            - name: "ELECTRUM_HOST"
+              value: "{{ .Values.backend.mempoolBackend.electrum.host }}"
+            - name: "ELECTRUM_PORT"
+              value: "{{ .Values.backend.mempoolBackend.electrum.port }}"
+            - name: "ELECTRUM_TLS_ENABLED"
+              value: "{{ .Values.backend.mempoolBackend.electrum.tls }}"
+            {{- end }}
+            {{- range $key, $val := .Values.backend.env }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
             - name: MY_POD_IP
               valueFrom:
                 fieldRef:

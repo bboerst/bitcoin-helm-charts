@@ -14,7 +14,7 @@ serviceAccount:
 frontend:
   image:
     repository: mempool/frontend
-    tag: v2.4.0
+    tag: v2.5.0
     pullPolicy: IfNotPresent
 
   strategyType: Recreate
@@ -23,11 +23,9 @@ frontend:
   nameOverride: ""
   fullnameOverride: ""
 
-  env:
-    - name: "DBUser"
-      value: ""
-    - name: "DBPassword"
-      value: ""
+  # env:
+  #   ENV1: "value1"
+  #   ENV2: "value2"
 
   arguments:
     # Send trace/debug info to console instead of debug.log file
@@ -73,6 +71,39 @@ frontend:
     healthCheckNodePort: 0
 
     tcpPort: 8080
+  
+  ingress:
+    enabled: false
+    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+    # ingressClassName: nginx
+    # Values can be templated
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    labels: {}
+    path: /
+
+    # pathType is only for k8s >= 1.1=
+    pathType: Prefix
+
+    hosts:
+      - chart-example.local
+    ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
+    extraPaths: []
+    # - path: /*
+    #   backend:
+    #     serviceName: ssl-redirect
+    #     servicePort: use-annotation
+    ## Or for k8s > 1.19
+    # - path: /*
+    #   pathType: Prefix
+    #   backend:
+    #     service:
+    #       name: ssl-redirect
+    #       port:
+    #         name: use-annotation
+
 
   persistence:
     enabled: false
@@ -129,11 +160,27 @@ backend:
   nameOverride: ""
   fullnameOverride: ""
 
+  env:
+    MEMPOOL_POOLS_JSON_URL: "https://raw.githubusercontent.com/mempool/mining-pools/master/pools-v2.json"
+    MEMPOOL_POOLS_JSON_TREE_URL: "https://api.github.com/repos/mempool/mining-pools/git/trees/master"
+    BISQ_ENABLED: "false"
+    LIQUID_ENABLED: "false"
+    LIGHTNING: "false"
+
   coreRpcHost: bitcoind
   coreRpcPort: 8332
   coreRpcUsername: mempool
   coreRpcPassword: 1234567890abcdefg
   statisticsEnabled: true
+
+  mempoolBackend:
+    ## If using electrum/fulcrum:
+    # type: electrum
+    # electrum:
+    #   host: electrum
+    #   port: 50002
+    #   tls: false
+    type: none
 
   arguments:
     # Send trace/debug info to console instead of debug.log file
@@ -178,7 +225,7 @@ backend:
 
     healthCheckNodePort: 0
 
-    tcpPort: 80
+    tcpPort: 8999
 
   persistence:
     enabled: false
