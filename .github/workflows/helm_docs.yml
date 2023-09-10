@@ -1,0 +1,67 @@
+name: Helm Docs Validation
+
+on:
+  pull_request:
+    branches:
+      - '**'
+
+env:
+  HELM_DOCS_VERSION: 1.11.0
+
+jobs:
+  helm_docs_validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: |
+          git fetch origin ${{ github.base_ref }} --depth=1
+          git branch ${{ github.base_ref }} FETCH_HEAD
+
+      - name: Install helm-docs
+        run: |
+          curl -LO https://github.com/norwoodj/helm-docs/releases/download/v${{ env.HELM_DOCS_VERSION }}/helm-docs_${{ env.HELM_DOCS_VERSION }}_Linux_x86_64.tar.gz
+          tar -zxvf helm-docs_${{ env.HELM_DOCS_VERSION }}_Linux_x86_64.tar.gz
+          sudo mv helm-docs /usr/local/bin/
+
+      - name: Validate README.md files
+        run: |
+          sudo npm install -g diff-so-fancy
+
+          git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
+
+          CHANGED_FILES=$(git diff ${{ github.base_ref }}...${{ github.head_ref }} --name-only)
+          echo "Changed files: $CHANGED_FILES"
+
+          for FILE in $CHANGED_FILES; do
+            if [[ $FILE == *Chart.yaml ]]; then
+              CHART_DIR=$(dirname $FILE)
+              README_PATH="$CHART_DIR/README.md"
+              
+              if [[ ! -f $README_PATH ]]; then
+                (cd $CHART_DIR && helm-docs)
+                echo "README.md does not exist in $CHART_DIR. Helm-docs has generated it as below:"
+                cat $README_PATH
+                exit 1
+              else
+                (cd $CHART_DIR && helm-docs)
+                DIFF_OUTPUT=$(git diff --color=always $README_PATH)
+                
+                if [ -n "$DIFF_OUTPUT" ]; then
+                  echo "README.md in $CHART_DIR does not match helm-docs output"
+                  echo
+                  echo "! Please run helm-docs in $CHART_DIR and commit the changes"
+                  echo
+                  echo "Diff:"
+                  echo "$DIFF_OUTPUT"
+                  exit 1
+                fi
+              fi
+            fi
+          done
