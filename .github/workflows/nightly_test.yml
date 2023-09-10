@@ -1,9 +1,13 @@
 name: Nightly Test
 
-on:
-  schedule:
-    - cron: '0 0 * * *' # runs daily at midnight
-
+# on:
+#   schedule:
+#     - cron: '0 0 * * *' # runs daily at midnight
+on: 
+  pull_request:
+    branches:
+      - '**'
+      
 env:
   KIND_VERSION: v0.20.0
   HELM_VERSION: v3.12.3
