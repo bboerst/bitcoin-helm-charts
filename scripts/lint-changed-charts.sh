@@ -44,6 +44,11 @@ for FILE in $CHANGED_FILES; do
     # Navigate to the chart directory and run helm lint
     helm lint "$DIR"
     
+    if [ $? -ne 0 ]; then
+        echo "Helm lint found issues in the chart at $DIR. Failing the workflow..."
+        exit 1
+    fi
+    
     # Set the flag to true as a Chart.yaml file was changed
     CHART_YAML_CHANGED=true
   fi
