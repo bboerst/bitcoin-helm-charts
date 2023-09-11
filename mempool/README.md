@@ -4,6 +4,12 @@
 
 A Helm chart for mempool
 
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://charts.bitnami.com/bitnami | mariadb | 13.1.3 |
+
 ## Values
 
 | Key | Type | Default | Description |
