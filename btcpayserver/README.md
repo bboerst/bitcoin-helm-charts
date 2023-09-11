@@ -44,7 +44,9 @@ A Helm chart for BTCPayServer
 | postgresql.image.tag | string | `"15.4.0-debian-11-r10"` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
-| securityContext | object | `{}` |  |
+| securityContext.allowPrivilegeEscalation | bool | `false` |  |
+| securityContext.runAsNonRoot | bool | `true` |  |
+| securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | service.port | int | `23000` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` |  |
