@@ -1,0 +1,80 @@
+name: Trivy Security Scan
+
+on: pull_request
+
+permissions:
+  security-events: write
+
+jobs:
+  trivy_scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: 'v3.12.3'
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Get list of changed directories
+        id: changed_dirs
+        run: |
+          echo "Getting list of changed directories..."
+          CHANGED_DIRS=$(git diff --name-only HEAD^ HEAD | grep '/' | awk 'BEGIN {FS="/"} {print $1}' | uniq | grep -Ev '^.github$' | tr '\n' ' ')
+          echo "Changed directories: $CHANGED_DIRS"
+          if [ -n "$CHANGED_DIRS" ]; then
+            echo "CHANGED_DIRS=$CHANGED_DIRS" >> $GITHUB_ENV
+          fi
+
+      - name: Install Trivy
+        run: |
+          echo "Installing Trivy..."
+          TRIVY_URL=$(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | grep browser_download_url | grep 'Linux-64bit[.]deb' | head -n 1 | cut -d '"' -f 4)
+          wget "$TRIVY_URL"
+          sudo dpkg -i trivy_*.deb
+          trivy --version
+          echo "Trivy installed successfully."
+
+      - name: Setup Dynamic Trivy Scans
+        id: trivy_scan
+        run: |
+          echo "Setting up dynamic Trivy scans..."
+          IFS=' ' read -r -a DIR_ARRAY <<< "${CHANGED_DIRS}"
+          for DIR in "${DIR_ARRAY[@]}"; do
+            DIR=$(echo $DIR | tr -d '"')
+            if [ -d "$DIR" ]; then
+              echo "Setting up Trivy scan for directory: $DIR"
+              trivy config --quiet --format 'sarif' --output 'trivy-results-$DIR.sarif' "./$DIR" || echo "Trivy scan failed for directory: $DIR"
+            else
+              echo "Current Directory: $(pwd)"
+              echo "Directory '$DIR' does not exist."
+            fi
+          done
+
+      - name: Combine SARIF files
+        id: combine_sarif
+        run: |
+          echo "Combining SARIF files..."
+          FILES=trivy-results-*.sarif
+          if ls $FILES 1> /dev/null 2>&1; then
+            jq -s '.[0].runs += .[1].runs | .[0]' $FILES > combined-trivy-results.sarif
+            echo "SARIF files combined successfully."
+            echo "SARIF_COMBINED=true" >> $GITHUB_ENV
+          else
+            echo "No SARIF files found to combine."
+          fi
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        if: env.SARIF_COMBINED == 'true'
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'combined-trivy-results.sarif'
