@@ -69,7 +69,8 @@ jobs:
             jq -s '.[0].runs += .[1].runs | .[0]' $FILES > combined-trivy-results.sarif
             echo "SARIF files combined successfully."
           else
-            echo "No SARIF files found to combine."
+            echo '{"version": "2.1.0","runs": []}' > combined-trivy-results.sarif
+            echo "No SARIF files found to combine, created an empty SARIF file."
           fi
 
       - name: Upload Trivy scan results to GitHub Security tab
