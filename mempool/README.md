@@ -39,7 +39,9 @@ A Helm chart for mempool
 | backend.persistence.tls | list | `[]` |  |
 | backend.podSecurityContext | object | `{}` |  |
 | backend.resources | object | `{}` |  |
-| backend.securityContext | object | `{}` |  |
+| backend.securityContext.allowPrivilegeEscalation | bool | `false` |  |
+| backend.securityContext.runAsNonRoot | bool | `true` |  |
+| backend.securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | backend.service.annotations | object | `{}` |  |
 | backend.service.enabled | bool | `true` |  |
 | backend.service.externalIPs | list | `[]` |  |
@@ -76,7 +78,9 @@ A Helm chart for mempool
 | frontend.persistence.tls | list | `[]` |  |
 | frontend.podSecurityContext | object | `{}` |  |
 | frontend.resources | object | `{}` |  |
-| frontend.securityContext | object | `{}` |  |
+| frontend.securityContext.allowPrivilegeEscalation | bool | `false` |  |
+| frontend.securityContext.runAsNonRoot | bool | `true` |  |
+| frontend.securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | frontend.service.annotations | object | `{}` |  |
 | frontend.service.enabled | bool | `true` |  |
 | frontend.service.externalIPs | list | `[]` |  |
