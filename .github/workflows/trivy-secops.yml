@@ -68,13 +68,13 @@ jobs:
           if ls $FILES 1> /dev/null 2>&1; then
             jq -s '.[0].runs += .[1].runs | .[0]' $FILES > combined-trivy-results.sarif
             echo "SARIF files combined successfully."
+            echo "SARIF_COMBINED=true" >> $GITHUB_ENV
           else
-            echo '{"version": "2.1.0","runs": []}' > combined-trivy-results.sarif
-            echo "No SARIF files found to combine, created an empty SARIF file."
+            echo "No SARIF files found to combine."
           fi
 
       - name: Upload Trivy scan results to GitHub Security tab
-        if: always()
+        if: env.SARIF_COMBINED == 'true'
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'combined-trivy-results.sarif'
