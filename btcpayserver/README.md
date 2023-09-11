@@ -45,7 +45,6 @@ A Helm chart for BTCPayServer
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
-| securityContext.runAsNonRoot | bool | `true` |  |
 | securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | service.port | int | `23000` |  |
 | service.type | string | `"ClusterIP"` |  |
