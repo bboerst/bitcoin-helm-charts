@@ -8,7 +8,7 @@ A Helm chart for Kubernetes
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | redis | 18.0.2 |
+| https://charts.bitnami.com/bitnami | redis | 18.0.4 |
 
 ## Values
 
