@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: apotdevin/thunderhub
-  tag: v0.13.21
+  tag: ""
   pullPolicy: IfNotPresent
 
 strategyType: Recreate
