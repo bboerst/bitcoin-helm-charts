@@ -22,5 +22,5 @@ jobs:
 
     - name: Run Helm Lint on Changed Charts
       run: |
-        chmod +x scripts/lint-changed-charts.sh
-        ./.github/scripts/lint-changed-charts.sh
+        chmod +x .github/scripts/lint-changed-charts.sh
+        .github/scripts/lint-changed-charts.sh
