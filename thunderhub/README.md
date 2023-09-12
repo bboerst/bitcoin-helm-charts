@@ -8,9 +8,10 @@ A Helm chart for thunderhub
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| account | list | `[]` |  |
 | affinity | object | `{}` |  |
 | arguments | list | `[]` |  |
+| config.account | list | `[]` |  |
+| config.masterPassword | string | `"password"` |  |
 | env.CURRENCY | string | `"sat"` |  |
 | env.DISABLE_LINKS | string | `"false"` |  |
 | env.DISABLE_LNMARKETS | string | `"false"` |  |
@@ -30,7 +31,6 @@ A Helm chart for thunderhub
 | ingress.labels | object | `{}` |  |
 | ingress.path | string | `"/"` |  |
 | ingress.pathType | string | `"Prefix"` |  |
-| masterPassword | string | `"password"` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
@@ -40,7 +40,9 @@ A Helm chart for thunderhub
 | podSecurityContext | object | `{}` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
-| securityContext | object | `{}` |  |
+| securityContext.allowPrivilegeEscalation | bool | `false` |  |
+| securityContext.runAsNonRoot | bool | `true` |  |
+| securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | service.annotations | object | `{}` |  |
 | service.enabled | bool | `true` |  |
 | service.externalIPs | list | `[]` |  |
