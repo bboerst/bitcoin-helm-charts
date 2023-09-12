@@ -41,7 +41,6 @@ A Helm chart for thunderhub
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
-| securityContext.runAsNonRoot | bool | `true` |  |
 | securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | service.annotations | object | `{}` |  |
 | service.enabled | bool | `true` |  |
