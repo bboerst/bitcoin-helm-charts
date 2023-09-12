@@ -1,6 +1,6 @@
 # thunderhub
 
-![Version: 24.0.1](https://img.shields.io/badge/Version-24.0.1-informational?style=flat-square) ![AppVersion: v24.0.1](https://img.shields.io/badge/AppVersion-v24.0.1-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![AppVersion: v0.13.22](https://img.shields.io/badge/AppVersion-v0.13.22-informational?style=flat-square)
 
 A Helm chart for thunderhub
 
@@ -24,7 +24,7 @@ A Helm chart for thunderhub
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"apotdevin/thunderhub"` |  |
-| image.tag | string | `"v0.13.21"` |  |
+| image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` |  |
