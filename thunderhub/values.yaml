@@ -24,14 +24,15 @@ serviceAccount:
 
 arguments: []
 
-# Server accounts
-masterPassword: 'password'
-account: []
-  # - name: 'Account 1'
-  #   serverUrl: 'url:port'
-  #   macaroon: '0201056...' # HEX or Base64 encoded macaroon
-  #   certificate: '0202045c...' # HEX or Base64 encoded certificate
-  #   password: 'password for account 3'
+# Configuration
+config:
+  masterPassword: 'password'
+  account: []
+    # - name: 'Account 1'
+    #   serverUrl: 'url:port'
+    #   macaroon: '0201056...' # HEX or Base64 encoded macaroon
+    #   certificate: '0202045c...' # HEX or Base64 encoded certificate
+    #   password: 'password for account 3'
 
 env:          
   LOG_LEVEL: "debug"

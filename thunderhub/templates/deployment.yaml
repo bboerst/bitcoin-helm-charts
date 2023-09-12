@@ -110,5 +110,6 @@ spec:
     {{- end }}
       volumes:
         - name: {{ template "thunderhub.fullname" . }}-config
-          configMap:
-            name: {{ template "thunderhub.fullname" . }}-config
+          secret:
+            secretName: {{ template "thunderhub.fullname" . }}-config
+
