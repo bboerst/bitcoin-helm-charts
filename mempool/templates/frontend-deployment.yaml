@@ -54,10 +54,6 @@ spec:
             {{- toYaml .Values.frontend.securityContext | nindent 12 }}
           image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
-          # command:
-          #   - ./wait-for {{ template "mempool.name" . }}-mariadb:3306
-          #   - --timeout=720
-          #   - -- nginx -g 'daemon off;'
           args:
           {{  range .Values.frontend.arguments }}
             - {{ . }}

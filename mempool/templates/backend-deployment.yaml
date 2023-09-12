@@ -54,16 +54,17 @@ spec:
             {{- toYaml .Values.backend.securityContext | nindent 12 }}
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
-          # command:
-          #   - ./wait-for-it.sh {{ template "mempool.name" . }}-mariadb:3306
-          #   - --timeout=720
-          #   - --strict
-          #   - -- ./start.sh'
+          command:
+            - "./wait-for-it.sh"
+            - "{{ template "mempool.name" . }}-mariadb:3306"
+            - "--timeout=720"
+            - "--strict"
+            - "--"
+            - "./start.sh"
           lifecycle:
             preStop:
               exec:
                 command: ["sh", "-c", "pkill -SIGINT node; while ps | grep node; do sleep 1; done"]
-
           args:
           {{ range .Values.backend.arguments }}
             - {{ . }}
