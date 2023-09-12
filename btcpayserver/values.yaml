@@ -7,6 +7,7 @@ replicaCount: 1
 postgresql:
   image:
     tag: 15.4.0-debian-11-r10
+
   global:
     postgresql:
       auth:
