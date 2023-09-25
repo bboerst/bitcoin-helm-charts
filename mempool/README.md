@@ -1,6 +1,6 @@
 # mempool
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![AppVersion: v2.4.0](https://img.shields.io/badge/AppVersion-v2.4.0-informational?style=flat-square)
+![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![AppVersion: v2.5.0](https://img.shields.io/badge/AppVersion-v2.5.0-informational?style=flat-square)
 
 A Helm chart for mempool
 
@@ -28,7 +28,7 @@ A Helm chart for mempool
 | backend.fullnameOverride | string | `""` |  |
 | backend.image.pullPolicy | string | `"IfNotPresent"` |  |
 | backend.image.repository | string | `"mempool/backend"` |  |
-| backend.image.tag | string | `"v2.4.0"` |  |
+| backend.image.tag | string | `"v2.5.0"` |  |
 | backend.imagePullSecrets | list | `[]` |  |
 | backend.mempoolBackend.type | string | `"none"` |  |
 | backend.nameOverride | string | `""` |  |
