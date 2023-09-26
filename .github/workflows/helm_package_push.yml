@@ -1,0 +1,85 @@
+name: Package and Push Helm Charts
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  package-and-push-charts:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Helm
+      run: |
+        echo "==> Installing Helm..."
+        curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+        chmod 700 get_helm.sh
+        ./get_helm.sh
+        if [[ $? -ne 0 ]]; then
+          echo "Error: Helm installation failed."
+          exit 1
+        fi
+        echo "==> Helm installed successfully."
+
+    - name: Install yq
+      run: |
+        echo "==> Installing yq..."
+        sudo snap install yq
+        if [[ $? -ne 0 ]]; then
+          echo "Error: yq installation failed."
+          exit 1
+        fi
+        echo "==> yq installed successfully."
+
+    - name: Identify Changed Charts
+      id: get-changed-charts
+      run: |
+        echo "==> Identifying changed Helm charts..."
+        changed_charts=""
+        for chart in $(git diff --name-only HEAD^ HEAD | grep '/Chart.yaml' | awk -F/ '{print $1}'); do
+          echo "    Modified chart: $chart"
+          changed_charts="$changed_charts $chart"
+        done
+        if [[ -z "$changed_charts" ]]; then
+          echo "No Helm charts were modified."
+          exit 0
+        fi
+        echo "==> Changed charts: $changed_charts"
+        echo "::set-output name=changed_charts::$changed_charts"
+
+    - name: Package and Push Changed Charts
+      run: |
+        # Write credentials to .netrc file for secure curl usage
+        echo "machine your-helm-repo-url login $GITHUB_USER password $GITHUB_TOKEN" > ~/.netrc
+        chmod 600 ~/.netrc
+
+        echo "==> Packaging and pushing changed charts..."
+        charts="${{ steps.get-changed-charts.outputs.changed_charts }}"
+        for chart in $charts; do
+          echo "==> Processing chart: $chart"
+          helm package $chart
+          if [[ $? -ne 0 ]]; then
+            echo "Error: Failed to package $chart."
+            exit 1
+          fi
+          echo "==> Successfully packaged $chart."
+          
+          # Extracting chart version from Chart.yaml
+          chart_version=$(yq e '.version' $chart/Chart.yaml)
+          packaged_chart="$chart-$chart_version.tgz"
+        
+          echo "==> Pushing $packaged_chart to Helm repository..."
+          curl -T $packaged_chart "https://your-helm-repo-url/charts/$packaged_chart"
+          if [[ $? -ne 0 ]]; then
+            echo "Error: Failed to push $packaged_chart to Helm repository."
+            exit 1
+          fi
+          echo "==> Successfully pushed $packaged_chart."
+        done
+      env:
+        GITHUB_USER: ${{ secrets.GITHUB_USER }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
