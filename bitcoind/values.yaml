@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: lncm/bitcoind
-  tag: v24.0.1
+  tag: ""
   pullPolicy: IfNotPresent
 
 strategyType: Recreate
