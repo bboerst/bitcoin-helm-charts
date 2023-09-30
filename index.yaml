@@ -1,0 +1,133 @@
+apiVersion: v1
+entries:
+  bitcoind:
+  - apiVersion: v1
+    appVersion: v25.0
+    created: "2023-09-30T15:10:17.19800319Z"
+    description: A Helm chart for bitcoin-core
+    digest: 4c39eb4865832a74969575e5044231d32c7e00cbe3e2d51c13825d4e1881fe7d
+    name: bitcoind
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/bitcoind-1.0.1/bitcoind-1.0.1.tgz
+    version: 1.0.1
+  btc-rpc-explorer:
+  - apiVersion: v2
+    appVersion: 3.2.0
+    created: "2023-09-30T15:10:17.406231024Z"
+    description: btc-rpc-explorer helm chart. The container can be started as middle(guard)-
+      , bridge- , exit-relay or as proxy exposing only the Socks5 Port per default
+      when running.
+    digest: 6124df0343671eddea1e5bc4f953c7e057775ab1b9524b61fcad1268ca76beec
+    name: btc-rpc-explorer
+    type: application
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/btc-rpc-explorer-3.2.0/btc-rpc-explorer-3.2.0.tgz
+    version: 3.2.0
+  fulcrum:
+  - apiVersion: v2
+    appVersion: v1.9.1
+    created: "2023-09-30T15:10:18.627254148Z"
+    description: fulcrum helm chart
+    digest: 0fa0c3121a6e06584cb066ae39b8939feb7f7bdaddb0502e06d07596fb6aba90
+    name: fulcrum
+    type: application
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/fulcrum-1.9.1/fulcrum-1.9.1.tgz
+    version: 1.9.1
+  lndhub:
+  - apiVersion: v2
+    appVersion: v1.4.1
+    created: "2023-09-30T15:10:18.861320572Z"
+    dependencies:
+    - name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 18.0.4
+    description: A Helm chart for Kubernetes
+    digest: a5631884e33968c9b19657b71b4905b38e87ff7583e91cb97c5b8f9d7cee48be
+    name: lndhub
+    type: application
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/lndhub-1.0.0/lndhub-1.0.0.tgz
+    version: 1.0.0
+  mempool:
+  - apiVersion: v2
+    appVersion: v2.5.0
+    created: "2023-09-30T15:10:19.076316327Z"
+    dependencies:
+    - name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.1.3
+    description: A Helm chart for mempool
+    digest: 7ca27424fb32faa73e995cb5f7a7c8fd767ad33ef98b98c02579a499596c3b03
+    name: mempool
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/mempool-1.0.1/mempool-1.0.1.tgz
+    version: 1.0.1
+  prometheus-bitcoind-exporter:
+  - apiVersion: v1
+    appVersion: v0.1.0
+    created: "2023-09-30T15:10:19.303025385Z"
+    description: bitcoind exporter to monitor bitcion-core metrics with Prometheus
+    digest: 30a5331e59e4001b19a8c8301d115234dc8873cd682083dbea0a41f98f7e7e3e
+    keywords:
+    - kubernetes
+    - exporter
+    - prometheus
+    - bitcoin
+    - bitcoind
+    maintainers:
+    - email: brian@boerst.com
+      name: bboerst
+    name: prometheus-bitcoind-exporter
+    sources:
+    - https://github.com/bboerst/helm-charts/
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/prometheus-bitcoind-exporter-0.1.0/prometheus-bitcoind-exporter-0.1.0.tgz
+    version: 0.1.0
+  prometheus-bosminer-exporter:
+  - apiVersion: v1
+    appVersion: v0.1.0
+    created: "2023-09-30T15:10:19.505113447Z"
+    description: BraiinsOS BOSMiner exporter to monitor bosminer metrics with Prometheus
+    digest: 4471e254dea4f0014ea3ebdf8bbe8ce0a16cb4c5db9e08fa3e99bde05f25b0f4
+    keywords:
+    - kubernetes
+    - apache
+    - bosminer
+    - exporter
+    - prometheus
+    - braiins
+    - braiinsos
+    maintainers:
+    - email: brian@boerst.com
+      name: bboerst
+    name: prometheus-bosminer-exporter
+    sources:
+    - https://github.com/bboerst/helm-charts/
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/prometheus-bosminer-exporter-0.1.0/prometheus-bosminer-exporter-0.1.0.tgz
+    version: 0.1.0
+  thunderhub:
+  - apiVersion: v1
+    appVersion: v0.13.21
+    created: "2023-09-30T15:10:19.691404092Z"
+    description: A Helm chart for thunderhub
+    digest: e11eafe51c62e75da3ee8a7f99f54d1a8be77a556fb17f169e4b2da34a4f24ec
+    name: thunderhub
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/thunderhub-1.0.0/thunderhub-1.0.0.tgz
+    version: 1.0.0
+  tor:
+  - apiVersion: v2
+    appVersion: 0.4.7.7
+    created: "2023-09-30T15:10:19.899518117Z"
+    description: Tor helm chart. The container can be started as middle(guard)- ,
+      bridge- , exit-relay or as proxy exposing only the Socks5 Port per default when
+      running.
+    digest: 483775f8c97eac6edfbef3253376dae0f5ebd66295a916b01d0c98e99859d99e
+    name: tor
+    type: application
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/tor-0.4.7/tor-0.4.7.tgz
+    version: 0.4.7
+generated: "2023-09-30T15:10:19.899529918Z"
