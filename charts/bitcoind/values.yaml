@@ -73,7 +73,6 @@ podSecurityContext: {}
   # fsGroup: 2000
 
 securityContext:
-  runAsNonRoot: true
   allowPrivilegeEscalation: false
   seccompProfile:
     type: RuntimeDefault
