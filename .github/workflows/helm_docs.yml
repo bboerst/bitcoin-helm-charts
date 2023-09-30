@@ -40,7 +40,7 @@ jobs:
           echo "Changed files: $CHANGED_FILES"
 
           for FILE in $CHANGED_FILES; do
-            if [[ $FILE == *Chart.yaml ]]; then
+            if [[ $FILE == charts/*Chart.yaml ]]; then
               CHART_DIR=$(dirname $FILE)
               README_PATH="$CHART_DIR/README.md"
               

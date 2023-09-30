@@ -34,7 +34,9 @@ A Helm chart for bitcoin-core
 | podSecurityContext | object | `{}` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
-| securityContext | object | `{}` |  |
+| securityContext.allowPrivilegeEscalation | bool | `false` |  |
+| securityContext.runAsNonRoot | bool | `true` |  |
+| securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | service.annotations | object | `{}` |  |
 | service.enableP2p | bool | `true` |  |
 | service.enableRpc | bool | `true` |  |

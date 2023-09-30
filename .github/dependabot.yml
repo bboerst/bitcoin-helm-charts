@@ -1,51 +1,51 @@
 version: 2
 updates:
   - package-ecosystem: "docker"
-    directory: "bitcoind"
+    directory: "charts/bitcoind"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "docker"
-    directory: "btcpayserver"
+    directory: "charts/btcpayserver"
     schedule:
       interval: "daily"
   
   - package-ecosystem: "docker"
-    directory: "fulcrum"
+    directory: "charts/fulcrum"
     schedule:
       interval: "daily"
   
   - package-ecosystem: "docker"
-    directory: "lndhub"
+    directory: "charts/lndhub"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "docker"
-    directory: "mempool"
+    directory: "charts/mempool"
     schedule:
       interval: "daily"
   
   - package-ecosystem: "docker"
-    directory: "nbxplorer"
+    directory: "charts/nbxplorer"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "docker"
-    directory: "prometheus-bitcoind-exporter"
+    directory: "charts/prometheus-bitcoind-exporter"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "docker"
-    directory: "prometheus-bosminer-exporter"
+    directory: "charts/prometheus-bosminer-exporter"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "docker"
-    directory: "thunderhub"
+    directory: "charts/thunderhub"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "docker"
-    directory: "tor"
+    directory: "charts/tor"
     schedule:
       interval: "daily"
