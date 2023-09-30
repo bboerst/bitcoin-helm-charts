@@ -1,6 +1,6 @@
 # bitcoind
 
-![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![AppVersion: v25.0](https://img.shields.io/badge/AppVersion-v25.0-informational?style=flat-square)
+![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![AppVersion: v25.0](https://img.shields.io/badge/AppVersion-v25.0-informational?style=flat-square)
 
 A Helm chart for bitcoin-core
 
@@ -35,7 +35,6 @@ A Helm chart for bitcoin-core
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
-| securityContext.runAsNonRoot | bool | `true` |  |
 | securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | service.annotations | object | `{}` |  |
 | service.enableP2p | bool | `true` |  |
