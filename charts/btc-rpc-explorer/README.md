@@ -1,101 +1,45 @@
+# btc-rpc-explorer
 
-# tor-helm
-Helm chart running [tor-docker](https://github.com/JFWenisch/tor-docker) container allowing to be configured as middle(guard)- , bridge- , exit-relay or as proxy exposing only the socks5 Port per default when running. Prepared to be run on a single node cluster due to persistence via local mountpath.
+![Version: 3.2.0](https://img.shields.io/badge/Version-3.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.2.0](https://img.shields.io/badge/AppVersion-3.2.0-informational?style=flat-square)
 
+btc-rpc-explorer helm chart. The container can be started as middle(guard)- , bridge- , exit-relay or as proxy exposing only the Socks5 Port per default when running.
 
-## Add Repository
-The packaged chart is hosted via github pages and can be found under https://github.com/JFWenisch/charts/tree/master/tor. To add the chart repository run
+## Values
 
-```
-helm repo add jfwenisch https://jfwenisch.github.io/charts
-helm repo update
-```
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| affinity | object | `{}` |  |
+| config | string | `"BTCEXP_HOST=0.0.0.0\n# Bitcoin Core\nBTCEXP_BITCOIND_HOST=bitcoin-core\nBTCEXP_BITCOIND_PORT=8332\nBTCEXP_BITCOIND_USER=$BITCOIN_RPC_USER\nBTCEXP_BITCOIND_PASS=$BITCOIN_RPC_PASS\n# Electrum\n# BTCEXP_ADDRESS_API=electrum\n# BTCEXP_ELECTRUM_SERVERS=tcp://electrs:50001\n# Log level\n# DEBUG=btcexp:*,electrumClient\n# Performance\nBTCEXP_SLOW_DEVICE_MODE=true\nBTCEXP_NO_INMEMORY_RPC_CACHE=true\n# Privacy\nBTCEXP_PRIVACY_MODE=true\nBTCEXP_NO_RATES=true\n# Disable RPC\nBTCEXP_RPC_ALLOWALL=false\nBTCEXP_BASIC_AUTH_PASSWORD=\n"` |  |
+| cookiePersistence.enabled | bool | `false` |  |
+| cookiePersistence.existingClaim | string | `"bitcoin-core-authcookie"` |  |
+| fullnameOverride | string | `""` |  |
+| image.pullPolicy | string | `"Always"` |  |
+| image.repository | string | `"getumbrel/btc-rpc-explorer"` |  |
+| image.tag | string | `"v3.2.0@sha256:ae22dae91a00268c8e02b50da332c6ffcb8c12a1f32991a1f85dfc1496a1c673"` |  |
+| imagePullSecrets | list | `[]` |  |
+| ingress.annotations | object | `{}` |  |
+| ingress.enabled | bool | `false` |  |
+| ingress.extraPaths | list | `[]` |  |
+| ingress.hosts[0] | string | `"chart-example.local"` |  |
+| ingress.labels | object | `{}` |  |
+| ingress.path | string | `"/"` |  |
+| ingress.pathType | string | `"Prefix"` |  |
+| nameOverride | string | `""` |  |
+| nodeSelector | object | `{}` |  |
+| podSecurityContext | object | `{}` |  |
+| replicaCount | int | `1` |  |
+| resources | object | `{}` |  |
+| securityContext | object | `{}` |  |
+| service.annotations | object | `{}` |  |
+| service.enabled | bool | `true` |  |
+| service.labels | object | `{}` |  |
+| service.port | int | `80` |  |
+| service.portName | string | `"service"` |  |
+| service.targetPort | int | `3002` |  |
+| service.type | string | `"ClusterIP"` |  |
+| serviceAccount.create | bool | `true` |  |
+| serviceAccount.name | string | `nil` |  |
+| tolerations | list | `[]` |  |
 
-Alternatively, you can manually fetch the chart
-```
-git clone https://github.com/JFWenisch/tor-helm.git
-cd tor-helm
-```
-
-## General usage
-
-Test deployment via helm repo
-
-```
-helm install --dry-run --debug --generate-name jfwenisch/tor
-
-```
-
-If you pulled the repository and want to deploy it from src run the following command from within the tor-helm directory
-
-```
-helm install --dry-run --debug --generate-name .
-
-```
-
-
-### Defining the mode
-Supported modes: proxy,exit,middle,bridge. For more information on supported modes pls refer to the [tor-docker readme](https://github.com/JFWenisch/tor-docker) and the official [tor-relay-guide](https://trac.torproject.org/projects/tor/wiki/TorRelayGuide)
-The different modes these can be set via --set mode=$value. If no mode is specified the default value "mode:proxy" will be used.
-
-```
-helm install --dry-run --debug --generate-name --set mode=bridge ./chart
-
-```
-
-### Persistence / Defining mountpath
-The chart inherits a 100M volume and volumeclaim that enables persistence via a local mountpath. The mountpath is per default set to /tmp an can be overriden by using --set mountpath=/mnt/...
-
-```
-helm install --dry-run --debug --generate-name --set mode=bridge -set mountpath=/media/raid/kubernetes/torvolume1 ./chart
-
-```
-
-### Defining ports
-Based on the chosen mode, different ports are set within the torrc. Which options are set can be viewed within the entrypoint sh. Per default port 80 is set as DirPort. port 443 is set as ORPort and Port 9050 is set as socksport. These values can be overwritten as
-
-```
-helm install --dry-run --debug --generate-name --set mode=exit --set service.tordirport=8080 ./chart
-helm install --dry-run --debug --generate-name --set mode=middle --set service.tororport=4443 ./chart
-helm install --dry-run --debug --generate-name --set mode=bridge --set service.tororport=4443 ./chart
-helm install --dry-run --debug --generate-name --set mode=proxy --set service.torsocksport=10050 ./chart
-
-```
-### Exposing ports as NodePort
-Per default the service makes the set ports available via nodePorts and automatically assigns a port within the kubernetes nodePort rang (default 30000 - 32767). As tor is making a self check on the set ports and no router is in front of the kubernetes node which might be used to map to the automatically assigned nodePort, fixed values for the nodeport can be set by specifying '--set samenodeport=true'. If set to true, the same ports that are specified as tordirport,tororport and torsocksport  will be used as nodeport.
-
-Warning: If set to true, the specified ports have to be within the kubernetes nodePort rang (default 30000 - 32767)
-
-```
-helm install --dry-run --debug --generate-name --set mode=mide --set samenodeport=true --set service.torsocksport=30050 --set service.tororport=30443 --set service.tordirport=30080 ./chart
-
-```
-
-### Additional configuration
-
-
-```
---set service.torcontactinfo="J.-Fabian Wenisch <info AT jfwenisch dot com>"
---set service.tornickname="tor"
---set service.tordnsport=""
---set service.tordnslistenaddress=""
---set service.tormyfamily=""
---set service.torhiddenservicedir=""
---set service.torhiddenserviceport=""
-```
-
-### Quickstart
-```
-helm install tor-middle --set mode=middle --set samenodeport=true --set service.torsocksport="30050" --set service.tororport="30051" --set service.tordirport="30052" --set mountpath=/tmp ./chart
-```
-
-
-## Further information
-
-[tor-docker](https://github.com/JFWenisch/tor-docker)
-
-[Tor Project](https://www.torproject.org/)
-
-[Alpine Linux ](https://alpinelinux.org/)
-
-[obfs4 - The obfourscator](https://gitlab.com/yawning/obfs4)
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.11.0](https://github.com/norwoodj/helm-docs/releases/v1.11.0)
