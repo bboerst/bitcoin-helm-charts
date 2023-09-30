@@ -29,7 +29,7 @@ jobs:
         id: changed_dirs
         run: |
           echo "Getting list of changed directories..."
-          CHANGED_DIRS=$(git diff --name-only HEAD^ HEAD | grep '/' | awk 'BEGIN {FS="/"} {print $1}' | uniq | grep -Ev '^.github$' | tr '\n' ' ')
+          CHANGED_DIRS=$(git diff --name-only HEAD^ HEAD | grep 'charts/' | awk 'BEGIN {FS="/"} {print $2}' | uniq | grep -Ev '^.github$' | tr '\n' ' ')
           echo "Changed directories: $CHANGED_DIRS"
           if [ -n "$CHANGED_DIRS" ]; then
             echo "CHANGED_DIRS=$CHANGED_DIRS" >> $GITHUB_ENV
@@ -51,12 +51,12 @@ jobs:
           IFS=' ' read -r -a DIR_ARRAY <<< "${CHANGED_DIRS}"
           for DIR in "${DIR_ARRAY[@]}"; do
             DIR=$(echo $DIR | tr -d '"')
-            if [ -d "$DIR" ]; then
-              echo "Setting up Trivy scan for directory: $DIR"
-              trivy config --quiet --format 'sarif' --output 'trivy-results-$DIR.sarif' "./$DIR" || echo "Trivy scan failed for directory: $DIR"
+            if [ -d "charts/$DIR" ]; then
+              echo "Setting up Trivy scan for directory: charts/$DIR"
+              trivy config --quiet --format 'sarif' --output 'trivy-results-$DIR.sarif' "./charts/$DIR" || echo "Trivy scan failed for directory: charts/$DIR"
             else
               echo "Current Directory: $(pwd)"
-              echo "Directory '$DIR' does not exist."
+              echo "Directory 'charts/$DIR' does not exist."
             fi
           done
 

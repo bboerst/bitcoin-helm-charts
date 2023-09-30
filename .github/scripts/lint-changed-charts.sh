@@ -35,7 +35,7 @@ CHART_YAML_CHANGED=false
 
 # Loop through the list of changed files
 for FILE in $CHANGED_FILES; do
-  if [[ "$FILE" == *"Chart.yaml"* ]]; then
+  if [[ "$FILE" == charts/*"Chart.yaml"* ]]; then
     # Get the directory of the changed Chart.yaml
     DIR=$(dirname "$FILE")
     
