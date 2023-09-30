@@ -1,5 +1,0 @@
-apiVersion: v1
-appVersion: "v0.13.21"
-description: A Helm chart for thunderhub
-name: thunderhub
-version: 1.0.0
