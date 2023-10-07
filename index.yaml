@@ -86,6 +86,19 @@ entries:
     urls:
     - https://github.com/bboerst/bitcoin-helm-charts/releases/download/mempool-1.0.1/mempool-1.0.1.tgz
     version: 1.0.1
+  - apiVersion: v2
+    appVersion: v2.5.0
+    created: "2023-10-07T15:17:20.627069643Z"
+    dependencies:
+    - name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.1.3
+    description: A Helm chart for mempool
+    digest: fff2e785f619e582c47fa07b95003cc581cf8c87074f966b97a0a02ad1c999b7
+    name: mempool
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/mempool-0.1.2/mempool-0.1.2.tgz
+    version: 0.1.2
   prometheus-bitcoind-exporter:
   - apiVersion: v1
     appVersion: v0.1.0
@@ -153,4 +166,4 @@ entries:
     urls:
     - https://github.com/bboerst/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2023-10-07T15:03:27.926941744Z"
+generated: "2023-10-07T15:17:20.627086943Z"
