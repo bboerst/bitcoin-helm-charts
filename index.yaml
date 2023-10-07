@@ -153,4 +153,16 @@ entries:
     urls:
     - https://github.com/bboerst/bitcoin-helm-charts/releases/download/tor-1.0.1/tor-1.0.1.tgz
     version: 1.0.1
-generated: "2023-10-07T14:59:25.249287567Z"
+  - apiVersion: v2
+    appVersion: 0.4.7.13
+    created: "2023-10-07T15:03:27.926932543Z"
+    description: Tor helm chart. The container can be started as middle(guard)- ,
+      bridge- , exit-relay or as proxy exposing only the Socks5 Port per default when
+      running.
+    digest: 0c16ae98005065d61fd5a146cff64696a4ed6b5e448823abc5f0e5d3da49038a
+    name: tor
+    type: application
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
+    version: 0.1.2
+generated: "2023-10-07T15:03:27.926941744Z"
