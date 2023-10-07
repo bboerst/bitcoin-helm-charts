@@ -46,7 +46,7 @@ A golang implementation of a Lightning Network node
 | nameOverride | string | `""` |  |
 | network | string | `"testnet"` |  |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| persistence.enabled | bool | `true` |  |
+| persistence.enabled | bool | `false` |  |
 | persistence.size | string | `"5Gi"` |  |
 | podSecurityContext | object | `{}` |  |
 | resources.limits.memory | string | `"512Mi"` |  |
