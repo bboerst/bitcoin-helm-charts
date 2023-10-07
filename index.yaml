@@ -60,20 +60,6 @@ entries:
   lndhub:
   - apiVersion: v2
     appVersion: v1.4.1
-    created: "2023-09-30T15:10:18.861320572Z"
-    dependencies:
-    - name: redis
-      repository: https://charts.bitnami.com/bitnami
-      version: 18.0.4
-    description: A Helm chart for Kubernetes
-    digest: a5631884e33968c9b19657b71b4905b38e87ff7583e91cb97c5b8f9d7cee48be
-    name: lndhub
-    type: application
-    urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/lndhub-1.0.0/lndhub-1.0.0.tgz
-    version: 1.0.0
-  - apiVersion: v2
-    appVersion: v1.4.1
     created: "2023-10-07T14:32:10.296599532Z"
     dependencies:
     - name: redis
