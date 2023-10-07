@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "bitcoin-core.name" -}}
+{{- define "bitcoind.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "bitcoin-core.fullname" -}}
+{{- define "bitcoind.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -27,16 +27,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "bitcoin-core.chart" -}}
+{{- define "bitcoind.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "bitcoin-core.labels" -}}
-app.kubernetes.io/name: {{ include "bitcoin-core.name" . }}
-helm.sh/chart: {{ include "bitcoin-core.chart" . }}
+{{- define "bitcoind.labels" -}}
+app.kubernetes.io/name: {{ include "bitcoind.name" . }}
+helm.sh/chart: {{ include "bitcoind.chart" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
@@ -47,9 +47,9 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "bitcoin-core.serviceAccountName" -}}
+{{- define "bitcoind.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "bitcoin-core.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "bitcoind.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
@@ -59,7 +59,7 @@ Create the name of the service account to use
 {{/*
 Allow the release namespace to be overridden for multi-namespace deployments in combined charts
 */}}
-{{- define "bitcoin-core.namespace" -}}
+{{- define "bitcoind.namespace" -}}
   {{- if .Values.namespaceOverride -}}
     {{- .Values.namespaceOverride -}}
   {{- else -}}
@@ -70,7 +70,7 @@ Allow the release namespace to be overridden for multi-namespace deployments in 
 {{/*
 Return the appropriate apiVersion for ingress.
 */}}
-{{- define "bitcoin-core.ingress.apiVersion" -}}
+{{- define "bitcoind.ingress.apiVersion" -}}
   {{- if and (.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version) -}}
       {{- print "networking.k8s.io/v1" -}}
   {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" -}}
@@ -82,18 +82,18 @@ Return the appropriate apiVersion for ingress.
 {{/*
 Return if ingress is stable.
 */}}
-{{- define "bitcoin-core.ingress.isStable" -}}
-  {{- eq (include "bitcoin-core.ingress.apiVersion" .) "networking.k8s.io/v1" -}}
+{{- define "bitcoind.ingress.isStable" -}}
+  {{- eq (include "bitcoind.ingress.apiVersion" .) "networking.k8s.io/v1" -}}
 {{- end -}}
 {{/*
 Return if ingress supports ingressClassName.
 */}}
-{{- define "bitcoin-core.ingress.supportsIngressClassName" -}}
-  {{- or (eq (include "bitcoin-core.ingress.isStable" .) "true") (and (eq (include "bitcoin-core.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) -}}
+{{- define "bitcoind.ingress.supportsIngressClassName" -}}
+  {{- or (eq (include "bitcoind.ingress.isStable" .) "true") (and (eq (include "bitcoind.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) -}}
 {{- end -}}
 {{/*
 Return if ingress supports pathType.
 */}}
-{{- define "bitcoin-core.ingress.supportsPathType" -}}
-  {{- or (eq (include "bitcoin-core.ingress.isStable" .) "true") (and (eq (include "bitcoin-core.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) -}}
+{{- define "bitcoind.ingress.supportsPathType" -}}
+  {{- or (eq (include "bitcoind.ingress.isStable" .) "true") (and (eq (include "bitcoind.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) -}}
 {{- end -}}

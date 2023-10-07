@@ -1,4 +1,4 @@
-# Default values for bitcoin-core.
+# Default values for bitcoind.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -145,7 +145,7 @@ ingress:
 
 persistence:
   enabled: false
-  ## bitcoin-core data Persistent Volume Storage Class
+  ## bitcoind data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
@@ -164,15 +164,15 @@ persistence:
   size: 5Gi
 
   tls: []
-  #  - secretName: bitcoin-core-tls
+  #  - secretName: bitcoind-tls
   #    hosts:
-  #      - bitcoin-core.local
+  #      - bitcoind.local
 
 # cookiePersistence will mount a persistent volume with the rpc cookie (.cookie). This is
 # useful when using the nfs-client-provisioner and sharing this volume with other apps on the cluster.
 cookiePersistence:
   enabled: false
-  ## bitcoin-core data Persistent Volume Storage Class
+  ## bitcoind data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
@@ -191,9 +191,9 @@ cookiePersistence:
   size: 5Mi
 
   tls: []
-  #  - secretName: bitcoin-core-tls
+  #  - secretName: bitcoind-tls
   #    hosts:
-  #      - bitcoin-core.local
+  #      - bitcoind.local
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

@@ -2,24 +2,24 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ template "bitcoin-core.name" . }}
-    chart: {{ template "bitcoin-core.chart" . }}
+    app: {{ template "bitcoind.name" . }}
+    chart: {{ template "bitcoind.chart" . }}
     heritage: {{ .Release.Service }}
-    {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoin-core
+    {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoind
 
     {{- if .Values.deploymentLabels }}
 {{ toYaml .Values.deploymentLabels | indent 4 }}
     {{- end }}
-  name: {{ template "bitcoin-core.fullname" . }}
+  name: {{ template "bitcoind.fullname" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
     type: {{ .Values.strategyType }}
   selector:
     matchLabels:
-      app: {{ template "bitcoin-core.name" . }}
+      app: {{ template "bitcoind.name" . }}
     {{- if .Values.useComponentLabel }}
-      {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoin-core
+      {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoind
     {{- end }}
   template:
     metadata:
@@ -33,9 +33,9 @@ spec:
       {{- end }}
       {{- end }}
       labels:
-        app: {{ template "bitcoin-core.name" . }}
+        app: {{ template "bitcoind.name" . }}
         component: "{{ .Values.name }}"
-        {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoin-core
+        {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoind
         {{- if .Values.podLabels }}
 {{ toYaml .Values.podLabels | indent 8 }}
         {{- end }}
@@ -44,7 +44,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ template "bitcoin-core.serviceAccountName" . }}
+      serviceAccountName: {{ template "bitcoind.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: 300
@@ -128,7 +128,7 @@ spec:
           type: Directory
         {{- else }}
         persistentVolumeClaim:
-          claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{- else }}{{ template "bitcoin-core.fullname" . }}{{- end }}
+          claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{- else }}{{ template "bitcoind.fullname" . }}{{- end }}
         {{- end }}
       {{- else }}
         emptyDir: {}
@@ -141,7 +141,7 @@ spec:
           type: Directory
         {{- else }}
         persistentVolumeClaim:
-          claimName: {{ if .Values.cookiePersistence.existingClaim }}{{ .Values.cookiePersistence.existingClaim }}{{- else }}{{ template "bitcoin-core.fullname" . }}-authcookie{{- end }}
+          claimName: {{ if .Values.cookiePersistence.existingClaim }}{{ .Values.cookiePersistence.existingClaim }}{{- else }}{{ template "bitcoind.fullname" . }}-authcookie{{- end }}
         {{- end }}
       {{- else }}
         emptyDir: {}

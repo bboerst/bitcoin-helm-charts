@@ -3,10 +3,10 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "bitcoin-core.fullname" . }}
+  name: {{ template "bitcoind.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "bitcoin-core.name" . }}
-    helm.sh/chart: {{ include "bitcoin-core.chart" . }}
+    app.kubernetes.io/name: {{ include "bitcoind.name" . }}
+    helm.sh/chart: {{ include "bitcoind.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
