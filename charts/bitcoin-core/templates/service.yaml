@@ -13,11 +13,11 @@ metadata:
 {{- if .Values.service.labels }}
 {{ toYaml .Values.service.labels | indent 4 }}
 {{- end }}
-    app: {{ template "bitcoind.name" . }}
-    chart: {{ template "bitcoind.chart" . }}
+    app: {{ template "bitcoin-core.name" . }}
+    chart: {{ template "bitcoin-core.chart" . }}
     component: "{{ .Values.name }}"
     heritage: {{ .Release.Service }}
-  name: {{ template "bitcoind.fullname" . }}
+  name: {{ template "bitcoin-core.fullname" . }}
 spec:
 {{- if not .Values.service.omitClusterIP }}
   {{- with .Values.service.clusterIP }}
@@ -87,7 +87,7 @@ spec:
      {{- end }}
   {{- end }}
   selector:
-    app: {{ template "bitcoind.name" . }}
+    app: {{ template "bitcoin-core.name" . }}
     {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoin-core
   type: "{{ .Values.service.type }}"
 {{- end }}

@@ -1,19 +1,19 @@
 {{- if .Values.ingress.enabled -}}
-{{- $ingressApiIsStable := eq (include "bitcoind.ingress.isStable" .) "true" -}}
-{{- $ingressSupportsIngressClassName := eq (include "bitcoind.ingress.supportsIngressClassName" .) "true" -}}
-{{- $ingressSupportsPathType := eq (include "bitcoind.ingress.supportsPathType" .) "true" -}}
-{{- $fullName := include "bitcoind.fullname" . -}}
+{{- $ingressApiIsStable := eq (include "bitcoin-core.ingress.isStable" .) "true" -}}
+{{- $ingressSupportsIngressClassName := eq (include "bitcoin-core.ingress.supportsIngressClassName" .) "true" -}}
+{{- $ingressSupportsPathType := eq (include "bitcoin-core.ingress.supportsPathType" .) "true" -}}
+{{- $fullName := include "bitcoin-core.fullname" . -}}
 {{- $servicePort := .Values.service.tcpPort -}}
 {{- $ingressPath := .Values.ingress.path -}}
 {{- $ingressPathType := .Values.ingress.pathType -}}
 {{- $extraPaths := .Values.ingress.extraPaths -}}
-apiVersion: {{ include "bitcoind.ingress.apiVersion" . }}
+apiVersion: {{ include "bitcoin-core.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
-  namespace: {{ template "bitcoind.namespace" . }}
+  namespace: {{ template "bitcoin-core.namespace" . }}
   labels:
-    {{- include "bitcoind.labels" . | nindent 4 }}
+    {{- include "bitcoin-core.labels" . | nindent 4 }}
 {{- if .Values.ingress.labels }}
 {{ toYaml .Values.ingress.labels | indent 4 }}
 {{- end }}

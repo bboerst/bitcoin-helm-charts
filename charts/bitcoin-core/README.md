@@ -18,7 +18,7 @@ A Helm chart for bitcoin-core
 | cookiePersistence.tls | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"lncm/bitcoind"` |  |
+| image.repository | string | `"lncm/bitcoin-core"` |  |
 | image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |

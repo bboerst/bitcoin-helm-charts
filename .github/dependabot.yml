@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: "docker"
-    directory: "charts/bitcoind"
+    directory: "charts/bitcoin-core"
     schedule:
       interval: "daily"
 
