@@ -14,7 +14,12 @@ updates:
     directory: "charts/fulcrum"
     schedule:
       interval: "daily"
-  
+
+  - package-ecosystem: "docker"
+    directory: "charts/lnd"
+    schedule:
+      interval: "daily"
+
   - package-ecosystem: "docker"
     directory: "charts/lndhub"
     schedule:

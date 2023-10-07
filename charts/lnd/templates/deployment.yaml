@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "lnd.fullname" . }}
+  labels:
+    app: {{ template "lnd.name" . }}
+    chart: {{ template "lnd.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "lnd.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        app: {{ template "lnd.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      {{- if .Values.configurationFile }}
+      initContainers:
+        - name: copy-lnd-config
+          image: busybox
+          {{- if .Values.extraconfig }}
+          command: ['sh', '-c', 'for f in /configmap/*.conf; do (cat "${f}"; echo) >> /root/.lnd/lnd.conf; done']
+          {{- else }}
+          command: ['sh', '-c', 'cat /configmap/lnd.conf > /root/.lnd/lnd.conf']
+          {{- end }}
+          volumeMounts:
+            - name: configmap
+              mountPath: /configmap
+            - name: config
+              mountPath: /root/.lnd/
+      {{- end }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ template "lnd.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: {{ template "lnd.fullname" . }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}"
+          command:
+{{ toYaml .Values.command | indent 12 }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          ports:
+            - name: rpc
+              containerPort: {{ .Values.internalServices.rpcPort }}
+            - name: rest
+              containerPort: {{ .Values.internalServices.restPort }}
+            - name: prometheus
+              containerPort: {{ .Values.internalServices.prometheusPort }}
+            - name: p2p
+              containerPort: {{ .Values.externalServices.p2pPort }}
+          volumeMounts:
+            - name: data
+              mountPath: /root/.lnd
+              subPath: .lnd
+            {{- if .Values.configurationFile }}
+            - name: config
+              mountPath: /root/.lnd/lnd.conf
+              subPath: lnd.conf
+            {{- end }}
+            {{- if .Values.autoUnlock }}
+            - name: secrets
+              mountPath: /passwords/wallet_password
+              subPath: wallet_password
+            {{- end }}
+          lifecycle:
+            preStop:
+              exec:
+                # Make sure we safely quit lnd so we don't corrupt
+                # anything
+                command: ["/bin/lncli", "-n", "{{ .Values.network }}", "stop"]
+      volumes:
+        {{- if .Values.autoUnlock }}
+        - name: secrets
+          secret:
+            secretName: {{ template "lnd.fullname" . }}
+        {{- end }}
+        {{- if .Values.configurationFile }}
+        - name: config
+          emptyDir: {}
+        - name: configmap
+          projected:
+            sources:
+              - configMap:
+                  name: {{ template "lnd.fullname" . }}
+              {{- if .Values.extraconfig }}
+              - secret:
+                  name: {{ .Values.extraconfig.secretName}}
+              {{- end }}
+        {{- end }}
+        - name: data
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "lnd.fullname" .) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end -}}
