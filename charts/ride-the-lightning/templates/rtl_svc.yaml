@@ -1,0 +1,19 @@
+{{- if .Values.rtl.enable -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "lnd.fullname" . }}-rtl
+  labels:
+    app: {{ template "lnd.name" . }}-rtl
+    chart: {{ template "lnd.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  ports:
+    - name: http
+      port: {{ .Values.rtl.port }}
+      targetPort: 3000
+  selector:
+    app: {{ template "lnd.name" . }}-rtl
+    release: {{ .Release.Name }}
+{{- end }}
