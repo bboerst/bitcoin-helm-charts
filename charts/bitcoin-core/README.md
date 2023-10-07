@@ -1,6 +1,6 @@
 # bitcoin-core
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![AppVersion: v25.0](https://img.shields.io/badge/AppVersion-v25.0-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![AppVersion: v25.0](https://img.shields.io/badge/AppVersion-v25.0-informational?style=flat-square)
 
 A Helm chart for bitcoin-core
 
@@ -18,7 +18,7 @@ A Helm chart for bitcoin-core
 | cookiePersistence.tls | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"lncm/bitcoin-core"` |  |
+| image.repository | string | `"lncm/bitcoind"` |  |
 | image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
