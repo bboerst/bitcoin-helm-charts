@@ -123,6 +123,15 @@ entries:
     version: 0.1.0
   thunderhub:
   - apiVersion: v1
+    appVersion: v0.13.23
+    created: "2023-10-07T16:18:24.425908117Z"
+    description: A Helm chart for thunderhub
+    digest: 918a2aa461485f3c4e121e2164029e23604384ea0396aa5589777fac677b78a4
+    name: thunderhub
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/thunderhub-0.1.1/thunderhub-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v1
     appVersion: v0.13.21
     created: "2023-10-07T14:15:42.692355905Z"
     description: A Helm chart for thunderhub
@@ -144,4 +153,4 @@ entries:
     urls:
     - https://github.com/bboerst/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2023-10-07T15:40:20.990619067Z"
+generated: "2023-10-07T16:18:24.425918917Z"
