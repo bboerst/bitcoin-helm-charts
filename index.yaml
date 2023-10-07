@@ -72,6 +72,20 @@ entries:
     urls:
     - https://github.com/bboerst/bitcoin-helm-charts/releases/download/lndhub-1.0.0/lndhub-1.0.0.tgz
     version: 1.0.0
+  - apiVersion: v2
+    appVersion: v1.4.1
+    created: "2023-10-07T14:32:10.296599532Z"
+    dependencies:
+    - name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 18.1.2
+    description: A Helm chart for Kubernetes
+    digest: d040754273f2537f6aa4da82c81349f429fca04c443e6527733d97211f1ed1ed
+    name: lndhub
+    type: application
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/lndhub-0.1.1/lndhub-0.1.1.tgz
+    version: 0.1.1
   mempool:
   - apiVersion: v2
     appVersion: v2.5.0
@@ -153,4 +167,4 @@ entries:
     urls:
     - https://github.com/bboerst/bitcoin-helm-charts/releases/download/tor-1.0.1/tor-1.0.1.tgz
     version: 1.0.1
-generated: "2023-10-07T14:15:42.692365605Z"
+generated: "2023-10-07T14:32:10.296613932Z"
