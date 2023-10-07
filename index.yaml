@@ -1,24 +1,5 @@
 apiVersion: v1
 entries:
-  bitcoin-core:
-  - apiVersion: v1
-    appVersion: v25.0
-    created: "2023-10-07T14:59:25.249279067Z"
-    description: A Helm chart for bitcoin-core
-    digest: 35aba22809988e5a6f26f60c44586b483feb77a1a131f1abb2d08ce4a0c6454e
-    name: bitcoin-core
-    urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/bitcoin-core-0.1.4/bitcoin-core-0.1.4.tgz
-    version: 0.1.4
-  - apiVersion: v1
-    appVersion: v25.0
-    created: "2023-10-07T14:50:03.139549875Z"
-    description: A Helm chart for bitcoin-core
-    digest: 7d51a39322921abfee8040e6db1c51e1e8c547ef0e679553c182a44666706c49
-    name: bitcoin-core
-    urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/bitcoin-core-0.1.3/bitcoin-core-0.1.3.tgz
-    version: 0.1.3
   bitcoind:
   - apiVersion: v1
     appVersion: v25.0
