@@ -8,7 +8,7 @@ entries:
     digest: cf605346375fef1574b07bfb2504f6d2fa6f86038f58557eedbd78415fe64250
     name: bitcoind
     urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/bitcoind-0.1.5/bitcoind-0.1.5.tgz
+    - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/bitcoind-0.1.5/bitcoind-0.1.5.tgz
     version: 0.1.5
   btc-rpc-explorer:
   - apiVersion: v2
@@ -21,7 +21,7 @@ entries:
     name: btc-rpc-explorer
     type: application
     urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/btc-rpc-explorer-3.2.0/btc-rpc-explorer-3.2.0.tgz
+    - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/btc-rpc-explorer-3.2.0/btc-rpc-explorer-3.2.0.tgz
     version: 3.2.0
   fulcrum:
   - apiVersion: v2
@@ -32,7 +32,7 @@ entries:
     name: fulcrum
     type: application
     urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/fulcrum-0.1.1/fulcrum-0.1.1.tgz
+    - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/fulcrum-0.1.1/fulcrum-0.1.1.tgz
     version: 0.1.1
   lnd:
   - apiVersion: v1
@@ -46,7 +46,7 @@ entries:
     - bitcoin
     name: lnd
     urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/lnd-0.1.0/lnd-0.1.0.tgz
+    - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/lnd-0.1.0/lnd-0.1.0.tgz
     version: 0.1.0
   lndhub:
   - apiVersion: v2
@@ -61,7 +61,7 @@ entries:
     name: lndhub
     type: application
     urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/lndhub-0.1.1/lndhub-0.1.1.tgz
+    - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/lndhub-0.1.1/lndhub-0.1.1.tgz
     version: 0.1.1
   mempool:
   - apiVersion: v2
@@ -75,7 +75,7 @@ entries:
     digest: fff2e785f619e582c47fa07b95003cc581cf8c87074f966b97a0a02ad1c999b7
     name: mempool
     urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/mempool-0.1.2/mempool-0.1.2.tgz
+    - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/mempool-0.1.2/mempool-0.1.2.tgz
     version: 0.1.2
   prometheus-bitcoind-exporter:
   - apiVersion: v1
@@ -94,9 +94,9 @@ entries:
       name: bboerst
     name: prometheus-bitcoind-exporter
     sources:
-    - https://github.com/bboerst/helm-charts/
+    - https://github.com/genesisplatformstack/helm-charts/
     urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/prometheus-bitcoind-exporter-0.1.0/prometheus-bitcoind-exporter-0.1.0.tgz
+    - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/prometheus-bitcoind-exporter-0.1.0/prometheus-bitcoind-exporter-0.1.0.tgz
     version: 0.1.0
   prometheus-bosminer-exporter:
   - apiVersion: v1
@@ -117,9 +117,9 @@ entries:
       name: bboerst
     name: prometheus-bosminer-exporter
     sources:
-    - https://github.com/bboerst/helm-charts/
+    - https://github.com/genesisplatformstack/helm-charts/
     urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/prometheus-bosminer-exporter-0.1.0/prometheus-bosminer-exporter-0.1.0.tgz
+    - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/prometheus-bosminer-exporter-0.1.0/prometheus-bosminer-exporter-0.1.0.tgz
     version: 0.1.0
   thunderhub:
   - apiVersion: v1
@@ -129,7 +129,7 @@ entries:
     digest: 918a2aa461485f3c4e121e2164029e23604384ea0396aa5589777fac677b78a4
     name: thunderhub
     urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/thunderhub-0.1.1/thunderhub-0.1.1.tgz
+    - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/thunderhub-0.1.1/thunderhub-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v1
     appVersion: v0.13.21
@@ -138,7 +138,7 @@ entries:
     digest: 57899b908ee3c1432c48963a30eed5b43efc89488869b0be65948581aa5fbd47
     name: thunderhub
     urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/thunderhub-0.1.0/thunderhub-0.1.0.tgz
+    - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/thunderhub-0.1.0/thunderhub-0.1.0.tgz
     version: 0.1.0
   tor:
   - apiVersion: v2
@@ -151,6 +151,6 @@ entries:
     name: tor
     type: application
     urls:
-    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
+    - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
 generated: "2023-10-07T16:18:24.425918917Z"
