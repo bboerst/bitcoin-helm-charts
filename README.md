@@ -16,7 +16,7 @@ Welcome to `bitcoin-helm-charts`, a curated repository hosting a collection of H
 
 To use the charts from this repository, execute the following commands:
 ```sh
-helm repo add bitcoin-helm-charts https://bitcoin-helm-charts.genesisplatformstack.org
+helm repo add bitcoin-helm-charts https://helm.genesisplatformstack.org
 helm repo update
 ```
 
