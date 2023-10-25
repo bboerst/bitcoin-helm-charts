@@ -16,13 +16,13 @@ Welcome to `bitcoin-helm-charts`, a curated repository hosting a collection of H
 
 To use the charts from this repository, execute the following commands:
 ```sh
-helm repo add bitcoin-helm https://bitcoin-helm.genesisplatformstack.org
+helm repo add bitcoin-helm-charts https://bitcoin-helm-charts.boerst.com
 helm repo update
 ```
 
 To install a chart. Example:
 ```sh
-helm upgrade --install bitcoind bitcoin-helm/bitcoind --values ~/fulcrum-helm-overrides.yaml --namespace bitcoin
+helm upgrade --install bitcoind bitcoin-helm-charts/bitcoind --values ~/fulcrum-helm-overrides.yaml --namespace bitcoin
 ```
 
 ## Usage
