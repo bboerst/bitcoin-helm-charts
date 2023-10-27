@@ -1,10 +1,9 @@
----
-apiVersion: v1
+apiVersion: v2
 appVersion: "v0.1.0"
 description: bitcoind exporter to monitor bitcion-core metrics with Prometheus
 engine: gotpl
 name: prometheus-bitcoind-exporter
-version: 0.1.0
+version: 0.1.1
 maintainers:
 - email: brian@boerst.com
   name: bboerst
