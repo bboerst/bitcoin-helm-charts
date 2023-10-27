@@ -1,6 +1,7 @@
 apiVersion: v2
-appVersion: "v1.9.1"
+type: application
 description: fulcrum helm chart
 name: fulcrum
-type: application
 version: 0.1.1
+# renovate: image=cculianu/fulcrum
+appVersion: "v1.9.1"
