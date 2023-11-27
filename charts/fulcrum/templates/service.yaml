@@ -44,38 +44,14 @@ spec:
   healthCheckNodePort: {{ .Values.service.healthCheckNodePort }}
 {{- end }}
   ports:
-    {{- $setNodePorts := (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) }}
-    {{- if .Values.service.enableRpc }}
-    - name: rpc
-      port: {{ .Values.service.ports.rpc }}
+    - name: tcp
+      port: {{ .Values.service.ports.tcp }}
       protocol: TCP
-      targetPort: {{ .Values.service.targetPorts.rpc }}
-      {{- if (and $setNodePorts (not (empty .Values.service.nodePorts.rpc))) }}
-      nodePort: {{ .Values.service.nodePorts.rpc }}
-      {{- end }}
-    {{- end }}
-  {{- range $port := .Values.service.ports.tcp }}
-    - name: "{{ $port }}-tcp"
-      port: {{ $port }}
+      targetPort: tcp
+    - name: ssl
+      port: {{ .Values.service.ports.ssl }}
       protocol: TCP
-      targetPort: "{{ $port }}-tcp"
-     {{- if $.Values.service.nodePorts.tcp }}
-      {{- if index $.Values.service.nodePorts.tcp $port }}
-      nodePort: {{ index $.Values.service.nodePorts.tcp $port }}
-      {{- end }}
-     {{- end }}
-  {{- end }}
-  {{- range $port := .Values.service.ports.udp }}
-    - name: "{{ $port }}-udp"
-      port: {{ $port }}
-      protocol: UDP
-      targetPort: "{{ $port }}-udp"
-     {{- if $.Values.service.nodePorts.udp }}
-      {{- if index $.Values.service.nodePorts.udp $port }}
-      nodePort: {{ index $.Values.service.nodePorts.udp $port }}
-      {{- end }}
-     {{- end }}
-  {{- end }}
+      targetPort: ssl
   selector:
     app: {{ template "fulcrum.name" . }}
     {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: fulcrum
