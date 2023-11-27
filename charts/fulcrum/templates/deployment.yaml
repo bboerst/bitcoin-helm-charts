@@ -63,7 +63,7 @@ spec:
           ports:
           {{- if .Values.service.enableRpc }}
             - name: rpc
-              containerPort: {{ .Values.service.ports.rpc }}
+              containerPort: {{ .Values.service.targetPorts.rpc }}
               protocol: TCP
           {{- end }}
           {{- range $port := .Values.service.ports.tcp }}

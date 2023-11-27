@@ -1,0 +1,46 @@
+{{- if .Values.traefikIngressRoute.enabled -}}
+
+{{- if .Values.traefikIngressRoute.certificate.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ template "fulcrum.fullname" . }}-tls
+spec:
+  secretName: {{ template "fulcrum.fullname" . }}-secret
+  issuerRef:
+    name: {{ .Values.traefikIngressRoute.certificate.issuerRef.name }}
+    kind: {{ .Values.traefikIngressRoute.certificate.issuerRef.kind }}
+  dnsNames: {{ .Values.traefikIngressRoute.certificate.dnsNames }}
+{{- end }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  labels:
+    {{- include "fulcrum.labels" . | nindent 4 }}
+{{- if .Values.traefikIngressRoute.labels }}
+{{ toYaml .Values.traefikIngressRoute.labels | indent 4 }}
+{{- end }}
+  name: {{ template "fulcrum.fullname" . }}
+  {{- if .Values.traefikIngressRoute.annotations }}
+  annotations:
+    {{- range $key, $value := .Values.traefikIngressRoute.annotations }}
+    {{ $key }}: {{ tpl $value $ | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  entryPoints:
+  # Ensure that you have an entrypoint configured for traefik, like this:
+  #  additionalArguments:
+  #  - "--entrypoints.electrum-50001.address=:50001"
+  - {{ .Values.traefikIngressRoute.entrypoint }}
+  routes:
+  - match: HostSNI(`*`)
+    services:
+    - name: {{ include "fulcrum.fullname" . }}
+      port: 50001
+  {{- if .Values.traefikIngressRoute.certificate.enabled }}
+  tls:
+    secretName: {{ template "fulcrum.fullname" . }}-secret
+  {{- end }}
+{{- end }}
