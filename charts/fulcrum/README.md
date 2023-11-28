@@ -27,7 +27,6 @@ fulcrum helm chart
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
 | service.annotations | object | `{}` |  |
-| service.enableRpc | bool | `true` |  |
 | service.enabled | bool | `true` |  |
 | service.externalIPs | list | `[]` |  |
 | service.externalTrafficPolicy | string | `""` |  |
@@ -35,16 +34,13 @@ fulcrum helm chart
 | service.labels | object | `{}` |  |
 | service.loadBalancerIP | string | `""` |  |
 | service.loadBalancerSourceRanges | list | `[]` |  |
-| service.nodePorts.rpc | string | `""` |  |
-| service.nodePorts.tcp | object | `{}` |  |
-| service.nodePorts.udp | object | `{}` |  |
 | service.omitClusterIP | bool | `false` |  |
-| service.ports.rpc | int | `50001` |  |
-| service.ports.tcp | object | `{}` |  |
-| service.ports.udp | object | `{}` |  |
+| service.ports.ssl | int | `50002` |  |
+| service.ports.tcp | int | `50001` |  |
 | service.sessionAffinity | string | `""` |  |
-| service.targetPorts.rpc | int | `50001` |  |
-| service.type | string | `"NodePort"` |  |
+| service.targetPorts.ssl | int | `50002` |  |
+| service.targetPorts.tcp | int | `50001` |  |
+| service.type | string | `"ClusterIP"` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `nil` |  |
 | strategyType | string | `"Recreate"` |  |
@@ -54,8 +50,9 @@ fulcrum helm chart
 | traefikIngressRoute.certificate.enabled | bool | `false` |  |
 | traefikIngressRoute.certificate.issuerRef.kind | string | `"ClusterIssuer"` |  |
 | traefikIngressRoute.certificate.issuerRef.name | string | `"letsencrypt-prod"` |  |
+| traefikIngressRoute.certificate.mountCertificate | bool | `true` |  |
 | traefikIngressRoute.enabled | bool | `false` |  |
-| traefikIngressRoute.entrypoint | string | `"electrum-50001"` |  |
+| traefikIngressRoute.entrypoint | string | `"electrum-50002"` |  |
 | traefikIngressRoute.labels | object | `{}` |  |
 
 ----------------------------------------------
