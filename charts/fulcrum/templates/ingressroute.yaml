@@ -32,15 +32,11 @@ spec:
   entryPoints:
   # Ensure that you have an entrypoint configured for traefik, like this:
   #  additionalArguments:
-  #  - "--entrypoints.electrum-50001.address=:50001"
+  #  - "--entrypoints.electrum-50002.address=:50002"
   - {{ .Values.traefikIngressRoute.entrypoint }}
   routes:
   - match: HostSNI(`*`)
     services:
     - name: {{ include "fulcrum.fullname" . }}
-      port: 50001
-  {{- if .Values.traefikIngressRoute.certificate.enabled }}
-  tls:
-    secretName: {{ template "fulcrum.fullname" . }}-secret
-  {{- end }}
+      port: 50002
 {{- end }}

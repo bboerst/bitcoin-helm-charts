@@ -25,12 +25,13 @@ config: |
 traefikIngressRoute:
   enabled: false
 
-  entrypoint: electrum-50001
+  entrypoint: electrum-50002
   annotations: {}
   labels: {}
   
   certificate:
     enabled: false
+    mountCertificate: true
     dnsNames:
       - "myelectrumserver.domain.com"
 
@@ -76,8 +77,6 @@ service:
   loadBalancerIP: ""
   loadBalancerSourceRanges: []
 
-  enableRpc: true
-
   ## Set external traffic policy to: "Local" to preserve source IP on
   ## providers supporting it
   ## Ref: https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-typeloadbalancer
@@ -90,24 +89,14 @@ service:
   healthCheckNodePort: 0
 
   ports:
-    rpc: 50001
-    tcp: {}
-    udp: {}
+    tcp: 50001
+    ssl: 50002
 
   targetPorts:
-    rpc: 50001
+    tcp: 50001
+    ssl: 50002
 
-  type: NodePort
-
-  # type: NodePort
-  # nodePorts:
-  #   rpc: 50001
-  #   tcp: {}
-  #   udp: {}
-  nodePorts:
-    rpc: ""
-    tcp: {}
-    udp: {}
+  type: ClusterIP
 
 persistence:
   enabled: false
