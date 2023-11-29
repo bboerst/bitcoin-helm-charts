@@ -33,6 +33,23 @@ config:
     # base64 encoded admin.macaroon
     admin_macaroon: lndmacaroooooooooooooooon
 
+traefikIngressRoute:
+  enabled: false
+
+  entrypoint: lnd-3002
+  annotations: {}
+  labels: {}
+  
+  certificate:
+    enabled: false
+    mountCertificate: true
+    dnsNames:
+      - "mylndhub.domain.com"
+
+    issuerRef:
+      name: letsencrypt-prod
+      kind: ClusterIssuer
+
 persistence:
   enabled: false
   ## Set storageClassName if you have no default defined
@@ -78,22 +95,7 @@ securityContext:
 
 service:
   type: ClusterIP
-  port: 3000
-
-ingress:
-  enabled: false
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-production
-    kubernetes.io/ingress.class: traefik-cert-manager
-  hosts:
-    - host: lndhub.domain
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: lndhub-tls
-      hosts:
-        - lndhub.domain
+  port: 3002
 
 resources:
   {}

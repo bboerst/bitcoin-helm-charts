@@ -57,13 +57,13 @@ spec:
 {{ toYaml .Values.resources | indent 12 }}
           ports:
             - name: rpc
-              containerPort: {{ .Values.internalServices.rpcPort }}
+              containerPort: {{ .Values.service.rpcPort }}
             - name: rest
-              containerPort: {{ .Values.internalServices.restPort }}
+              containerPort: {{ .Values.service.restPort }}
             - name: prometheus
-              containerPort: {{ .Values.internalServices.prometheusPort }}
+              containerPort: {{ .Values.service.prometheusPort }}
             - name: p2p
-              containerPort: {{ .Values.externalServices.p2pPort }}
+              containerPort: {{ .Values.service.p2pPort }}
           volumeMounts:
             - name: data
               mountPath: /root/.lnd
@@ -77,6 +77,16 @@ spec:
             - name: secrets
               mountPath: /passwords/wallet_password
               subPath: wallet_password
+            {{- end }}
+            {{- if and .Values.certificate.enabled .Values.certificate.mountCertificate }}
+            - name: tls
+              mountPath: "/root/tls.cert"
+              subPath: tls.crt
+              readOnly: true
+            - name: tls
+              mountPath: "/root/tls.key"
+              subPath: tls.key
+              readOnly: true
             {{- end }}
           lifecycle:
             preStop:
@@ -110,3 +120,8 @@ spec:
         {{- else }}
           emptyDir: {}
         {{- end -}}
+        {{- if and .Values.certificate.enabled .Values.certificate.mountCertificate }}
+        - name: tls
+          secret:
+            secretName: {{ template "lnd.fullname" . }}-secret
+        {{- end }}

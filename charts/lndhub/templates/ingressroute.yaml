@@ -1,0 +1,47 @@
+{{- if .Values.traefikIngressRoute.enabled -}}
+
+{{- if .Values.traefikIngressRoute.certificate.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ template "lndhub.fullname" . }}-tls
+spec:
+  secretName: {{ template "lndhub.fullname" . }}-secret
+  issuerRef:
+    name: {{ .Values.traefikIngressRoute.certificate.issuerRef.name }}
+    kind: {{ .Values.traefikIngressRoute.certificate.issuerRef.kind }}
+  dnsNames: {{ .Values.traefikIngressRoute.certificate.dnsNames }}
+{{- end }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  labels:
+    {{- include "lndhub.labels" . | nindent 4 }}
+{{- if .Values.traefikIngressRoute.labels }}
+{{ toYaml .Values.traefikIngressRoute.labels | indent 4 }}
+{{- end }}
+  name: {{ template "lndhub.fullname" . }}
+  {{- if .Values.traefikIngressRoute.annotations }}
+  annotations:
+    {{- range $key, $value := .Values.traefikIngressRoute.annotations }}
+    {{ $key }}: {{ tpl $value $ | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  entryPoints:
+  # Ensure that you have an entrypoint configured for traefik, like this:
+  #  additionalArguments:
+  #  - "--entrypoints.lndhub-3002.address=:3002"
+  - {{ .Values.traefikIngressRoute.entrypoint }}
+  routes:
+  - match: HostSNI(`*`)
+    services:
+    - name: {{ include "lndhub.fullname" . }}
+      port: 3002
+      # {{- if and .Values.traefikIngressRoute.enabled .Values.traefikIngressRoute.certificate.enabled .Values.traefikIngressRoute.certificate.mountCertificate }}
+      # - name: tls
+      #   secret:
+      #     secretName: {{ template "lndhub.fullname" . }}-secret
+      # {{- end }}
+{{- end }}

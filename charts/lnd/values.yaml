@@ -21,10 +21,12 @@ serviceAccount:
 command:
   - lnd
 # Ports that are exposed to other pods in your cluster
-internalServices:
+service:
+  type: ClusterIP
   rpcPort: 10009
   restPort: 8080
   prometheusPort: 8989
+  p2pPort: 9735
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -37,47 +39,52 @@ securityContext:
   seccompProfile:
     type: RuntimeDefault
 
+certificate:
+  enabled: false
+  mountCertificate: true
+  dnsNames:
+    - "lnd.domain.com"
+
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    
 # Ingress for REST API and GRPC interface
 # only on test clusters eg. regtest
 # Not for production!
 ingress:
   rest:
-    enable: false
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-      nginx.ingress.kubernetes.io/enable-cors: "true"
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    hosts:
-      - host: lnd.example.com
-        paths:
-          - path: /
-            port: 8080
-    tls:
-      - hosts:
-          - lnd.example.com
-        secretName: lnd-tls-secret
+    enabled: false
+    # annotations:
+    #   kubernetes.io/ingress.class: nginx
+    #   cert-manager.io/cluster-issuer: letsencrypt-prod
+    #   nginx.ingress.kubernetes.io/enable-cors: "true"
+    #   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    # hosts:
+    #   - host: lnd.example.com
+    #     paths:
+    #       - path: /
+    #         port: 8080
+    # tls:
+    #   - hosts:
+    #       - lnd.example.com
+    #     secretName: lnd-tls-secret
   rpc:
     enabled: false
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-      nginx.ingress.kubernetes.io/enable-cors: "true"
-      nginx.ingress.kubernetes.io/backend-protocol: "GRPCS"
-    hosts:
-      - host: rpc.lnd.example.com
-        paths:
-          - path: /
-            port: 10009
-    tls:
-      - hosts:
-          - rpc.lnd.example.com
-        secretName: lnd-rpc-tls-secret
-
-# Ports that are visible outside your cluster
-externalServices:
-  p2pPort: 9735
-  type: LoadBalancer
+    # annotations:
+    #   kubernetes.io/ingress.class: nginx
+    #   cert-manager.io/cluster-issuer: letsencrypt-prod
+    #   nginx.ingress.kubernetes.io/enable-cors: "true"
+    #   nginx.ingress.kubernetes.io/backend-protocol: "GRPCS"
+    # hosts:
+    #   - host: rpc.lnd.example.com
+    #     paths:
+    #       - path: /
+    #         port: 10009
+    # tls:
+    #   - hosts:
+    #       - rpc.lnd.example.com
+    #     secretName: lnd-rpc-tls-secret
 
 persistence:
   enabled: false
