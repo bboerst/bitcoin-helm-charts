@@ -1,0 +1,57 @@
+{{- if .Values.jdClient.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+{{- if .Values.jdClient.service.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.jdClient.service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
+  labels:
+{{- if .Values.jdClient.service.labels }}
+{{ toYaml .Values.jdClient.service.labels | indent 4 }}
+{{- end }}
+    app: {{ template "stratum-v2.name" . }}
+    chart: {{ template "stratum-v2.chart" . }}
+    component: "{{ .Values.jdClient.name }}"
+    heritage: {{ .Release.Service }}
+  name: {{ template "stratum-v2.fullname" . }}-jd-client
+spec:
+{{- if not .Values.jdClient.service.omitClusterIP }}
+  {{- with .Values.jdClient.service.clusterIP }}
+  clusterIP: {{ if eq "-" . }}""{{ else }}{{ . | quote }}{{ end }}
+  {{- end }}
+{{- end }}
+{{- if .Values.jdClient.service.externalIPs }}
+  externalIPs:
+{{ toYaml .Values.jdClient.service.externalIPs | indent 4 }}
+{{- end }}
+{{- if .Values.jdClient.service.loadBalancerIP }}
+  loadBalancerIP: "{{ .Values.jdClient.service.loadBalancerIP }}"
+{{- end }}
+{{- if .Values.jdClient.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+{{ toYaml .Values.jdClient.service.loadBalancerSourceRanges | indent 4 }}
+{{- end }}
+{{- if and (semverCompare ">=1.7-0" .Capabilities.KubeVersion.GitVersion) (.Values.jdClient.service.externalTrafficPolicy) }}
+  externalTrafficPolicy: "{{ .Values.jdClient.service.externalTrafficPolicy }}"
+{{- end }}
+{{- if .Values.jdClient.service.sessionAffinity }}
+  sessionAffinity: "{{ .Values.jdClient.service.sessionAffinity }}"
+{{- end }}
+{{- if and (semverCompare ">=1.7-0" .Capabilities.KubeVersion.GitVersion) (.Values.jdClient.service.healthCheckNodePort) }}
+  healthCheckNodePort: {{ .Values.jdClient.service.healthCheckNodePort }}
+{{- end }}
+  ports:
+  {{- range $port := .Values.jdClient.service.ports.tcp }}
+    - name: "{{ $port }}-tcp"
+      port: {{ $port }}
+      protocol: TCP
+      targetPort: "{{ $port }}-tcp"
+  {{- end }}
+  selector:
+    app: {{ template "stratum-v2.name" . }}
+    {{ .Values.jdClient.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: stratum-v2
+  type: "{{ .Values.jdClient.service.type }}"
+{{- end }}

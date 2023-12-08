@@ -1,0 +1,57 @@
+{{- if and .Values.translator.enabled .Values.translator.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+{{- if .Values.translator.service.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.translator.service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
+  labels:
+{{- if .Values.translator.service.labels }}
+{{ toYaml .Values.translator.service.labels | indent 4 }}
+{{- end }}
+    app: {{ template "stratum-v2.name" . }}
+    chart: {{ template "stratum-v2.chart" . }}
+    component: "{{ .Values.translator.name }}"
+    heritage: {{ .Release.Service }}
+  name: {{ template "stratum-v2.fullname" . }}-translator
+spec:
+{{- if not .Values.translator.service.omitClusterIP }}
+  {{- with .Values.translator.service.clusterIP }}
+  clusterIP: {{ if eq "-" . }}""{{ else }}{{ . | quote }}{{ end }}
+  {{- end }}
+{{- end }}
+{{- if .Values.translator.service.externalIPs }}
+  externalIPs:
+{{ toYaml .Values.translator.service.externalIPs | indent 4 }}
+{{- end }}
+{{- if .Values.translator.service.loadBalancerIP }}
+  loadBalancerIP: "{{ .Values.translator.service.loadBalancerIP }}"
+{{- end }}
+{{- if .Values.translator.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+{{ toYaml .Values.translator.service.loadBalancerSourceRanges | indent 4 }}
+{{- end }}
+{{- if and (semverCompare ">=1.7-0" .Capabilities.KubeVersion.GitVersion) (.Values.translator.service.externalTrafficPolicy) }}
+  externalTrafficPolicy: "{{ .Values.translator.service.externalTrafficPolicy }}"
+{{- end }}
+{{- if .Values.translator.service.sessionAffinity }}
+  sessionAffinity: "{{ .Values.translator.service.sessionAffinity }}"
+{{- end }}
+{{- if and (semverCompare ">=1.7-0" .Capabilities.KubeVersion.GitVersion) (.Values.translator.service.healthCheckNodePort) }}
+  healthCheckNodePort: {{ .Values.translator.service.healthCheckNodePort }}
+{{- end }}
+  ports:
+  {{- range $port := .Values.translator.service.ports.tcp }}
+    - name: "{{ $port }}-tcp"
+      port: {{ $port }}
+      protocol: TCP
+      targetPort: "{{ $port }}-tcp"
+  {{- end }}
+  selector:
+    app: {{ template "stratum-v2.name" . }}
+    {{ .Values.translator.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: stratum-v2
+  type: "{{ .Values.translator.service.type }}"
+{{- end }}

@@ -1,0 +1,106 @@
+{{- if .Values.translator.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ template "stratum-v2.name" . }}
+    chart: {{ template "stratum-v2.chart" . }}
+    heritage: {{ .Release.Service }}
+    {{ .Values.translator.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: stratum-v2
+
+    {{- if .Values.translator.deploymentLabels }}
+{{ toYaml .Values.translator.deploymentLabels | indent 4 }}
+    {{- end }}
+  name: {{ template "stratum-v2.fullname" . }}-translator
+spec:
+  replicas: {{ .Values.translator.replicaCount }}
+  strategy:
+    type: {{ .Values.translator.strategyType }}
+  selector:
+    matchLabels:
+      app: {{ template "stratum-v2.name" . }}
+    {{- if .Values.translator.useComponentLabel }}
+      {{ .Values.translator.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: stratum-v2
+    {{- end }}
+  template:
+    metadata:
+      {{- if or .Values.translator.podAnnotations .Values.translator.podAnnotationConfigChecksum }}
+      annotations:
+      {{- range $key, $value := .Values.translator.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- if .Values.translator.podAnnotationConfigChecksum }}
+        checksum/config: {{ tpl (toYaml .Values) . | sha256sum }}
+      {{- end }}
+      {{- end }}
+      labels:
+        app: {{ template "stratum-v2.name" . }}
+        component: "{{ .Values.translator.name }}"
+        {{ .Values.translator.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: stratum-v2
+        {{- if .Values.translator.podLabels }}
+{{ toYaml .Values.translator.podLabels | indent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ template "stratum-v2.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.translator.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.translator.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /stratum/translator_sv2
+          args:
+            - -c
+            - /config/proxy-config.toml
+          {{-  range .Values.translator.arguments }}
+            - {{ . }}
+          {{ end }}
+          env:
+          {{- range $key, $val := .Values.translator.env }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+          {{- end }}
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          ports:
+          {{- range $port := .Values.translator.service.ports.tcp }}
+            - name: "{{ $port }}-tcp"
+              containerPort: {{ $port }}
+              protocol: TCP
+          {{- end }}
+          volumeMounts:
+            - name: config
+              mountPath: /config/proxy-config.toml
+              subPath: translator-config
+          resources:
+            {{- toYaml .Values.translator.resources | nindent 12 }}
+      {{- with .Values.translator.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.translator.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.translator.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+      - name: config
+        secret:
+        {{ if .Values.translator.existingConfigSecret }}
+          secretName: {{ .Values.translator.existingConfigSecret }}
+        {{ else }}
+          secretName: {{ .Release.Name }}-config
+        {{ end}}
+{{- end }}

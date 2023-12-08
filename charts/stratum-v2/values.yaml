@@ -1,0 +1,242 @@
+# Default values for stratum-v2.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: bboerst/stratum-1
+  pullPolicy: Always
+
+strategyType: Recreate
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+translator:
+  enabled: true
+
+  config: |
+    # Braiins Pool Upstream Connection
+    # upstream_authority_pubkey = "u95GEReVMjK6k5YqiSFNqqTnKU4ypU2Wm8awa6tmbmDmk1bWt"
+    # upstream_address = "18.196.32.109"
+    # upstream_port = 3336
+
+    # Local SRI Pool Upstream Connection
+    upstream_address = "10.1.50.101"
+    upstream_port = 34265
+    # upstream_address = "127.0.0.1"
+    # upstream_port = 34254
+    # upstream_authority_pubkey = "2di19GHYQnAZJmEpoUeP7C3Eg9TCcksHr23rZCC83dvUiZgiDL"
+    upstream_authority_pubkey = "3VANfft6ei6jQq1At7d8nmiZzVhBFS4CiQujdgim1ign"
+
+    # Local Mining Device Downstream Connection
+    downstream_address = "0.0.0.0"
+    downstream_port = 34255
+
+    # Version support
+    max_supported_version = 2
+    min_supported_version = 2
+
+    # Minimum extranonce2 size
+    min_extranonce2_size = 16
+
+    # Difficulty params
+    [downstream_difficulty_config]
+    # hashes/s of the weakest miner that will be connecting
+    min_individual_miner_hashrate=5_000_000.0
+    # minimum number of shares needed before a mining.set_difficulty is sent for updating targets
+    miner_num_submits_before_update=5
+    # target number of shares per minute the miner should be sending
+    shares_per_minute = 6.0
+
+    [upstream_difficulty_config]
+    # interval in seconds to elapse before updating channel hashrate with the pool
+    channel_diff_update_interval = 60
+    # estimated accumulated hashrate of all downstream miners
+    channel_nominal_hashrate = 5_000_000.0
+
+  arguments: []
+
+  env: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  service:
+    enabled: true
+
+    annotations: {}
+    labels: {}
+    ## Deprecated, instead simply do not provide a clusterIP value
+    omitClusterIP: false
+    # clusterIP: ""
+
+    ## List of IP addresses at which the controller services are available
+    ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+    ##
+    externalIPs: []
+
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+
+    ## Set external traffic policy to: "Local" to preserve source IP on
+    ## providers supporting it
+    ## Ref: https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-typeloadbalancer
+    externalTrafficPolicy: ""
+
+    # Must be either "None" or "ClientIP" if set. Kubernetes will default to "None".
+    # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+    sessionAffinity: ""
+
+    healthCheckNodePort: 0
+
+    ports:
+      tcp:
+        - 34255
+
+    targetPorts:
+      tcp: 34255
+
+    type: ClusterIP
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+
+jdClient:
+  config: |
+    # Example config: https://github.com/Fi3/stratum-1/blob/DEMAND-BRANCH/roles/jd-client/jdc-config.toml
+    downstream_address = "0.0.0.0"
+    downstream_port = 34265
+
+    max_supported_version = 2
+    min_supported_version = 2
+
+    min_extranonce2_size = 8
+
+    withhold = false
+
+    authority_public_key = "3VANfft6ei6jQq1At7d8nmiZzVhBFS4CiQujdgim1ign"
+    authority_secret_key = "7qbpUjScc865jyX2kiB4NVJANoC7GA7TAJupdzXWkc62"
+    cert_validity_sec = 3600
+
+    retry = 10
+
+    tp_address = "bitcoind.bitcoin.svc.cluster.local:8442"
+    tp_authority_pub_key = "3VANfft6ei6jQq1At7d8nmiZzVhBFS4CiQujdgim1ign"
+
+    coinbase_outputs = [
+        { output_script_type = "P2WPKH", output_script_value = "036adc3bdf21e6f9a0f0fb0066bf517e5b7909ed1563d6958a10993849a7554075" },
+    ]
+
+    [timeout]
+    unit = "secs"
+    value = 1
+
+    [[upstreams]]
+    authority_pubkey = "CzmNv9q5JfKTdXEBgTiq15aUTrQD4c3AP2ZSJo73ogSy"
+    pool_address = "141.125.110.185:2000"
+    jd_address = "141.125.110.185:2000"
+    pool_signature = "DEMAND:V2"
+
+  arguments: []
+
+  env:
+    POOL_KIND: SOLO
+    ADDRESS: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  service:
+    enabled: true
+
+    annotations: {}
+    labels: {}
+    ## Deprecated, instead simply do not provide a clusterIP value
+    omitClusterIP: false
+    # clusterIP: ""
+
+    ## List of IP addresses at which the controller services are available
+    ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+    ##
+    externalIPs: []
+
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+
+    ## Set external traffic policy to: "Local" to preserve source IP on
+    ## providers supporting it
+    ## Ref: https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-typeloadbalancer
+    externalTrafficPolicy: ""
+
+    # Must be either "None" or "ClientIP" if set. Kubernetes will default to "None".
+    # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+    sessionAffinity: ""
+
+    healthCheckNodePort: 0
+
+    ports:
+      tcp:
+        - 34265
+
+    targetPorts:
+      tcp: 34265
+
+    type: ClusterIP
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
