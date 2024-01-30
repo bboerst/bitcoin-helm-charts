@@ -62,6 +62,9 @@ arguments:
   # Useful for setting up and debugging a tor proxy
   # - -debug=tor
 
+  # Allow node to communicate with peers other encrypted connections
+  # - -v2transport=true
+
   ### The following flags work well when running on a RaspberryPi
   # - -dbcache=100
   # - -maxorphantx=10
