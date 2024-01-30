@@ -3,4 +3,4 @@ type: application
 description: stratum-v2 helm chart
 name: stratum-v2
 version: 0.1.0
-appVersion: "DEMAND-BRANCH-v3"
+appVersion: "DEMAND-BRANCH-v4"
