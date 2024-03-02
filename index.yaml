@@ -12,6 +12,18 @@ entries:
     version: 0.1.5
   btc-rpc-explorer:
   - apiVersion: v2
+    appVersion: 3.4.0
+    created: "2024-03-02T16:25:06.794807714Z"
+    description: btc-rpc-explorer helm chart. The container can be started as middle(guard)-
+      , bridge- , exit-relay or as proxy exposing only the Socks5 Port per default
+      when running.
+    digest: 94a9243397929b08420ddefe6de40853920d746cbaf2dcbcecc4e01a75eca821
+    name: btc-rpc-explorer
+    type: application
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/btc-rpc-explorer-3.4.0/btc-rpc-explorer-3.4.0.tgz
+    version: 3.4.0
+  - apiVersion: v2
     appVersion: 3.2.0
     created: "2023-09-30T15:10:17.406231024Z"
     description: btc-rpc-explorer helm chart. The container can be started as middle(guard)-
@@ -194,4 +206,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2024-03-02T16:18:06.870812428Z"
+generated: "2024-03-02T16:25:06.794830226Z"
