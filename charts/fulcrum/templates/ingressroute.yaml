@@ -1,6 +1,6 @@
-{{- if .Values.traefikIngressRoute.enabled -}}
+{{- if and (.Capabilities.APIVersions.Has "traefik.containo.us/v1alpha1/IngressRouteTCP") .Values.traefikIngressRoute.enabled -}}
 
-{{- if .Values.traefikIngressRoute.certificate.enabled }}
+{{- if and (.Capabilities.APIVersions.Has "cert-manager.io/v1/Certificate") .Values.traefikIngressRoute.certificate.enabled }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
