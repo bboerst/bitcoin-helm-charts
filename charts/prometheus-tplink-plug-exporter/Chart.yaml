@@ -1,0 +1,13 @@
+apiVersion: v2
+appVersion: 0.4.0
+description: tplink plug exporter to monitor a tplink plug metrics with Prometheus
+engine: gotpl
+name: prometheus-tplink-plug-exporter
+version: 0.1.0
+sources:
+  - https://github.com/bboerst/bitcoin-helm-charts/
+keywords:
+- kubernetes
+- exporter
+- prometheus
+- tplink
