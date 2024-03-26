@@ -174,6 +174,23 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/prometheus-bosminer-exporter-0.1.0/prometheus-bosminer-exporter-0.1.0.tgz
     version: 0.1.0
+  prometheus-tplink-plug-exporter:
+  - apiVersion: v2
+    appVersion: 0.4.0
+    created: "2024-03-26T00:38:40.052145283Z"
+    description: tplink plug exporter to monitor a tplink plug metrics with Prometheus
+    digest: 4c1f83cb8205b74e04b4a3baf6cabb8577fa3c73fd03c768f4dab6498ae9b1e6
+    keywords:
+    - kubernetes
+    - exporter
+    - prometheus
+    - tplink
+    name: prometheus-tplink-plug-exporter
+    sources:
+    - https://github.com/bboerst/bitcoin-helm-charts/
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/prometheus-tplink-plug-exporter-0.1.0/prometheus-tplink-plug-exporter-0.1.0.tgz
+    version: 0.1.0
   thunderhub:
   - apiVersion: v1
     appVersion: v0.13.23
@@ -206,4 +223,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2024-03-02T16:25:06.794830226Z"
+generated: "2024-03-26T00:38:40.052161854Z"
