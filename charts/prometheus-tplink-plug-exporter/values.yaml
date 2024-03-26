@@ -1,0 +1,35 @@
+---
+name: tplink-plug-exporter
+
+image:
+  name: bboerst/tplink-plug-exporter
+  tag: "v0.5.0"
+  pullPolicy: IfNotPresent
+
+annotations: {}
+
+podAnnotations: {}
+
+metricsListenPort: 9233
+
+serviceAccount:
+  create: true
+
+serviceType: ClusterIP
+
+serviceMonitor:
+  enabled: false
+  interval: 10s
+  scrapeTimeout: 10s
+  additionalLabels: {}
+  targetLabels: []
+
+securityContext: {}
+
+containerSecurityContext: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
