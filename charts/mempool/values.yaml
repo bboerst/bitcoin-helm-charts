@@ -275,6 +275,5 @@ mariadb:
 
   primary:
     persistence:
-      enabled: true
-      storageClass: nfs-client
+      enabled: false
       size: 8Gi
