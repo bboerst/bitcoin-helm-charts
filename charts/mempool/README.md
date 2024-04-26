@@ -1,6 +1,6 @@
 # mempool
 
-![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![AppVersion: v2.5.1](https://img.shields.io/badge/AppVersion-v2.5.1-informational?style=flat-square)
+![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![AppVersion: v2.5.1](https://img.shields.io/badge/AppVersion-v2.5.1-informational?style=flat-square)
 
 A Helm chart for mempool
 
@@ -8,7 +8,7 @@ A Helm chart for mempool
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | mariadb | 16.4.0 |
+| https://charts.bitnami.com/bitnami | mariadb | 18.0.2 |
 
 ## Values
 
