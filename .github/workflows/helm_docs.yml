@@ -6,7 +6,7 @@ on:
       - '**'
 
 env:
-  HELM_DOCS_VERSION: 1.12.0
+  HELM_DOCS_VERSION: 1.13.1
 
 jobs:
   helm_docs_validation:
