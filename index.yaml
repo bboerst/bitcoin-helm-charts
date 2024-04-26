@@ -47,6 +47,19 @@ entries:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/fulcrum-0.1.1/fulcrum-0.1.1.tgz
     version: 0.1.1
   lnd:
+  - apiVersion: v2
+    appVersion: v0.17.5-beta
+    created: "2024-04-26T22:46:29.534761371Z"
+    description: A golang implementation of a Lightning Network node
+    digest: 7e96e5b39e39afe5c1e93e6bc47d0db459427955a97dfc8841f49d326331c777
+    home: https://github.com/lightningnetwork/lnd
+    keywords:
+    - lnd
+    - bitcoin
+    name: lnd
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/lnd-0.1.2/lnd-0.1.2.tgz
+    version: 0.1.2
   - apiVersion: v1
     appVersion: v0.17.0-beta
     created: "2023-10-07T14:04:49.456341147Z"
@@ -236,4 +249,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2024-04-26T22:42:14.989769213Z"
+generated: "2024-04-26T22:46:29.53478217Z"
