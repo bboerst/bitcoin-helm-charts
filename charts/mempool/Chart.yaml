@@ -1,9 +1,9 @@
 apiVersion: v2
 description: A Helm chart for mempool
 name: mempool
-version: 0.1.5
+version: 0.1.6
 # renovate: image=mempool/frontend
-appVersion: "v2.5.1"
+appVersion: "v3.0.0-dev8"
 dependencies:
 - name: mariadb
   version: "18.0.2"

@@ -1,6 +1,6 @@
 # mempool
 
-![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![AppVersion: v2.5.1](https://img.shields.io/badge/AppVersion-v2.5.1-informational?style=flat-square)
+![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![AppVersion: v3.0.0-dev8](https://img.shields.io/badge/AppVersion-v3.0.0--dev8-informational?style=flat-square)
 
 A Helm chart for mempool
 
@@ -28,7 +28,7 @@ A Helm chart for mempool
 | backend.fullnameOverride | string | `""` |  |
 | backend.image.pullPolicy | string | `"IfNotPresent"` |  |
 | backend.image.repository | string | `"mempool/backend"` |  |
-| backend.image.tag | string | `"v2.5.1"` |  |
+| backend.image.tag | string | `"v3.0.0-dev8"` |  |
 | backend.imagePullSecrets | list | `[]` |  |
 | backend.mempoolBackend.type | string | `"none"` |  |
 | backend.nameOverride | string | `""` |  |
@@ -61,7 +61,7 @@ A Helm chart for mempool
 | frontend.fullnameOverride | string | `""` |  |
 | frontend.image.pullPolicy | string | `"IfNotPresent"` |  |
 | frontend.image.repository | string | `"mempool/frontend"` |  |
-| frontend.image.tag | string | `"v2.5.1"` |  |
+| frontend.image.tag | string | `"v3.0.0-dev8"` |  |
 | frontend.imagePullSecrets | list | `[]` |  |
 | frontend.ingress.annotations | object | `{}` |  |
 | frontend.ingress.enabled | bool | `false` |  |

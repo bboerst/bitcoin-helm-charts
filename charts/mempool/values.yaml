@@ -14,7 +14,7 @@ serviceAccount:
 frontend:
   image:
     repository: mempool/frontend
-    tag: v2.5.1
+    tag: v3.0.0-dev8
     pullPolicy: IfNotPresent
 
   strategyType: Recreate
@@ -149,7 +149,7 @@ frontend:
 backend:
   image:
     repository: mempool/backend
-    tag: v2.5.1
+    tag: v3.0.0-dev8
     pullPolicy: IfNotPresent
 
   strategyType: Recreate
