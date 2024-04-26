@@ -1,6 +1,6 @@
 apiVersion: v2
 description: A Helm chart for thunderhub
 name: thunderhub
-version: 0.1.2
+version: 0.1.3
 # renovate: image=apotdevin/thunderhub
-appVersion: "v0.13.23"
+appVersion: "v0.13.30"
