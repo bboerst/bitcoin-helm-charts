@@ -98,9 +98,8 @@ A Helm chart for mempool
 | mariadb.auth.password | string | `"mempool"` |  |
 | mariadb.auth.rootPassword | string | `"admin"` |  |
 | mariadb.auth.username | string | `"mempool"` |  |
-| mariadb.primary.persistence.enabled | bool | `true` |  |
+| mariadb.primary.persistence.enabled | bool | `false` |  |
 | mariadb.primary.persistence.size | string | `"8Gi"` |  |
-| mariadb.primary.persistence.storageClass | string | `"nfs-client"` |  |
 | replicaCount | int | `1` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `nil` |  |
