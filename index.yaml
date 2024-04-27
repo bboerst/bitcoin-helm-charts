@@ -56,6 +56,16 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/fulcrum-0.1.1/fulcrum-0.1.1.tgz
     version: 0.1.1
+  lightning-terminal:
+  - apiVersion: v2
+    appVersion: v0.12.4-alpha
+    created: "2024-04-27T23:45:54.372204122Z"
+    description: A Helm chart for lightning-terminal
+    digest: 621062876e97a70bb3a44e080ecd201f9b332ddf4fb87f7fb9910230be865f1d
+    name: lightning-terminal
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/lightning-terminal-0.1.0/lightning-terminal-0.1.0.tgz
+    version: 0.1.0
   lnd:
   - apiVersion: v2
     appVersion: v0.17.5-beta
@@ -334,4 +344,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2024-04-27T16:54:01.582041506Z"
+generated: "2024-04-27T23:45:54.372247973Z"
