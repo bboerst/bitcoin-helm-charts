@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "lightning-terminal.fullname" . }}-test-connection"
+  labels:
+{{ include "lightning-terminal.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "lightning-terminal.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
