@@ -148,6 +148,8 @@ configurationFile:
     protocol.wumbo-channels=1
     prometheus.enable=false
     prometheus.listen=0.0.0.0:8989
+    [rpcmiddleware]
+    rpcmiddleware.enable=false
 #    wallet-unlock-password-file=/passwords/wallet_password
 # extraConfig:
 #   secretName: lnd-secret-config

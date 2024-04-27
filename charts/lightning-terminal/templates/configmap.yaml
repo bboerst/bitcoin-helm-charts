@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "lightning-terminal.fullname" . }}
+  namespace: {{ template "lightning-terminal.namespace" . }}
+  labels:
+    app: {{ template "lightning-terminal.name" . }}
+    chart: {{ template "lightning-terminal.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+{{ toYaml .Values.configurationFile | indent 2 }}
