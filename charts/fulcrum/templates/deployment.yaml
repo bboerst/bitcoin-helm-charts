@@ -61,21 +61,12 @@ spec:
             - {{ . }}
           {{ end }}
           ports:
-          {{- if .Values.service.enableRpc }}
-            - name: rpc
-              containerPort: {{ .Values.service.ports.rpc }}
+            - name: tcp
+              containerPort: {{ .Values.service.ports.tcp }}
               protocol: TCP
-          {{- end }}
-          {{- range $port := .Values.service.ports.tcp }}
-            - name: "{{ $port }}-tcp"
-              containerPort: {{ $port }}
+            - name: ssl
+              containerPort: {{ .Values.service.ports.ssl }}
               protocol: TCP
-          {{- end }}
-          {{- range $port := .Values.service.ports.udp }}
-            - name: "{{ $port }}-udp"
-              containerPort: {{ $port }}
-              protocol: UDP
-          {{- end }}
           volumeMounts:
             - name: config
               mountPath: /data/config.toml
@@ -84,6 +75,16 @@ spec:
               name: data
             - mountPath: /authcookie/
               name: authcookie
+            {{- if and .Values.certificate.enabled .Values.certificate.mountCertificate }}
+            - name: tls
+              mountPath: "/ssl/tls.crt"
+              subPath: tls.crt
+              readOnly: true
+            - name: tls
+              mountPath: "/ssl/tls.key"
+              subPath: tls.key
+              readOnly: true
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -131,4 +132,9 @@ spec:
         {{- end }}
       {{- else }}
         emptyDir: {}
-      {{ end }}
+      {{- end }}
+      {{- if and .Values.certificate.enabled .Values.certificate.mountCertificate }}
+      - name: tls
+        secret:
+          secretName: {{ template "fulcrum.fullname" . }}-secret
+      {{- end }}

@@ -22,37 +22,15 @@ config: |
   rpcpassword = hunter1
   #rpccookie = /authcookie/.cookie
 
-ingress:
+certificate:
   enabled: false
-  # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
-  # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-  # ingressClassName: nginx
-  # Values can be templated
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  labels: {}
-  path: /
+  mountCertificate: true
+  dnsNames:
+    - "myelectrumserver.domain.com"
 
-  # pathType is only for k8s >= 1.1=
-  pathType: Prefix
-
-  hosts:
-    - chart-example.local
-  ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
-  extraPaths: []
-  # - path: /*
-  #   backend:
-  #     serviceName: ssl-redirect
-  #     servicePort: use-annotation
-  ## Or for k8s > 1.19
-  # - path: /*
-  #   pathType: Prefix
-  #   backend:
-  #     service:
-  #       name: ssl-redirect
-  #       port:
-  #         name: use-annotation
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
 
 arguments:
   - /data/config.toml
@@ -92,8 +70,6 @@ service:
   loadBalancerIP: ""
   loadBalancerSourceRanges: []
 
-  enableRpc: true
-
   ## Set external traffic policy to: "Local" to preserve source IP on
   ## providers supporting it
   ## Ref: https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-typeloadbalancer
@@ -106,24 +82,14 @@ service:
   healthCheckNodePort: 0
 
   ports:
-    rpc: 50001
-    tcp: {}
-    udp: {}
+    tcp: 50001
+    ssl: 50002
 
   targetPorts:
-    rpc: rpc
+    tcp: 50001
+    ssl: 50002
 
-  type: NodePort
-
-  # type: NodePort
-  # nodePorts:
-  #   rpc: 50001
-  #   tcp: {}
-  #   udp: {}
-  nodePorts:
-    rpc: ""
-    tcp: {}
-    udp: {}
+  type: ClusterIP
 
 persistence:
   enabled: false
@@ -166,3 +132,25 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+extraManifests: []
+# extraManifests:
+#  - apiVersion: traefik.containo.us/v1alpha1
+#    kind: IngressRouteTCP
+#    metadata:
+#      labels:
+#        {{- include "fulcrum.labels" . | nindent 4 }}
+#      name: {{ template "fulcrum.fullname" . }}
+#      annotations:
+#        traefik.ingress.kubernetes.io/router.tls.options: foobar@file
+#    spec:
+#      entryPoints:
+#      # Ensure that you have an entrypoint configured for traefik, like this:
+#      #  additionalArguments:
+#      #  - "--entrypoints.electrum-50002.address=:50002"
+#      - electrum-50002
+#      routes:
+#      - match: HostSNI(`*`)
+#        services:
+#        - name: {{ include "fulcrum.fullname" . }}
+#          port: 50002

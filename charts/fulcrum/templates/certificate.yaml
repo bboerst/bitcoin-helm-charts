@@ -1,0 +1,12 @@
+{{- if and (.Capabilities.APIVersions.Has "cert-manager.io/v1/Certificate") .Values.certificate.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ template "fulcrum.fullname" . }}-tls
+spec:
+  secretName: {{ template "fulcrum.fullname" . }}-secret
+  issuerRef:
+    name: {{ .Values.certificate.issuerRef.name }}
+    kind: {{ .Values.certificate.issuerRef.kind }}
+  dnsNames: {{ .Values.certificate.dnsNames }}
+{{- end }}
