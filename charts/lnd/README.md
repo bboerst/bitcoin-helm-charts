@@ -1,6 +1,6 @@
 # lnd
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![AppVersion: v0.17.5-beta](https://img.shields.io/badge/AppVersion-v0.17.5--beta-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![AppVersion: v0.17.5-beta](https://img.shields.io/badge/AppVersion-v0.17.5--beta-informational?style=flat-square)
 
 A golang implementation of a Lightning Network node
 
@@ -19,9 +19,22 @@ A golang implementation of a Lightning Network node
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"lightninglabs/lnd"` |  |
 | imagePullSecrets | list | `[]` |  |
+| ingress.rest.annotations | object | `{}` |  |
 | ingress.rest.enabled | bool | `false` |  |
+| ingress.rest.extraPaths | list | `[]` |  |
+| ingress.rest.hosts[0] | string | `"chart-example.local"` |  |
+| ingress.rest.labels | object | `{}` |  |
+| ingress.rest.path | string | `"/"` |  |
+| ingress.rest.pathType | string | `"Prefix"` |  |
+| ingress.rpc.annotations | object | `{}` |  |
 | ingress.rpc.enabled | bool | `false` |  |
+| ingress.rpc.extraPaths | list | `[]` |  |
+| ingress.rpc.hosts[0] | string | `"chart-example.local"` |  |
+| ingress.rpc.labels | object | `{}` |  |
+| ingress.rpc.path | string | `"/"` |  |
+| ingress.rpc.pathType | string | `"Prefix"` |  |
 | nameOverride | string | `""` |  |
+| namespaceOverride | string | `""` |  |
 | network | string | `"testnet"` |  |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
 | persistence.enabled | bool | `false` |  |
