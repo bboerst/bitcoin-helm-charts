@@ -33,7 +33,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ $fullName }}-internal
+                name: {{ $fullName }}
                 port:
                   number: {{ .port }}
           {{- end }}
