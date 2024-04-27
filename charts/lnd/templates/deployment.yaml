@@ -57,13 +57,13 @@ spec:
 {{ toYaml .Values.resources | indent 12 }}
           ports:
             - name: rpc
-              containerPort: {{ .Values.internalServices.rpcPort }}
+              containerPort: {{ .Values.service.rpcPort }}
             - name: rest
-              containerPort: {{ .Values.internalServices.restPort }}
+              containerPort: {{ .Values.service.restPort }}
             - name: prometheus
-              containerPort: {{ .Values.internalServices.prometheusPort }}
+              containerPort: {{ .Values.service.prometheusPort }}
             - name: p2p
-              containerPort: {{ .Values.externalServices.p2pPort }}
+              containerPort: {{ .Values.service.p2pPort }}
           volumeMounts:
             - name: data
               mountPath: /root/.lnd
