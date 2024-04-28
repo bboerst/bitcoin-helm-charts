@@ -66,6 +66,16 @@ entries:
     urls:
     - https://github.com/bboerst/bitcoin-helm-charts/releases/download/lightning-terminal-0.1.0/lightning-terminal-0.1.0.tgz
     version: 0.1.0
+  lnbits:
+  - apiVersion: v2
+    appVersion: 0.12.5
+    created: "2024-04-28T04:08:20.355354273Z"
+    description: A Helm chart for lnbits
+    digest: dfa3b425ad8dd12dce003600f5ae715ed727c6c493d440d8bf70f0b676b3788e
+    name: lnbits
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/lnbits-0.1.0/lnbits-0.1.0.tgz
+    version: 0.1.0
   lnd:
   - apiVersion: v2
     appVersion: v0.17.5-beta
@@ -354,4 +364,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2024-04-28T01:00:30.372013078Z"
+generated: "2024-04-28T04:08:20.355395409Z"
