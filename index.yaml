@@ -242,6 +242,16 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/mempool-0.1.2/mempool-0.1.2.tgz
     version: 0.1.2
+  phoenixd:
+  - apiVersion: v2
+    appVersion: v0.1.4
+    created: "2024-04-28T01:00:30.371967633Z"
+    description: A Helm chart for phoenixd
+    digest: a91c3978f5a6307309d911bdc25ce31d6265e79b7fec1f60bc4cde462b098fac
+    name: phoenixd
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/phoenixd-0.1.0/phoenixd-0.1.0.tgz
+    version: 0.1.0
   prometheus-bitcoind-exporter:
   - apiVersion: v1
     appVersion: v0.1.0
@@ -344,4 +354,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2024-04-27T23:45:54.372247973Z"
+generated: "2024-04-28T01:00:30.372013078Z"
