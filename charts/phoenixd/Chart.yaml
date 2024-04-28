@@ -1,0 +1,6 @@
+apiVersion: v2
+description: A Helm chart for phoenixd
+name: phoenixd
+version: 0.1.0
+# renovate: image=ghcr.io/sethforprivacy/phoenixd
+appVersion: "v0.1.4"
