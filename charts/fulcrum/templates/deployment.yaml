@@ -62,11 +62,7 @@ spec:
           {{ end }}
           ports:
             - name: tcp
-              containerPort: {{ .Values.service.ports.tcp }}
-              protocol: TCP
-            - name: ssl
-              containerPort: {{ .Values.service.ports.ssl }}
-              protocol: TCP
+              containerPort: {{ .Values.ssl.enabled | ternary 50002 50001 }}
           volumeMounts:
             - name: config
               mountPath: /data/config.toml
@@ -75,12 +71,12 @@ spec:
               name: data
             - mountPath: /authcookie/
               name: authcookie
-            {{- if and .Values.certificate.enabled .Values.certificate.mountCertificate }}
-            - name: tls
+            {{- if and .Values.ssl.enabled .Values.ssl.mountCertificate }}
+            - name: ssl
               mountPath: "/ssl/tls.crt"
               subPath: tls.crt
               readOnly: true
-            - name: tls
+            - name: ssl
               mountPath: "/ssl/tls.key"
               subPath: tls.key
               readOnly: true
@@ -133,8 +129,8 @@ spec:
       {{- else }}
         emptyDir: {}
       {{- end }}
-      {{- if and .Values.certificate.enabled .Values.certificate.mountCertificate }}
-      - name: tls
+      {{- if and .Values.ssl.enabled .Values.ssl.mountCertificate }}
+      - name: ssl
         secret:
-          secretName: {{ template "fulcrum.fullname" . }}-secret
+          secretName: {{ .Values.ssl.certificate.secretName }}
       {{- end }}
