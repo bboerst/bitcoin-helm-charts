@@ -1,0 +1,4 @@
+Note: Make sure to follow the instructions in the README to finish setting up your wallet.
+
+Once your wallet is setup, the c-lightning RPC interface can be accessed via port {{ .Values.service.rpcPort }} on the following DNS name from within your cluster:
+{{ template "c-lightning.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local

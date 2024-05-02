@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "c-lightning.fullname" . }}
+  namespace: {{ template "c-lightning.namespace" . }}
+  labels:
+    app: {{ template "c-lightning.name" . }}
+    chart: {{ template "c-lightning.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "c-lightning.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        app: {{ template "c-lightning.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      {{- if .Values.configurationFile }}
+      initContainers:
+        - name: copy-c-lightning-config
+          image: busybox
+          {{- if .Values.extraconfig }}
+          command: ['sh', '-c', 'for f in /configmap/*.conf; do (cat "${f}"; echo) >> /root/.lightning/config; done']
+          {{- else }}
+          command: ['sh', '-c', 'cat /configmap/config > /root/.lightning/config']
+          {{- end }}
+          volumeMounts:
+            - name: configmap
+              mountPath: /configmap
+            - name: config
+              mountPath: /root/.lightning/
+      {{- end }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ template "c-lightning.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: {{ template "c-lightning.fullname" . }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}"
+          command:
+{{ toYaml .Values.command | indent 12 }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          args:
+          {{-  range .Values.arguments }}
+            - {{ . }}
+          {{- end }}
+          env:
+            - name: LIGHTNINGD_DATA
+              value: /root/.lightning
+            - name: EXPOSE_TCP
+              value: "true"
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          ports:
+            - name: tcp
+              containerPort: {{ .Values.service.tcpPort }}
+            {{- if .Values.service.restEnabled }}
+            - name: rest
+              containerPort: {{ .Values.service.restPort }}
+            {{- end }}
+          volumeMounts:
+            - name: data
+              mountPath: /root/.lightning
+              subPath: .lightning
+            {{- if .Values.configurationFile }}
+            - name: config
+              mountPath: /root/.lightning/config
+              subPath: config
+            {{- end }}
+          lifecycle:
+            preStop:
+              exec:
+                # Make sure we safely quit c-lightning so we don't corrupt
+                # anything
+                command: ["lightning-cli", "stop"]
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+
+      volumes:
+        {{- if .Values.configurationFile }}
+        - name: config
+          emptyDir: {}
+        - name: configmap
+          projected:
+            sources:
+              - configMap:
+                  name: {{ template "c-lightning.fullname" . }}
+              {{- if .Values.extraconfig }}
+              - secret:
+                  name: {{ .Values.extraconfig.secretName}}
+              {{- end }}
+        {{- end }}
+        - name: data
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "c-lightning.fullname" .) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end -}}

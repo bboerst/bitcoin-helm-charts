@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "c-lightning.fullname" . }}
+  namespace: {{ template "c-lightning.namespace" . }}
+  labels:
+    app: {{ template "c-lightning.name" . }}
+    chart: {{ template "c-lightning.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: tcp
+      port: {{ .Values.service.tcpPort }}
+      targetPort: tcp
+    {{- if .Values.service.restEnabled }}
+    - name: rest
+      port: {{ .Values.service.restPort }}
+      targetPort: rest
+    {{- end }}
+  selector:
+    app: {{ template "c-lightning.name" . }}
+    release: {{ .Release.Name }}

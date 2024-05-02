@@ -1,0 +1,10 @@
+apiVersion: v2
+name: c-lightning
+description: A specification compliant Lightning Network implementation in C
+version: 0.1.0
+# renovate: image=elementsproject/lightningd
+appVersion: v24.02-amd64
+keywords:
+  - c-lightning
+  - bitcoin
+home: https://github.com/ElementsProject/lightning
