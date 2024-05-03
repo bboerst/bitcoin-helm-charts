@@ -1,0 +1,174 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ template "ride-the-lightning.name" . }}
+    chart: {{ template "ride-the-lightning.chart" . }}
+    heritage: {{ .Release.Service }}
+    {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: ride-the-lightning
+
+    {{- if .Values.deploymentLabels }}
+{{ toYaml .Values.deploymentLabels | indent 4 }}
+    {{- end }}
+  name: {{ template "ride-the-lightning.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: {{ .Values.strategyType }}
+  selector:
+    matchLabels:
+      app: {{ template "ride-the-lightning.name" . }}
+    {{- if .Values.useComponentLabel }}
+      {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: ride-the-lightning
+    {{- end }}
+  template:
+    metadata:
+      {{- if or .Values.podAnnotations .Values.podAnnotationConfigChecksum }}
+      annotations:
+      {{- range $key, $value := .Values.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- if .Values.podAnnotationConfigChecksum }}
+        checksum/config: {{ tpl (toYaml .Values) . | sha256sum }}
+      {{- end }}
+      {{- end }}
+      labels:
+        app: {{ template "ride-the-lightning.name" . }}
+        component: "{{ .Values.name }}"
+        {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: ride-the-lightning
+        {{- if .Values.podLabels }}
+{{ toYaml .Values.podLabels | indent 8 }}
+        {{- end }}
+    spec:
+    {{- if .Values.configurationFile }}
+      initContainers:
+        - name: copy-lit-config
+          image: busybox
+          {{- if .Values.extraconfig }}
+          command: ['sh', '-c', 'for f in /configmap/*.conf; do (cat "${f}"; echo) >> /root/.lit/lit.conf; done']
+          {{- else }}
+          command: ['sh', '-c', 'cat /configmap/lit.conf > /root/.lit/lit.conf']
+          {{- end }}
+          volumeMounts:
+            - name: configmap
+              mountPath: /configmap
+            - name: config
+              mountPath: /root/.lit/
+      {{- end }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ template "ride-the-lightning.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 300
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --uipassword={{ .Values.uiPassword }}
+          {{-  range .Values.arguments }}
+            - {{ . }}
+          {{ end }}
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          ports:
+            - name: "tcp"
+              containerPort: {{ .Values.service.ports.tcp }}
+              protocol: TCP
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #     - sh
+          #     - -c
+          #     - grep -r ride-the-lightning /proc/1/cmdline
+          # readinessProbe:
+          #   exec:
+          #     command:
+          #     - sh
+          #     - -c
+          #     - grep -r ride-the-lightning /proc/1/cmdline
+            # initialDelaySeconds: 10
+            # periodSeconds: 30
+          volumeMounts:
+          - mountPath: /data/.lit/
+            name: data
+          {{- if .Values.configurationFile }}
+          - name: config
+            mountPath: /root/.lit/lit.conf
+            subPath: lit.conf
+          {{- end }}
+          - name: credentials
+            mountPath: "/data/admin.macaroon"
+            subPath: admin.macaroon
+            readOnly: true
+          - name: credentials
+            mountPath: "/data/tls.cert"
+            subPath: tls.cert
+            readOnly: true
+          {{- if .Values.mountTlsFromSecret }}
+          - name: tls
+            mountPath: "/ssl/tls.crt"
+            subPath: tls.crt
+            readOnly: true
+          - name: tls
+            mountPath: "/ssl/tls.key"
+            subPath: tls.key
+            readOnly: true
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+      - name: data
+      {{- if .Values.persistence.enabled }}
+        {{- if .Values.persistence.hostPath }}
+        hostPath:
+          path: {{.Values.persistence.hostPath}}
+          type: Directory
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{- else }}{{ template "ride-the-lightning.fullname" . }}{{- end }}
+        {{- end }}
+      {{- else }}
+        emptyDir: {}
+      {{ end }}
+      {{- if .Values.configurationFile }}
+      - name: config
+        emptyDir: {}
+      - name: configmap
+        projected:
+          sources:
+            - configMap:
+                name: {{ template "ride-the-lightning.fullname" . }}
+            {{- if .Values.extraconfig }}
+            - secret:
+                name: {{ .Values.extraconfig.secretName }}
+            {{- end }}
+      {{- end }}
+      - name: credentials
+        secret:
+          secretName: {{ template "ride-the-lightning.fullname" . }}-credentials
+      {{- if .Values.mountTlsFromSecret }}
+      - name: tls
+        secret:
+          secretName: {{ .Values.tlsSecretName }}
+      {{- end }}
