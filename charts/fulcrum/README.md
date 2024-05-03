@@ -1,6 +1,6 @@
 # fulcrum
 
-![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.10.0](https://img.shields.io/badge/AppVersion-v1.10.0-informational?style=flat-square)
+![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.10.0](https://img.shields.io/badge/AppVersion-v1.10.0-informational?style=flat-square)
 
 fulcrum helm chart
 
@@ -10,11 +10,6 @@ fulcrum helm chart
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | arguments[0] | string | `"/data/config.toml"` |  |
-| certificate.dnsNames[0] | string | `"myelectrumserver.domain.com"` |  |
-| certificate.enabled | bool | `false` |  |
-| certificate.issuerRef.kind | string | `"ClusterIssuer"` |  |
-| certificate.issuerRef.name | string | `"letsencrypt-prod"` |  |
-| certificate.mountCertificate | bool | `true` |  |
 | config | string | `"# Example config: https://github.com/cculianu/Fulcrum/blob/master/doc/fulcrum-example-config.conf\ndatadir = /data\nbitcoind = bitcoind:8332\nrpcuser = fulcrum\nrpcpassword = hunter1\n#rpccookie = /authcookie/.cookie\n"` |  |
 | cookiePersistence.enabled | bool | `false` |  |
 | cookiePersistence.existingClaim | string | `"bitcoin-core-authcookie"` |  |
@@ -23,6 +18,13 @@ fulcrum helm chart
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"cculianu/fulcrum"` |  |
 | imagePullSecrets | list | `[]` |  |
+| ingress.annotations | object | `{}` |  |
+| ingress.enabled | bool | `false` |  |
+| ingress.extraPaths | list | `[]` |  |
+| ingress.hosts[0] | string | `"chart-example.local"` |  |
+| ingress.labels | object | `{}` |  |
+| ingress.path | string | `"/"` |  |
+| ingress.pathType | string | `"Prefix"` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
@@ -41,14 +43,17 @@ fulcrum helm chart
 | service.loadBalancerIP | string | `""` |  |
 | service.loadBalancerSourceRanges | list | `[]` |  |
 | service.omitClusterIP | bool | `false` |  |
-| service.ports.ssl | int | `50002` |  |
-| service.ports.tcp | int | `50001` |  |
 | service.sessionAffinity | string | `""` |  |
-| service.targetPorts.ssl | int | `50002` |  |
-| service.targetPorts.tcp | int | `50001` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `nil` |  |
+| ssl.certificate.secretName | string | `"fulcrum-ssl-certificate"` |  |
+| ssl.dnsNames[0] | string | `"myelectrumserver.domain.com"` |  |
+| ssl.enabled | bool | `false` |  |
+| ssl.issuerRef.kind | string | `"ClusterIssuer"` |  |
+| ssl.issuerRef.name | string | `"letsencrypt-prod"` |  |
+| ssl.mountCertificate | bool | `true` |  |
+| ssl.useCertManager | bool | `true` |  |
 | strategyType | string | `"Recreate"` |  |
 | tolerations | list | `[]` |  |
 

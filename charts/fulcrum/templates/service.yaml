@@ -45,13 +45,8 @@ spec:
 {{- end }}
   ports:
     - name: tcp
-      port: {{ .Values.service.ports.tcp }}
-      protocol: TCP
+      port: {{ .Values.ssl.enabled | ternary 50002 50001 }}
       targetPort: tcp
-    - name: ssl
-      port: {{ .Values.service.ports.ssl }}
-      protocol: TCP
-      targetPort: ssl
   selector:
     app: {{ template "fulcrum.name" . }}
     {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: fulcrum

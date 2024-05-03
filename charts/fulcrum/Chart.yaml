@@ -2,6 +2,6 @@ apiVersion: v2
 type: application
 description: fulcrum helm chart
 name: fulcrum
-version: 0.1.4
+version: 0.1.5
 # renovate: image=cculianu/fulcrum
 appVersion: "v1.10.0"
