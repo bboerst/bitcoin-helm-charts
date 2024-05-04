@@ -148,28 +148,38 @@ ingress:
 
 persistence:
   enabled: false
-  ## bitcoind data Persistent Volume Storage Class
-  ## If defined, storageClassName: <storageClass>
-  ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
-  ##
+  ## Configure persistent storage for bitcoind data.
+  ## `storageClassName`: Specifies the storage class to use for the volume.
+  ## If defined, the volume will use the specified storage class.
+  ## If set to "-", dynamic provisioning is disabled and the storageClassName is set to an empty string.
+  ## If left undefined or set to null, the default storage class of the cluster is used. Examples of default provisioners include:
+  ##   - gp2 on Amazon Web Services
+  ##   - standard on Google Kubernetes Engine, Azure Kubernetes Service, and OpenStack
   # storageClass: "-"
   ##
-  ## If you want to reuse an existing claim, you can pass the name of the PVC using
-  ## the existingClaim variable
-  # existingClaim: your-claim
+  ## To reuse an existing Persistent Volume Claim (PVC), specify its name with `existingClaim`.
+  ## If set, the StatefulSet will use the named PVC instead of creating a new one.
+  # existingClaim: "your-existing-claim"
   ##
-  ## If you want to use a volume on the host machine instead of a PVC:
-  # hostPath: /path/to/the/config/folder
-  accessMode: ReadWriteOnce
-  size: 5Gi
+  ## To use a host path instead of a PVC, specify the path on the host machine.
+  ## This option mounts a specified path inside the host to the pod. Use with caution as it ties your pod to specific nodes.
+  # hostPath: "/path/to/the/config/folder"
+  ## `accessModes`: Defines the access modes for the volume. Typical modes include:
+  ##   - ReadWriteOnce: The volume can be mounted as read-write by a single node
+  ##   - ReadOnlyMany: Multiple nodes can mount the volume as read-only
+  ##   - ReadWriteMany: Multiple nodes can mount the volume as read-write
+  accessModes: 
+    - ReadWriteOnce
+  ## `size`: Defines the size of the storage volume.
+  ## Specify the size of the volume. Note that resizing an existing volume is not supported in all storage classes.
+  size: 600Gi
 
-  tls: []
-  #  - secretName: bitcoind-tls
-  #    hosts:
-  #      - bitcoind.local
+  ## TLS configuration for secure communication (currently unused).
+  ## Uncomment the following lines and specify the secret name and hostnames if TLS is required.
+  # tls:
+  #   - secretName: "bitcoind-tls"
+  #     hosts:
+  #       - "bitcoind.local"
 
 # cookiePersistence will mount a persistent volume with the rpc cookie (.cookie). This is
 # useful when using the nfs-client-provisioner and sharing this volume with other apps on the cluster.
@@ -190,7 +200,8 @@ cookiePersistence:
   ##
   ## If you want to use a volume on the host machine instead of a PVC:
   # hostPath: /path/to/the/config/folder
-  accessMode: ReadWriteOnce
+  accessModes:
+    - ReadWriteOnce
   size: 5Mi
 
   tls: []

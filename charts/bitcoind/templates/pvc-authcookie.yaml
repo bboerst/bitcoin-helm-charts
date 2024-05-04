@@ -11,7 +11,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   accessModes:
-    - {{ .Values.cookiePersistence.accessMode | quote }}
+  {{- range .Values.persistence.accessModes }}
+  - {{ . }}
+  {{- end }}
   resources:
     requests:
       storage: {{ .Values.cookiePersistence.size | quote }}
