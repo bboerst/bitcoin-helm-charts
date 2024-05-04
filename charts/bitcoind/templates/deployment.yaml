@@ -101,8 +101,10 @@ spec:
           volumeMounts:
             - mountPath: /data/.bitcoin/
               name: data
+            {{- if .Values.cookiePersistence.enabled }}
             - mountPath: /authcookie/
               name: authcookie
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -129,7 +131,10 @@ spec:
   - metadata:
       name: data
     spec:
-      accessModes: {{ .Values.persistence.accessModes }}
+      accessModes:
+      {{- range .Values.persistence.accessModes }}
+      - {{ . }}
+      {{- end }}
       resources:
         requests:
           storage: {{ .Values.persistence.size }}
@@ -141,7 +146,10 @@ spec:
   - metadata:
       name: authcookie
     spec:
-      accessModes: {{ .Values.cookiePersistence.accessModes }}
+      accessModes:
+      {{- range .Values.persistence.accessModes }}
+      - {{ . }}
+      {{- end }}
       resources:
         requests:
           storage: {{ .Values.cookiePersistence.size }}

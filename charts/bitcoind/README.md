@@ -12,7 +12,7 @@ A Helm chart for bitcoin-core daemon bitcoind
 | arguments[0] | string | `"-printtoconsole"` |  |
 | arguments[1] | string | `"-txindex"` |  |
 | arguments[2] | string | `"-disablewallet"` |  |
-| cookiePersistence.accessMode | string | `"ReadWriteOnce"` |  |
+| cookiePersistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | cookiePersistence.enabled | bool | `false` |  |
 | cookiePersistence.size | string | `"5Mi"` |  |
 | cookiePersistence.tls | list | `[]` |  |
@@ -27,10 +27,9 @@ A Helm chart for bitcoin-core daemon bitcoind
 | ingress.path | string | `"/"` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
-| persistence.accessMode | string | `"ReadWriteOnce"` |  |
+| persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | persistence.enabled | bool | `false` |  |
-| persistence.size | string | `"5Gi"` |  |
-| persistence.tls | list | `[]` |  |
+| persistence.size | string | `"600Gi"` |  |
 | podSecurityContext | object | `{}` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
