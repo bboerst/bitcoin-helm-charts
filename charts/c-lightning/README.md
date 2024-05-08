@@ -11,7 +11,7 @@ A specification compliant Lightning Network implementation in C
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | arguments | list | `[]` |  |
-| configurationFile.config | string | `"alias=MyNode\nnetwork=bitcoin\nbitcoin-rpcconnect=bitcoind.bitcoin.svc.cluster.local\nbitcoin-rpcport=8332\nbitcoin-rpcuser=c-lightning\nbitcoin-rpcpassword=aHVudGVyMQ=="` |  |
+| configurationFile.config | string | `"alias=MyNodeAlias\nnetwork=bitcoin\nbitcoin-rpcconnect=bitcoind.bitcoin.svc.cluster.local\nbitcoin-rpcport=8332\nbitcoin-rpcuser=c-lightning\nbitcoin-rpcpassword=aHVudGVyMQ=="` |  |
 | extraManifests | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
