@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "c-lightning.fullname" . }}
+  namespace: {{ template "c-lightning.namespace" . }}
+  labels:
+    app: {{ template "c-lightning.name" . }}
+    chart: {{ template "c-lightning.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+{{ toYaml .Values.configurationFile | indent 2 }}

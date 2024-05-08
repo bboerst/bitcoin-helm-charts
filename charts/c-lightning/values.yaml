@@ -1,0 +1,166 @@
+# Default values for bitcoind.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: elementsproject/lightningd
+  # tag: 
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+# The network c-lightning is running on
+network: testnet
+# network: mainnet
+
+arguments: []
+  # - --experimental-offers
+
+# Custom c-lightning configuration file used to override default c-lightning settings
+configurationFile:
+  config: |-
+    alias=MyNodeAlias
+    network=bitcoin
+    bitcoin-rpcconnect=bitcoind.bitcoin.svc.cluster.local
+    bitcoin-rpcport=8332
+    bitcoin-rpcuser=c-lightning
+    bitcoin-rpcpassword=aHVudGVyMQ==
+
+# Ports that are exposed to other pods in your cluster
+service:
+  type: ClusterIP
+
+  tcpPort: 9735
+
+  restEnabled: false
+  restPort: 3001
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  allowPrivilegeEscalation: false
+  seccompProfile:
+    type: RuntimeDefault
+    
+ingress:
+  rest:
+    enabled: false
+    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+    # ingressClassName: nginx
+    # Values can be templated
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    labels: {}
+    path: /
+
+    # pathType is only for k8s >= 1.1=
+    pathType: Prefix
+
+    hosts:
+      - chart-example.local
+    ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
+    extraPaths: []
+    # - path: /*
+    #   backend:
+    #     serviceName: ssl-redirect
+    #     servicePort: use-annotation
+    ## Or for k8s > 1.19
+    # - path: /*
+    #   pathType: Prefix
+    #   backend:
+    #     service:
+    #       name: ssl-redirect
+    #       port:
+    #         name: use-annotation
+  rpc:
+    enabled: false
+    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+    # ingressClassName: nginx
+    # Values can be templated
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    labels: {}
+    path: /
+
+    # pathType is only for k8s >= 1.1=
+    pathType: Prefix
+
+    hosts:
+      - chart-example.local
+    ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
+    extraPaths: []
+    # - path: /*
+    #   backend:
+    #     serviceName: ssl-redirect
+    #     servicePort: use-annotation
+    ## Or for k8s > 1.19
+    # - path: /*
+    #   pathType: Prefix
+    #   backend:
+    #     service:
+    #       name: ssl-redirect
+    #       port:
+    #         name: use-annotation
+
+persistence:
+  enabled: false
+  ## database data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  accessMode: ReadWriteOnce
+  size: 5Gi
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 100m
+  limits:
+    memory: 512Mi
+
+extraManifests: []
+# extraManifests:
+#  - apiVersion: traefik.containo.us/v1alpha1
+#    kind: IngressRouteTCP
+#    metadata:
+#      labels:
+#        {{- include "c-lightning.labels" . | nindent 4 }}
+#      name: {{ template "c-lightning.fullname" . }}
+#      annotations:
+#        traefik.ingress.kubernetes.io/router.tls.options: foobar@file
+#    spec:
+#      entryPoints:
+#      # Ensure that you have an entrypoint configured for traefik, like this:
+#      #  additionalArguments:
+#      #  - "--entrypoints.c-lightning-8080.address=:8080"
+#      - c-lightning-3002
+#      routes:
+#      - match: HostSNI(`*`)
+#        services:
+#        - name: {{ include "c-lightning.fullname" . }}
+#          port: 8080
