@@ -29,7 +29,7 @@ arguments: []
 # Custom c-lightning configuration file used to override default c-lightning settings
 configurationFile:
   config: |-
-    alias=MyNode
+    alias=MyNodeAlias
     network=bitcoin
     bitcoin-rpcconnect=bitcoind.bitcoin.svc.cluster.local
     bitcoin-rpcport=8332
