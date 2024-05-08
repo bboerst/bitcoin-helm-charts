@@ -53,6 +53,20 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/btc-rpc-explorer-3.2.0/btc-rpc-explorer-3.2.0.tgz
     version: 3.2.0
+  c-lightning:
+  - apiVersion: v2
+    appVersion: v24.02-amd64
+    created: "2024-05-08T00:06:10.28769429Z"
+    description: A specification compliant Lightning Network implementation in C
+    digest: edd76dc5bb4fe05d5dbc7ba8c8eaacff582b19e385225759bea64927adb641ac
+    home: https://github.com/ElementsProject/lightning
+    keywords:
+    - c-lightning
+    - bitcoin
+    name: c-lightning
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/c-lightning-0.1.0/c-lightning-0.1.0.tgz
+    version: 0.1.0
   fulcrum:
   - apiVersion: v2
     appVersion: v1.10.0
@@ -392,4 +406,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2024-05-04T13:20:09.549646725Z"
+generated: "2024-05-08T00:06:10.287741137Z"
