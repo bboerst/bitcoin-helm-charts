@@ -1,0 +1,27 @@
+{{- if and .Values.persistenceBackup.enabled (not .Values.persistenceBackup.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "c-lightning.fullname" . }}-backup
+  namespace: {{ template "c-lightning.namespace" . }}
+  annotations:
+    "helm.sh/resource-policy": keep
+  labels:
+    app: {{ template "c-lightning.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  accessModes:
+    - {{ .Values.persistenceBackup.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistenceBackup.size | quote }}
+{{- if .Values.persistenceBackup.storageClass }}
+{{- if (eq "-" .Values.persistenceBackup.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistenceBackup.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}
