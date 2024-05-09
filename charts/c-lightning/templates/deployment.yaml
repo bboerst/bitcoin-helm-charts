@@ -76,6 +76,11 @@ spec:
             - name: data
               mountPath: /root/.lightning
               subPath: .lightning
+            {{- if .Values.persistenceBackup.enabled }}
+            - name: backup
+              mountPath: /root/backup
+              subPath: backup
+            {{- end }}
             {{- if .Values.configurationFile }}
             - name: config
               mountPath: /root/.lightning/config
@@ -87,6 +92,9 @@ spec:
                 # Make sure we safely quit c-lightning so we don't corrupt
                 # anything
                 command: ["lightning-cli", "stop"]
+        {{- if .Values.extraContainers }}
+        {{- toYaml .Values.extraContainers | nindent 8 }}
+        {{- end }}
     {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
@@ -114,6 +122,13 @@ spec:
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (include "c-lightning.fullname" .) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: backup
+        {{- if .Values.persistenceBackup.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistenceBackup.existingClaim | default (printf "%s-backup" (include "c-lightning.fullname" .)) | quote }}
         {{- else }}
           emptyDir: {}
         {{- end -}}

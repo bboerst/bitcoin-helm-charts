@@ -1,6 +1,6 @@
 # c-lightning
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![AppVersion: v24.02-amd64](https://img.shields.io/badge/AppVersion-v24.02--amd64-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![AppVersion: v24.02-amd64](https://img.shields.io/badge/AppVersion-v24.02--amd64-informational?style=flat-square)
 
 A specification compliant Lightning Network implementation in C
 
@@ -11,7 +11,8 @@ A specification compliant Lightning Network implementation in C
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | arguments | list | `[]` |  |
-| configurationFile.config | string | `"alias=MyNodeAlias\nnetwork=bitcoin\nbitcoin-rpcconnect=bitcoind.bitcoin.svc.cluster.local\nbitcoin-rpcport=8332\nbitcoin-rpcuser=c-lightning\nbitcoin-rpcpassword=aHVudGVyMQ=="` |  |
+| configurationFile.config | string | `"wallet=sqlite3:///root/.lightning/bitcoin/lightningd.sqlite3:/root/backup/lightningd.sqlite3\nalias=MyNodeAlias\nnetwork=bitcoin\nbitcoin-rpcconnect=bitcoind.bitcoin.svc.cluster.local\nbitcoin-rpcport=8332\nbitcoin-rpcuser=c-lightning\nbitcoin-rpcpassword=aHVudGVyMQ=="` |  |
+| extraContainers | list | `[]` |  |
 | extraManifests | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
@@ -37,6 +38,9 @@ A specification compliant Lightning Network implementation in C
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
 | persistence.enabled | bool | `false` |  |
 | persistence.size | string | `"5Gi"` |  |
+| persistenceBackup.accessMode | string | `"ReadWriteOnce"` |  |
+| persistenceBackup.enabled | bool | `false` |  |
+| persistenceBackup.size | string | `"5Gi"` |  |
 | podSecurityContext | object | `{}` |  |
 | resources.limits.memory | string | `"512Mi"` |  |
 | resources.requests.cpu | string | `"100m"` |  |
