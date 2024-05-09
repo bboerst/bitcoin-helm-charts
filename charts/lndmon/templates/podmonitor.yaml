@@ -1,0 +1,12 @@
+{{- if .Values.lndmon.enable -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ template "lnd.fullname" . }}-lndmon
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "lnd.name" . }}-lndmon
+  podMetricsEndpoints:
+  - port: lndmon
+{{- end }}
