@@ -3,6 +3,15 @@ entries:
   bitcoind:
   - apiVersion: v2
     appVersion: v27.0
+    created: "2024-05-10T11:58:11.333339226Z"
+    description: A Helm chart for bitcoin-core daemon bitcoind
+    digest: b49e01a371888428b49cb63095707b134baf890636be8447f8e8e6e963018d28
+    name: bitcoind
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/bitcoind-0.3.2/bitcoind-0.3.2.tgz
+    version: 0.3.2
+  - apiVersion: v2
+    appVersion: v27.0
     created: "2024-05-04T13:20:09.549597163Z"
     description: A Helm chart for bitcoin-core daemon bitcoind
     digest: 2a117eb1a1d9648b1423f8052ec9bd50c2d119ce3b49dc1ea5c3a5951f585e20
@@ -419,4 +428,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2024-05-09T00:58:56.301200963Z"
+generated: "2024-05-10T11:58:11.333400411Z"
