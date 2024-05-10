@@ -226,3 +226,23 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+extraManifests: []
+  # - |
+  #   apiVersion: traefik.io/v1alpha1
+  #   kind: IngressRouteTCP
+  #   metadata:
+  #     labels:
+  #       {{- include "bitcoind.labels" . | nindent 4 }}
+  #     name: {{ template "bitcoind.fullname" . }}
+  #   spec:
+  #     entryPoints:
+  #     # Ensure that you have an entrypoint configured for traefik, like this:
+  #     #  additionalArguments:
+  #     #  - "--entrypoints.bitcoind-8332.address=:8332"
+  #     - bitcoind-8332
+  #     routes:
+  #     - match: HostSNI(`*`)
+  #       services:
+  #       - name: {{ include "bitcoind.fullname" . }}
+  #         port: 8332
