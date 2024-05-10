@@ -3,7 +3,7 @@
 {{- $ingressSupportsIngressClassName := eq (include "ride-the-lightning.ingress.supportsIngressClassName" .) "true" -}}
 {{- $ingressSupportsPathType := eq (include "ride-the-lightning.ingress.supportsPathType" .) "true" -}}
 {{- $fullName := include "ride-the-lightning.fullname" . -}}
-{{- $servicePort := .Values.service.ports.https -}}
+{{- $servicePort := .Values.service.ports.tcp -}}
 {{- $ingressPath := .Values.ingress.path -}}
 {{- $ingressPathType := .Values.ingress.pathType -}}
 {{- $extraPaths := .Values.ingress.extraPaths -}}

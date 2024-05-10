@@ -18,34 +18,54 @@ fullnameOverride: ""
 # Freely specify the configuration options for RTL in YAML format. This gets converted to json and written
 #  to the configuration file. Ex: https://github.com/Ride-The-Lightning/RTL/blob/master/Sample-RTL-Config.json
 rtlConfig:
-  multiPass: "password"
-  port: "3000"
-  defaultNodeIndex: 1
-  dbDirectoryPath: "/root/.rtl/data"
+  multiPass: "changethispassword" # <The password in plain text, default 'password', Required>
+  port: "3000" # <port number for the rtl node server, default '3000', Required>
+  host: "0.0.0.0" # <host for the rtl node server, default 'all IPs', Optional>
+  defaultNodeIndex: 1 # <Default index to load when rtl server starts, default 1, Optional>
+  dbDirectoryPath: "/root/.rtl/data" # <Complete path of the folder where rtl database file should be saved, defults to RTL root, Optional>
   SSO:
-    rtlSSO: 0
-    rtlCookiePath: ""
-    logoutRedirectLink: ""
-  nodes:
-    - index: 1
-      lnNode: "Node 1"
-      lnImplementation: "CLN"
-      Authentication:
-        macaroonPath: "/root/.rtl/credentials"
-        configPath: ""
-        swapMacaroonPath: ""
-        boltzMacaroonPath: ""
-      Settings:
-        userPersona: "OPERATOR"
-        themeMode: "DAY"
-        themeColor: "PURPLE"
-        channelBackupPath: "/root/.rtl/data/backup/node-1"
-        logLevel: "ERROR"
-        lnServerUrl: "https://127.0.0.1:8080"
-        swapServerUrl: ""
-        boltzServerUrl: ""
-        fiatConversion: false
-        unannouncedChannels: false
+    rtlSSO: 0 # <parameter to turn SSO off/on. Allowed values - 1 (single sign on via an external cookie), 0 (stand alone RTL authentication), Required>
+  #   rtlCookiePath: "<Full path of the cookie file including the file name. The application url needs to pass the value from this cookie file as query param 'access-key' for the SSO authentication to work, Required if SSO=1 else empty (Optional)>"
+  #   logoutRedirectLink: "<URL to re-direct to after logout/timeout from RTL, Required if SSO=1 else empty (Optional)>"
+  nodes: 
+  # - index: <Incremental node indices starting from 1, Required>
+  #   lnNode: "<Node name to uniquely identify the node in the UI, Required>"
+  #   lnImplementation: "<LNP implementation, Allowed values LND/CLN/ECL, Required>"
+  #   Authentication: 
+  #     macaroonPath: "<Path for the folder containing 'admin.macaroon' for LND node, Required for LND. Example /credentials/>"
+  #     runePath: "<Complete path including filename for CLN rune for the node, Required for CLN. Example /credentials/rune>"
+  #     lnApiPassword: "<Password to be used for ECL API authentication. Mandatory only for ECL if the configPath is missing>"
+  #     swapMacaroonPath: "<Path for the folder containing 'loop.macaroon' (LND), Required for LND Loop>"
+  #     boltzMacaroonPath: "<Path for the folder containing 'admin.macaroon' (Boltz), Required for Boltz Swaps>"
+  #     configPath: "<Full path of the lnd.conf/core lightning config/eclair.conf file including the file name, if present locally, Optional, only mandatory for ECL if the lnApiPassword is missing>"
+  #   Settings: 
+  #     userPersona: "<User persona to tailor the data on UI. Allowed values MERCHANT/OPERATOR. Default MERCHANT, Optional>"
+  #     themeMode: "<Theme modes, Allowed values DAY, NIGHT. Default DAY, Optional>"
+  #     themeColor: "<Theme colors, Allowed values PURPLE, TEAL, INDIGO, PINK, YELLOW. Default PURPLE, Optional>"
+  #     channelBackupPath: "<Path to save channel backup file. Only for LND implementation, Default <RTL root>\backup\node-1, Optional>"
+  #     bitcoindConfigPath: "<Path of bitcoind.conf path if available locally>"
+  #     logLevel: "<logging levels, will log in accordance with the logLevel value provided, Allowed values ERROR, WARN, INFO, DEBUG>"
+  #     fiatConversion: <parameter to turn fiat conversion off/on. Allowed values - true, false, default false, Optional>
+  #     currencyUnit: "<Optional: Fiat current Unit for currency conversion, default 'USD', Optional>"
+  #     unannouncedChannels: <parameter to turn off/on setting for opening announced Channels, default false, Optional>
+  #     lnServerUrl: "<Service url for LND/Core Lightning REST APIs for the node, e.g. https://192.168.0.1:8080 OR https://192.168.0.1:3001 OR http://192.168.0.1:8080. Default 'https://127.0.0.1:8080', Optional>"
+  #     swapServerUrl: "<Service url for swap server REST APIs for the node, e.g. https://127.0.0.1:8081, Optional>"
+  #     boltzServerUrl: "<Service url for boltz server REST APIs for the node, e.g. https://127.0.0.1:9003, Optional>"
+  ### Example:
+  # - index: 1
+  #   lnNode: "Node 1"
+  #   lnImplementation: "CLN"
+  #   Authentication:
+  #     runePath: "/credentials/rune"
+  #   Settings:
+  #     userPersona: "OPERATOR"
+  #     themeMode: "DAY"
+  #     themeColor: "PURPLE"
+  #     logLevel: "ERROR"
+  #     fiatConversion: false
+  #     currencyUnit: "USD"
+  #     unannouncedChannels: false
+  #     lnServerUrl: "https://c-lightning.lightning.svc.cluster.local:3001"
 
 serviceAccount:
   # Specifies whether a service account should be created

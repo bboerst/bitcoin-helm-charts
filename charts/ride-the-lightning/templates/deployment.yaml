@@ -42,18 +42,18 @@ spec:
     spec:
     {{- if .Values.configurationFile }}
       initContainers:
-        - name: copy-lit-config
+        - name: copy-rtl-config
           image: busybox
           {{- if .Values.extraconfig }}
-          command: ['sh', '-c', 'for f in /configmap/*.conf; do (cat "${f}"; echo) >> /root/.lit/lit.conf; done']
+          command: ['sh', '-c', 'for f in /configmap/*.json; do (cat "${f}"; echo) >> /RTL/RTL-Config.json; done']
           {{- else }}
-          command: ['sh', '-c', 'cat /configmap/lit.conf > /root/.lit/lit.conf']
+          command: ['sh', '-c', 'cat /configmap/RTL-Config.json > /RTL/RTL-Config.json']
           {{- end }}
           volumeMounts:
             - name: configmap
               mountPath: /configmap
             - name: config
-              mountPath: /root/.lit/
+              mountPath: /RTL
       {{- end }}
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -70,7 +70,6 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
-            - --uipassword={{ .Values.uiPassword }}
           {{-  range .Values.arguments }}
             - {{ . }}
           {{ end }}
@@ -98,29 +97,21 @@ spec:
             # initialDelaySeconds: 10
             # periodSeconds: 30
           volumeMounts:
-          - mountPath: /data/.lit/
+          - mountPath: /root/.rtl/
             name: data
-          {{- if .Values.configurationFile }}
           - name: config
-            mountPath: /root/.lit/lit.conf
-            subPath: lit.conf
-          {{- end }}
+            mountPath: /RTL/RTL-Config.json
+            subPath: RTL-Config.json
+          {{- if .Values.macaroon }}
           - name: credentials
-            mountPath: "/data/admin.macaroon"
+            mountPath: "/credentials/admin.macaroon"
             subPath: admin.macaroon
             readOnly: true
+          {{- end }}
+          {{- if .Values.rune }}
           - name: credentials
-            mountPath: "/data/tls.cert"
-            subPath: tls.cert
-            readOnly: true
-          {{- if .Values.mountTlsFromSecret }}
-          - name: tls
-            mountPath: "/ssl/tls.crt"
-            subPath: tls.crt
-            readOnly: true
-          - name: tls
-            mountPath: "/ssl/tls.key"
-            subPath: tls.key
+            mountPath: "/credentials/rune"
+            subPath: rune
             readOnly: true
           {{- end }}
           resources:
@@ -151,7 +142,6 @@ spec:
       {{- else }}
         emptyDir: {}
       {{ end }}
-      {{- if .Values.configurationFile }}
       - name: config
         emptyDir: {}
       - name: configmap
@@ -163,12 +153,7 @@ spec:
             - secret:
                 name: {{ .Values.extraconfig.secretName }}
             {{- end }}
-      {{- end }}
       - name: credentials
         secret:
           secretName: {{ template "ride-the-lightning.fullname" . }}-credentials
-      {{- if .Values.mountTlsFromSecret }}
-      - name: tls
-        secret:
-          secretName: {{ .Values.tlsSecretName }}
-      {{- end }}
+
