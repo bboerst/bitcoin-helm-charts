@@ -1,0 +1,169 @@
+# Default values for ckpool.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: bboerst/ckpool
+  tag: ""
+  pullPolicy: IfNotPresent
+
+strategyType: Recreate
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+arguments: []
+
+# Configuration
+config:
+  btcd:
+  - url: host.docker.internal:48332
+    auth: brian
+    pass: _xZrXNfZbt5B7ImO12dvGcQULyk-1drjEH99lWDFxwA
+    notify: true
+  upstream: 127.0.0.1:3336
+  btcaddress: tb1q0ujz0fqgnhxtnhyrrlg8cpjxtpvez9yxfyrma0
+  btcsig: "/@boerst/"
+  blockpoll: 100
+  donation: 0
+  nonce1length: 4
+  nonce2length: 8
+  update_interval: 30
+  version_mask: 1fffe000
+  serverurl:
+  - 0.0.0.0:3333
+  - 0.0.0.0:80
+  nodeserver:
+  - 0.0.0.0:3335
+  trusted:
+  - 0.0.0.0:3336
+  mindiff: 1
+  startdiff: 42
+  maxdiff: 0
+  zmqblock: tcp://host.docker.internal:28332
+  logdir: logs
+
+
+env:          
+  LOG_LEVEL: "debug"
+  TOR_PROXY_SERVER: ""
+  THEME: "dark"
+  CURRENCY: "sat"
+  FETCH_PRICES: "true"
+  FETCH_FEES: "true"
+  DISABLE_LINKS: "false"
+  DISABLE_LNMARKETS: "false"
+  NO_VERSION_CHECK: "false"
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  # runAsNonRoot: true
+  allowPrivilegeEscalation: false
+  seccompProfile:
+    type: RuntimeDefault
+
+service:
+  enabled: true
+
+  annotations: {}
+  labels: {}
+  ## Deprecated, instead simply do not provide a clusterIP value
+  omitClusterIP: false
+  # clusterIP: ""
+
+  ## List of IP addresses at which the controller services are available
+  ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+  ##
+  externalIPs: []
+
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+
+  ## Set external traffic policy to: "Local" to preserve source IP on
+  ## providers supporting it
+  ## Ref: https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-typeloadbalancer
+  externalTrafficPolicy: ""
+
+  # Must be either "None" or "ClientIP" if set. Kubernetes will default to "None".
+  # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+  sessionAffinity: ""
+
+  healthCheckNodePort: 0
+
+  ports:
+    tcp: {}
+
+  type: ClusterIP
+
+ingress:
+  enabled: false
+  # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+  # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+  # ingressClassName: nginx
+  # Values can be templated
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  labels: {}
+  path: /
+
+  # pathType is only for k8s >= 1.1=
+  pathType: Prefix
+
+persistence:
+  enabled: false
+  ## ckpool data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  ##
+  ## If you want to reuse an existing claim, you can pass the name of the PVC using
+  ## the existingClaim variable
+  # existingClaim: your-claim
+  ##
+  ## If you want to use a volume on the host machine instead of a PVC:
+  # hostPath: /path/to/the/config/folder
+  accessMode: ReadWriteOnce
+  size: 5Gi
+
+  tls: []
+  #  - secretName: ckpool-tls
+  #    hosts:
+  #      - ckpool.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

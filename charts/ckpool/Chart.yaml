@@ -1,0 +1,6 @@
+apiVersion: v2
+description: A Helm chart for ckpool
+name: ckpool
+version: 0.1.0
+# renovate: image=bboerst/ckpool
+appVersion: "master-testnet4-v1"

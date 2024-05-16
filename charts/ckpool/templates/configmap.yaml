@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template "ckpool.fullname" . }}-config
+  labels:
+    app: {{ template "ckpool.name" . }}
+    chart: {{ template "ckpool.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  thubConfig.yaml: |-
+{{ toYaml .Values.config | b64enc | indent 6 }}
