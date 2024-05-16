@@ -1,0 +1,12 @@
+{{- if and .Values.ssl.enabled .Values.ssl.useCertManager }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ template "nutshell.fullname" . }}-ssl-certificate
+spec:
+  secretName: {{ .Values.ssl.certificate.secretName }}
+  issuerRef:
+    name: {{ .Values.ssl.issuerRef.name }}
+    kind: {{ .Values.ssl.issuerRef.kind }}
+  dnsNames: {{ .Values.ssl.certificate.dnsNames }}
+{{- end }}

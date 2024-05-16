@@ -1,0 +1,7 @@
+apiVersion: v2
+type: application
+description: nutshell helm chart
+name: nutshell
+version: 0.1.0
+# renovate: image=cashubtc/nutshell
+appVersion: 0.15.3
