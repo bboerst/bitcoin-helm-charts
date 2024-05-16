@@ -31,6 +31,9 @@ env:
 secretEnv:
   MINT_PRIVATE_KEY: "supersecretprivatekey"
 
+# Macaroon for either LND or C-Lightning
+macaroon: ""
+
 ssl:
   enabled: false
   useCertManager: true
