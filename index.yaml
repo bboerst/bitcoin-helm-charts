@@ -92,6 +92,16 @@ entries:
   fulcrum:
   - apiVersion: v2
     appVersion: v1.10.0
+    created: "2024-06-01T18:53:04.007010344Z"
+    description: fulcrum helm chart
+    digest: 57d37d1ed965470d82d6c7309193d75c0e19f53789edf753fe064d7a27b5cd46
+    name: fulcrum
+    type: application
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/fulcrum-0.1.6/fulcrum-0.1.6.tgz
+    version: 0.1.6
+  - apiVersion: v2
+    appVersion: v1.10.0
     created: "2024-05-03T22:33:34.101128209Z"
     description: fulcrum helm chart
     digest: 53d5fa9ea6327e836135867a91e5b785f1d58d4671958fcf01871a3795eed14d
@@ -428,4 +438,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2024-05-10T11:58:11.333400411Z"
+generated: "2024-06-01T18:53:04.007065937Z"
