@@ -98,6 +98,10 @@ service:
   omitClusterIP: false
   # clusterIP: ""
 
+  ports:
+    tcp:
+      - 50002
+
   ## List of IP addresses at which the controller services are available
   ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
   ##

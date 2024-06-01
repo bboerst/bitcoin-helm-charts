@@ -44,9 +44,12 @@ spec:
   healthCheckNodePort: {{ .Values.service.healthCheckNodePort }}
 {{- end }}
   ports:
-    - name: tcp
-      port: {{ .Values.ssl.enabled | ternary 50002 50001 }}
-      targetPort: tcp
+  {{- range $port := .Values.service.ports.tcp }}
+    - name: "{{ $port }}-tcp"
+      port: {{ $port }}
+      protocol: TCP
+      targetPort: "{{ $port }}-tcp"
+  {{- end }}
   selector:
     app: {{ template "fulcrum.name" . }}
     {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: fulcrum
