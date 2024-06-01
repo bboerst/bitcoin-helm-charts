@@ -57,12 +57,15 @@ spec:
           command:
             - /usr/bin/Fulcrum
           args:
-          {{  range .Values.arguments }}
+          {{-  range .Values.arguments }}
             - {{ . }}
-          {{ end }}
+          {{- end }}
           ports:
-            - name: tcp
-              containerPort: {{ .Values.ssl.enabled | ternary 50002 50001 }}
+            {{- range $port := .Values.service.ports.tcp }}
+            - name: "{{ $port }}-tcp"
+              containerPort: {{ $port }}
+              protocol: TCP
+            {{- end }}
           volumeMounts:
             - name: config
               mountPath: /data/config.toml
@@ -98,11 +101,11 @@ spec:
       volumes:
       - name: config
         secret:
-        {{ if .Values.existingConfigSecret }}
+        {{- if .Values.existingConfigSecret }}
           secretName: {{ .Values.existingConfigSecret }}
         {{ else }}
           secretName: {{ .Release.Name }}-config-file
-        {{ end}}
+        {{- end}}
       - name: data
       {{- if .Values.persistence.enabled }}
         {{- if .Values.persistence.hostPath }}
