@@ -12,7 +12,7 @@ metadata:
 {{- if .Values.service.labels }}
 {{ toYaml .Values.service.labels | indent 4 }}
 {{- end }}
-    app: {{ template "nutshell.name" . }}
+    app: {{ template "nutshell.fullname" . }}
     chart: {{ template "nutshell.chart" . }}
     component: "{{ .Values.name }}"
     heritage: {{ .Release.Service }}
@@ -57,7 +57,7 @@ spec:
       targetPort: "{{ $port }}-udp"
   {{- end }}
   selector:
-    app: {{ template "nutshell.name" . }}
-    {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: nutshell
+    app: {{ template "nutshell.fullname" . }}
+    {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: {{ template "nutshell.fullname" . }}
   type: "{{ .Values.service.type }}"
 {{- end }}

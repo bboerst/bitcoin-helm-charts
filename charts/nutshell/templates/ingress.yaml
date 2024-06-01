@@ -3,7 +3,7 @@
 {{- $ingressSupportsIngressClassName := eq (include "nutshell.ingress.supportsIngressClassName" .) "true" -}}
 {{- $ingressSupportsPathType := eq (include "nutshell.ingress.supportsPathType" .) "true" -}}
 {{- $fullName := include "nutshell.fullname" . -}}
-{{- $servicePort := .Values.ssl.enabled | ternary 50002 50001 -}}
+{{- $servicePorts := .Values.service.ports.tcp -}}
 {{- $ingressPath := .Values.ingress.path -}}
 {{- $ingressPathType := .Values.ingress.pathType -}}
 {{- $extraPaths := .Values.ingress.extraPaths -}}
@@ -44,6 +44,7 @@ spec:
             {{- if $ingressSupportsPathType }}
             pathType: {{ $ingressPathType }}
             {{- end }}
+            {{ range $servicePort := $servicePorts }}
             backend:
               {{- if $ingressApiIsStable }}
               service:
@@ -54,10 +55,12 @@ spec:
               serviceName: {{ $fullName }}
               servicePort: {{ $servicePort }}
               {{- end }}
+              {{- end }}
   {{- end }}
   {{- else }}
     - http:
         paths:
+          {{ range $servicePort := $servicePorts }}
           - backend:
               {{- if $ingressApiIsStable }}
               service:
@@ -73,6 +76,7 @@ spec:
             {{- end }}
             {{- if $ingressSupportsPathType }}
             pathType: {{ $ingressPathType }}
+            {{- end }}
             {{- end }}
   {{- end -}}
 {{- end }}

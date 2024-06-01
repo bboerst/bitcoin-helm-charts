@@ -2,10 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ template "nutshell.name" . }}
+    app: {{ template "nutshell.fullname" . }}
     chart: {{ template "nutshell.chart" . }}
     heritage: {{ .Release.Service }}
-    {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: nutshell
+    {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: {{ template "nutshell.fullname" . }}
 
     {{- if .Values.deploymentLabels }}
 {{ toYaml .Values.deploymentLabels | indent 4 }}
@@ -17,9 +17,9 @@ spec:
     type: {{ .Values.strategyType }}
   selector:
     matchLabels:
-      app: {{ template "nutshell.name" . }}
+      app: {{ template "nutshell.fullname" . }}
     {{- if .Values.useComponentLabel }}
-      {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: nutshell
+      {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: {{ template "nutshell.fullname" . }}
     {{- end }}
   template:
     metadata:
@@ -33,9 +33,9 @@ spec:
       {{- end }}
       {{- end }}
       labels:
-        app: {{ template "nutshell.name" . }}
+        app: {{ template "nutshell.fullname" . }}
         component: "{{ .Values.name }}"
-        {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: nutshell
+        {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: {{ template "nutshell.fullname" . }}
         {{- if .Values.podLabels }}
 {{ toYaml .Values.podLabels | indent 8 }}
         {{- end }}
@@ -55,9 +55,9 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
-          {{  range .Values.command }}
+          {{-  range .Values.command }}
             - {{ . }}
-          {{ end }}
+          {{- end }}
           env:
             - name: CASHU_DIR
               value: "/root/.cashu"
@@ -65,15 +65,15 @@ spec:
             - name: {{ $key }}
               value: {{ $val | quote }}
           {{- end }}
-          {{- range $key, $val := .Values.env.secret }}
-          - name: {{ $key }}
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "nutshell.fullname" . }}
-                key: {{ $key }}
+          {{- range $key, $val := .Values.secretEnv }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nutshell.fullname" $ }}
+                  key: {{ $key }}
           {{- end}}
           args:
-          {{  range .Values.arguments }}
+          {{ range .Values.arguments }}
             - {{ . }}
           {{ end }}
           ports:
@@ -90,6 +90,12 @@ spec:
           volumeMounts:
             - mountPath: /root/.cashu
               name: data
+            {{- if .Values.macaroon }}
+            - name: credentials
+              mountPath: "/credentials/access.macaroon"
+              subPath: access.macaroon
+              readOnly: true
+            {{- end }}
             {{- if and .Values.ssl.enabled .Values.ssl.mountCertificate }}
             - name: ssl
               mountPath: "/ssl/tls.crt"
@@ -133,3 +139,6 @@ spec:
         secret:
           secretName: {{ .Values.ssl.certificate.secretName }}
       {{- end }}
+      - name: credentials
+        secret:
+          secretName: {{ template "nutshell.fullname" . }}-credentials

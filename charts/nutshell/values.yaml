@@ -25,13 +25,14 @@ env:
   MINT_INFO_DESCRIPTION_LONG: "A long mint description that can be a long piece of text."
   MINT_INFO_MOTD: "Message to users"
   MINT_DERIVATION_PATH: "m/0'/0'/0'"
-  MINT_DATABASE: "data/mint"
+  MINT_DATABASE: "/root/.cashu/data/mint"
   MINT_BACKEND_BOLT11_SAT: "FakeWallet"
 
 secretEnv:
   MINT_PRIVATE_KEY: "supersecretprivatekey"
 
 # Macaroon for either LND or C-Lightning
+# Mounts to /credentials/access.macaroon
 macaroon: ""
 
 ssl:
@@ -50,7 +51,10 @@ ssl:
 
 arguments: []
 
-command: []
+command:
+  - "poetry"
+  - "run"
+  - "mint"
 
 serviceAccount:
   # Specifies whether a service account should be created
