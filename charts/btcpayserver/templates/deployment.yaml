@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "btcpayserver.fullname" . }}
+  labels:
+    {{- include "btcpayserver.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  strategy:
+    type: Recreate  
+  selector:
+    matchLabels:
+      {{- include "btcpayserver.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "btcpayserver.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "btcpayserver.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          # command: ['sleep']
+          # args:
+          #   - "--debuglog=/data/debug.log"
+          env:
+          - name: BTCPAY_POSTGRES
+            value: "User ID={{ .Values.postgresql.global.postgresql.auth.username }};Password={{ .Values.postgresql.global.postgresql.auth.password }};Host=btcpayserver-postgresql;Port=5432;Database={{ .Values.postgresql.auth.database }}"
+          - name: NBITCOIN_NETWORK
+            value: "mainnet"
+          - name: BTCPAY_BIND
+            value: "0.0.0.0:{{ .Values.service.port }}"
+          - name: BTCPAY_DATADIR
+            value: "/data"
+          - name: BTCPAY_ROOTPATH
+            value: "/"
+          - name: BTCPAY_DEBUGLOG
+            value: "btcpay.log"      
+          - name: BTCPAY_DOCKERDEPLOYMENT
+            value: "true"
+          - name: BTCPAY_CHAINS
+            value: "btc"
+          - name: BTCPAY_BTCEXPLORERURL
+            value: "http://nbxplorer:32838"
+          - name: BTCPAY_HOST
+            value: "btcpay.boerst.com"
+          - name: VIRTUAL_HOST
+            value: "btcpay.boerst.com"
+          - name: VIRTUAL_HOST_NAME
+            value: "btcpay"
+          - name: BTCPAY_PROTOCOL
+            value: "https"
+          - name: BTCPAYGEN_LIGHTNING
+            value: "lnd"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+          - mountPath: /data
+            name: btcpayserver
+          # - mountPath: /lndhub/admin.macaroon
+          #   name: admin-macaroon
+          #   subPath: "admin.macaroon"
+          ports:
+            - name: btcpayserver
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: btcpayserver
+          persistentVolumeClaim:
+            claimName: btcpayserver
+        # - name: admin-macaroon
+        #   secret:
+        #     secretName: btcpayserver-config
+        # - name: tls-cert
+        #   secret:
+        #     secretName: btcpayserver-config
+        - name: cookie
+          secret:
+            secretName: btcpayserver-config
