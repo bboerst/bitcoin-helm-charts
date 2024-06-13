@@ -41,6 +41,9 @@ for FILE in $CHANGED_FILES; do
     
     echo "Detected changes in Chart.yaml file at $DIR. Running helm lint..."
     
+    # Update dependencies before linting
+    helm dependency update "$DIR"
+
     # Navigate to the chart directory and run helm lint
     helm lint "$DIR"
     
