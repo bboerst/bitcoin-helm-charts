@@ -162,6 +162,19 @@ entries:
     version: 0.1.0
   lnd:
   - apiVersion: v2
+    appVersion: v0.18.1-beta
+    created: "2024-07-03T02:51:35.814274702Z"
+    description: A golang implementation of a Lightning Network node
+    digest: 679ec909b39be0afcfbd147271ec898e160d3c024e17e8e1baeea5a1b53747a3
+    home: https://github.com/lightningnetwork/lnd
+    keywords:
+    - lnd
+    - bitcoin
+    name: lnd
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/lnd-0.1.5/lnd-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
     appVersion: v0.17.5-beta
     created: "2024-04-27T16:54:01.582001371Z"
     description: A golang implementation of a Lightning Network node
@@ -448,4 +461,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2024-06-17T01:23:05.047855357Z"
+generated: "2024-07-03T02:51:35.814337359Z"
