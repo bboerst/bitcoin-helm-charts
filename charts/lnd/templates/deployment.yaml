@@ -79,6 +79,16 @@ spec:
               mountPath: /passwords/wallet_password
               subPath: wallet_password
             {{- end }}
+            {{- if and .Values.ssl.enabled .Values.ssl.mountCertificate }}
+            - name: ssl
+              mountPath: {{ .Values.ssl.certMountPath }}
+              subPath: tls.crt
+              readOnly: true
+            - name: ssl
+              mountPath: {{ .Values.ssl.certKeyMountPath }}
+              subPath: tls.key
+              readOnly: true
+            {{- end }}
           lifecycle:
             preStop:
               exec:
@@ -111,3 +121,8 @@ spec:
         {{- else }}
           emptyDir: {}
         {{- end -}}
+        {{- if and .Values.ssl.enabled .Values.ssl.mountCertificate }}
+        - name: ssl
+          secret:
+            secretName: {{ .Values.ssl.certificate.secretName }}
+        {{- end }}

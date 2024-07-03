@@ -131,6 +131,23 @@ resources:
 network: testnet
 # network: mainnet
 
+ssl:
+  enabled: false
+  useCertManager: true
+  mountCertificate: true
+
+  certMountPath: "/root/.lnd/tls.cert"
+  certKeyMountPath: "/root/.lnd/tls.key"
+
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  
+  certificate:
+    dnsNames:
+      - "mylnd.domain.com"
+    secretName: "lnd-ssl-certificate"
+
 # Custom lnd configuration file used to override default lnd settings
 configurationFile:
   lnd.conf: |-
