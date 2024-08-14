@@ -1,6 +1,6 @@
 # lnd
 
-![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![AppVersion: v0.18.1-beta](https://img.shields.io/badge/AppVersion-v0.18.1--beta-informational?style=flat-square)
+![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![AppVersion: v0.18.2-beta](https://img.shields.io/badge/AppVersion-v0.18.2--beta-informational?style=flat-square)
 
 A golang implementation of a Lightning Network node
 
