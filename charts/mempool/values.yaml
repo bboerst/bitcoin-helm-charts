@@ -274,6 +274,7 @@ mariadb:
     rootPassword: admin
 
   primary:
+    resourcesPreset: "small"
     persistence:
       enabled: false
       size: 8Gi

@@ -100,6 +100,7 @@ A Helm chart for mempool
 | mariadb.auth.username | string | `"mempool"` |  |
 | mariadb.primary.persistence.enabled | bool | `false` |  |
 | mariadb.primary.persistence.size | string | `"8Gi"` |  |
+| mariadb.primary.resourcesPreset | string | `"small"` |  |
 | replicaCount | int | `1` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `nil` |  |
