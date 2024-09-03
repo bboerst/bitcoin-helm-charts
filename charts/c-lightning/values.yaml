@@ -36,6 +36,8 @@ configurationFile:
     bitcoin-rpcport=8332
     bitcoin-rpcuser=c-lightning
     bitcoin-rpcpassword=aHVudGVyMQ==
+    clnrest-port=3010
+    clnrest-host=0.0.0.0
 
 # Ports that are exposed to other pods in your cluster
 service:
@@ -44,7 +46,7 @@ service:
   tcpPort: 9735
 
   restEnabled: false
-  restPort: 3001
+  restPort: 3010
 
 podSecurityContext: {}
   # fsGroup: 2000

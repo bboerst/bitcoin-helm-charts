@@ -1,9 +1,9 @@
 apiVersion: v2
 name: c-lightning
 description: A specification compliant Lightning Network implementation in C
-version: 0.1.2
+version: 0.1.3
 # renovate: image=elementsproject/lightningd
-appVersion: v24.05-amd64
+appVersion: v24.08
 keywords:
   - c-lightning
   - bitcoin

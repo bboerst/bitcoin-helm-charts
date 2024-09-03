@@ -1,6 +1,6 @@
 # c-lightning
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![AppVersion: v24.05-amd64](https://img.shields.io/badge/AppVersion-v24.05--amd64-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![AppVersion: v24.08](https://img.shields.io/badge/AppVersion-v24.08-informational?style=flat-square)
 
 A specification compliant Lightning Network implementation in C
 
@@ -11,7 +11,7 @@ A specification compliant Lightning Network implementation in C
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | arguments | list | `[]` |  |
-| configurationFile.config | string | `"wallet=sqlite3:///root/.lightning/bitcoin/lightningd.sqlite3:/root/backup/lightningd.sqlite3\nalias=MyNodeAlias\nnetwork=bitcoin\nbitcoin-rpcconnect=bitcoind.bitcoin.svc.cluster.local\nbitcoin-rpcport=8332\nbitcoin-rpcuser=c-lightning\nbitcoin-rpcpassword=aHVudGVyMQ=="` |  |
+| configurationFile.config | string | `"wallet=sqlite3:///root/.lightning/bitcoin/lightningd.sqlite3:/root/backup/lightningd.sqlite3\nalias=MyNodeAlias\nnetwork=bitcoin\nbitcoin-rpcconnect=bitcoind.bitcoin.svc.cluster.local\nbitcoin-rpcport=8332\nbitcoin-rpcuser=c-lightning\nbitcoin-rpcpassword=aHVudGVyMQ==\nclnrest-port=3010\nclnrest-host=0.0.0.0"` |  |
 | extraContainers | list | `[]` |  |
 | extraManifests | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
@@ -49,7 +49,7 @@ A specification compliant Lightning Network implementation in C
 | securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | service.restEnabled | bool | `false` |  |
-| service.restPort | int | `3001` |  |
+| service.restPort | int | `3010` |  |
 | service.tcpPort | int | `9735` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.create | bool | `true` |  |
