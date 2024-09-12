@@ -1,0 +1,42 @@
+port: 3000
+config:
+  RTL-Config.json: |-
+    {
+      "multiPass": "password",
+      "port": "3000",
+      "defaultNodeIndex": 1,
+      "SSO": {
+        "rtlSSO": 0,
+      },
+      "nodes": [
+        {
+          "index": 1,
+          "lnNode": "Node 1",
+          "lnImplementation": "LND",
+          "Authentication": {
+            "macaroonPath": "/root/nodes/macaroon-1.macaroon",
+            "lnServerUrl": "https://lnd-1:8080",
+          },
+          "Settings": {}
+        }
+      ]
+    }
+nodeMacaroonSecret: rtl-nodes
+image:
+  repository: shahanafarooqui/rtl
+  tag: 0.12.2
+
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+  hosts:
+    - host: rtl.lnd.dev.flitz.be
+      paths:
+        - path: /
+          port: 3000
+  tls:
+    - hosts:
+        - rtl.lnd.dev.flitz.be
+      secretName: lnd-rtl-tls-secret
