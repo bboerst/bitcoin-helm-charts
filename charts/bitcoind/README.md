@@ -1,6 +1,6 @@
 # bitcoind
 
-![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square) ![AppVersion: v27.0](https://img.shields.io/badge/AppVersion-v27.0-informational?style=flat-square)
+![Version: 0.3.3](https://img.shields.io/badge/Version-0.3.3-informational?style=flat-square) ![AppVersion: v27.1](https://img.shields.io/badge/AppVersion-v27.1-informational?style=flat-square)
 
 A Helm chart for bitcoin-core daemon bitcoind
 
