@@ -1,0 +1,14 @@
+annotations:
+  key: value
+port: 9092
+sleep: 30
+listenaddr: 0.0.0.0:9092
+macaroonDir: /credentials/
+tlsPath: /credentials/tls.cert
+lndNetwork: regtest
+lndHost: your-lnd-host:10009
+secretName: your-lnd-credentials-secret
+extraOptions: --disablegraph
+image:
+  repository: lightninglabs/lndmon
+  tag: v0.2.1
