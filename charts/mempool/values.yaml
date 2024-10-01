@@ -149,7 +149,7 @@ frontend:
 backend:
   image:
     repository: mempool/backend
-    tag: v3.0.0
+    tag: v3.0.1
     pullPolicy: IfNotPresent
 
   strategyType: Recreate
