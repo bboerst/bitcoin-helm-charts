@@ -13,9 +13,9 @@ metadata:
 {{- if .Values.service.labels }}
 {{ toYaml .Values.service.labels | indent 4 }}
 {{- end }}
-    app: {{ template "tor.name" . }}
+    app: {{ template "tor.fullname" . }}
     chart: {{ template "tor.chart" . }}
-    component: "{{ .Values.name }}"
+    component: "{{ template "tor.name" . }}"
     heritage: {{ .Release.Service }}
   name: {{ template "tor.fullname" . }}
 spec:
@@ -87,7 +87,7 @@ spec:
      {{- end }}
   {{- end }}
   selector:
-    app: {{ template "tor.name" . }}
+    app: {{ template "tor.fullname" . }}
     {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: tor
   type: "{{ .Values.service.type }}"
 {{- end }}

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ template "tor.name" . }}
+    app: {{ template "tor.fullname" . }}
     chart: {{ template "tor.chart" . }}
     heritage: {{ .Release.Service }}
     {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: controller
@@ -15,7 +15,7 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "tor.name" . }}
+      app: {{ template "tor.fullname" . }}
     {{- if .Values.useComponentLabel }}
       {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: tor
     {{- end }}
@@ -31,8 +31,8 @@ spec:
       {{- end }}
       {{- end }}
       labels:
-        app: {{ template "tor.name" . }}
-        component: "{{ .Values.name }}"
+        app: {{ template "tor.fullname" . }}
+        component: "{{ template "tor.name" . }}"
         {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: tor
         {{- if .Values.podLabels }}
 {{ toYaml .Values.podLabels | indent 8 }}
