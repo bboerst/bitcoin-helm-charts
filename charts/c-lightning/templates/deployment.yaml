@@ -63,6 +63,22 @@ spec:
               value: /root/.lightning
             - name: EXPOSE_TCP
               value: "true"
+          args:
+            - --network={{ .Values.network }}
+          {{- if .Values.postgresql.enabled }}
+          env:
+            - name: PGHOST
+              value: {{ include "c-lightning.fullname" . }}-postgresql
+            - name: PGPORT
+              value: "5432"
+            - name: PGUSER
+              value: {{ .Values.postgresql.auth.username }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "c-lightning.fullname" . }}-postgresql
+                  key: postgres-password
+          {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
           ports:
