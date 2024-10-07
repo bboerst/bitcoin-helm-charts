@@ -2,3 +2,14 @@ Note: Make sure to follow the instructions in the README to finish setting up yo
 
 Once your wallet is setup, the c-lightning RPC interface can be accessed via port {{ .Values.service.rpcPort }} on the following DNS name from within your cluster:
 {{ template "c-lightning.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+
+{{- if .Values.postgresql.enabled }}
+c-lightning is configured to use a PostgreSQL database. The database connection details are automatically set up.
+The PostgreSQL connection string is: postgres://clightning:clightning@{{ .Release.Name }}-postgresql:5432/clightning_db
+
+To change the database configuration, modify the PostgreSQL settings in the `postgresql` section of your values.yaml file.
+{{- else }}
+c-lightning is using its default SQLite database. If you want to use PostgreSQL, set `postgresql.enabled: true` in your values.yaml file.
+{{- end }}
+
+To change the wallet configuration, modify the `wallet` line in the `configurationFile.config` section of your values.yaml file.

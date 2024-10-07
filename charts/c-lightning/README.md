@@ -1,17 +1,23 @@
 # c-lightning
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![AppVersion: v24.08](https://img.shields.io/badge/AppVersion-v24.08-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![AppVersion: v24.08](https://img.shields.io/badge/AppVersion-v24.08-informational?style=flat-square)
 
 A specification compliant Lightning Network implementation in C
 
 **Homepage:** <https://github.com/ElementsProject/lightning>
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://charts.bitnami.com/bitnami | postgresql | 12.x.x |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | arguments | list | `[]` |  |
-| configurationFile.config | string | `"wallet=sqlite3:///root/.lightning/bitcoin/lightningd.sqlite3:/root/backup/lightningd.sqlite3\nalias=MyNodeAlias\nnetwork=bitcoin\nbitcoin-rpcconnect=bitcoind.bitcoin.svc.cluster.local\nbitcoin-rpcport=8332\nbitcoin-rpcuser=c-lightning\nbitcoin-rpcpassword=aHVudGVyMQ==\nclnrest-port=3010\nclnrest-host=0.0.0.0"` |  |
+| configurationFile.config | string | `"wallet=sqlite3:///root/.lightning/bitcoin/lightningd.sqlite3:/root/backup/lightningd.sqlite3\n# wallet=postgres://clightning:clightning@{{ .Release.Name }}-postgresql:5432/clightning_db\nalias=MyNodeAlias\nnetwork=bitcoin\nbitcoin-rpcconnect=bitcoind.bitcoin.svc.cluster.local\nbitcoin-rpcport=8332\nbitcoin-rpcuser=c-lightning\nbitcoin-rpcpassword=aHVudGVyMQ==\nclnrest-port=3010\nclnrest-host=0.0.0.0"` |  |
 | extraContainers | list | `[]` |  |
 | extraManifests | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
@@ -42,6 +48,17 @@ A specification compliant Lightning Network implementation in C
 | persistenceBackup.enabled | bool | `false` |  |
 | persistenceBackup.size | string | `"5Gi"` |  |
 | podSecurityContext | object | `{}` |  |
+| postgresql.auth.database | string | `"clightning_db"` |  |
+| postgresql.auth.password | string | `"clightning"` |  |
+| postgresql.auth.username | string | `"clightning"` |  |
+| postgresql.enabled | bool | `false` |  |
+| postgresql.persistence.size | string | `"5Gi"` |  |
+| postgresql.primary.configuration | string | `"shared_buffers = 256MB\nmax_connections = 100\nsynchronous_commit = off\nfsync = off\nfull_page_writes = off\n"` |  |
+| postgresql.primary.initdb.args | string | `"--lc-collate=C --lc-ctype=C"` |  |
+| postgresql.resources.limits.cpu | string | `"500m"` |  |
+| postgresql.resources.limits.memory | string | `"512Mi"` |  |
+| postgresql.resources.requests.cpu | string | `"250m"` |  |
+| postgresql.resources.requests.memory | string | `"256Mi"` |  |
 | resources.limits.memory | string | `"512Mi"` |  |
 | resources.requests.cpu | string | `"100m"` |  |
 | resources.requests.memory | string | `"512Mi"` |  |

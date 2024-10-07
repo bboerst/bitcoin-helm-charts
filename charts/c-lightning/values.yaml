@@ -30,6 +30,7 @@ arguments: []
 configurationFile:
   config: |-
     wallet=sqlite3:///root/.lightning/bitcoin/lightningd.sqlite3:/root/backup/lightningd.sqlite3
+    # wallet=postgres://clightning:clightning@{{ .Release.Name }}-postgresql:5432/clightning_db
     alias=MyNodeAlias
     network=bitcoin
     bitcoin-rpcconnect=bitcoind.bitcoin.svc.cluster.local
@@ -189,3 +190,40 @@ extraManifests: []
 #        services:
 #        - name: {{ include "c-lightning.fullname" . }}
 #          port: 8080
+
+# PostgreSQL configuration
+postgresql:
+  # Set to true to deploy a PostgreSQL instance. Be sure to change the 'wallet' configuration option to use
+  #  postgres. Example: postgres://lightningusr:<password assigned to lightningusr>@localhost:5432/lightningdb
+  enabled: false
+  # PostgreSQL User to create
+  auth:
+    username: clightning
+    password: clightning
+    database: clightning_db
+  
+  # PostgreSQL parameters
+  primary:
+    initdb:
+      args: "--lc-collate=C --lc-ctype=C"
+    
+    # Custom postgresql.conf parameters
+    configuration: |
+      shared_buffers = 256MB
+      max_connections = 100
+      synchronous_commit = off
+      fsync = off
+      full_page_writes = off
+
+  # Persistence configuration
+  persistence:
+    size: 5Gi
+
+  # Resources limits
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
