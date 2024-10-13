@@ -4,7 +4,7 @@ metadata:
   name: {{ template "c-lightning.fullname" . }}
   namespace: {{ template "c-lightning.namespace" . }}
   labels:
-    app: {{ template "c-lightning.name" . }}
+    app: {{ template "c-lightning.fullname" . }}
     chart: {{ template "c-lightning.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -13,14 +13,14 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ template "c-lightning.name" . }}
+      app: {{ template "c-lightning.fullname" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
-        app: {{ template "c-lightning.name" . }}
+        app: {{ template "c-lightning.fullname" . }}
         release: {{ .Release.Name }}
     spec:
       {{- if .Values.configurationFile }}

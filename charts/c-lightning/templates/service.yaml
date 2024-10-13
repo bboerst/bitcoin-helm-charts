@@ -4,7 +4,7 @@ metadata:
   name: {{ template "c-lightning.fullname" . }}
   namespace: {{ template "c-lightning.namespace" . }}
   labels:
-    app: {{ template "c-lightning.name" . }}
+    app: {{ template "c-lightning.fullname" . }}
     chart: {{ template "c-lightning.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -20,5 +20,5 @@ spec:
       targetPort: rest
     {{- end }}
   selector:
-    app: {{ template "c-lightning.name" . }}
+    app: {{ template "c-lightning.fullname" . }}
     release: {{ .Release.Name }}
