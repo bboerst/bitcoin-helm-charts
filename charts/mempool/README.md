@@ -1,6 +1,6 @@
 # mempool
 
-![Version: 0.1.8](https://img.shields.io/badge/Version-0.1.8-informational?style=flat-square) ![AppVersion: v3.0.0](https://img.shields.io/badge/AppVersion-v3.0.0-informational?style=flat-square)
+![Version: 0.1.9](https://img.shields.io/badge/Version-0.1.9-informational?style=flat-square) ![AppVersion: v3.0.1](https://img.shields.io/badge/AppVersion-v3.0.1-informational?style=flat-square)
 
 A Helm chart for mempool
 
@@ -8,7 +8,7 @@ A Helm chart for mempool
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | mariadb | 19.0.5 |
+| https://charts.bitnami.com/bitnami | mariadb | 19.1.0 |
 
 ## Values
 
@@ -28,7 +28,7 @@ A Helm chart for mempool
 | backend.fullnameOverride | string | `""` |  |
 | backend.image.pullPolicy | string | `"IfNotPresent"` |  |
 | backend.image.repository | string | `"mempool/backend"` |  |
-| backend.image.tag | string | `"v3.0.0"` |  |
+| backend.image.tag | string | `"v3.0.1"` |  |
 | backend.imagePullSecrets | list | `[]` |  |
 | backend.mempoolBackend.type | string | `"none"` |  |
 | backend.nameOverride | string | `""` |  |
@@ -61,7 +61,7 @@ A Helm chart for mempool
 | frontend.fullnameOverride | string | `""` |  |
 | frontend.image.pullPolicy | string | `"IfNotPresent"` |  |
 | frontend.image.repository | string | `"mempool/frontend"` |  |
-| frontend.image.tag | string | `"v3.0.0"` |  |
+| frontend.image.tag | string | `"v3.0.1"` |  |
 | frontend.imagePullSecrets | list | `[]` |  |
 | frontend.ingress.annotations | object | `{}` |  |
 | frontend.ingress.enabled | bool | `false` |  |
