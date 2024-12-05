@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: lncm/bitcoind
+  repository: bboerst/lncm-bitcoind
   tag: ""
   pullPolicy: IfNotPresent
 
@@ -21,6 +21,16 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name:
+
+extraEnv: {}
+# MALLOC_ARENA_MAX: 1
+
+# Few options for configuration...
+#  1. Send in configuration as "arguments:". This simply adds each option as an argument to ./bitcoind
+#  2. Specify the name of an "externalSecret:" that contains the contents of bitcoin.conf.
+#  3. Both of these can be used together and is useful for things that you want to keep secret, like rpc
+#     credentials. In this case, you would specify most configuration as "arguments" and rpc credentials
+#     in an externalSecret.
 
 arguments:
   # Send trace/debug info to console instead of debug.log file
@@ -71,6 +81,13 @@ arguments:
   # - -maxmempool=50
   # - -maxconnections=40
   # - -maxuploadtarget=5000
+
+# This secret gets mounted as bitcoin.conf. Use this example command to generate this secret:
+#
+#  kubectl create secret generic bitcoin-conf-secret --from-file=bitcoin.conf=/path/to/bitcoin.conf
+#
+# The above example would then use "bitcoin-conf-secret" in configExternalSecretName
+configExternalSecretName: ""
 
 podSecurityContext: {}
   # fsGroup: 2000

@@ -1,6 +1,6 @@
 # bitcoind
 
-![Version: 0.3.3](https://img.shields.io/badge/Version-0.3.3-informational?style=flat-square) ![AppVersion: v27.1](https://img.shields.io/badge/AppVersion-v27.1-informational?style=flat-square)
+![Version: 0.3.4](https://img.shields.io/badge/Version-0.3.4-informational?style=flat-square) ![AppVersion: v28.0-amd64](https://img.shields.io/badge/AppVersion-v28.0--amd64-informational?style=flat-square)
 
 A Helm chart for bitcoin-core daemon bitcoind
 
@@ -12,14 +12,16 @@ A Helm chart for bitcoin-core daemon bitcoind
 | arguments[0] | string | `"-printtoconsole"` |  |
 | arguments[1] | string | `"-txindex"` |  |
 | arguments[2] | string | `"-disablewallet"` |  |
+| configExternalSecretName | string | `""` |  |
 | cookiePersistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | cookiePersistence.enabled | bool | `false` |  |
 | cookiePersistence.size | string | `"5Mi"` |  |
 | cookiePersistence.tls | list | `[]` |  |
+| extraEnv | object | `{}` |  |
 | extraManifests | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"lncm/bitcoind"` |  |
+| image.repository | string | `"bboerst/lncm-bitcoind"` |  |
 | image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |

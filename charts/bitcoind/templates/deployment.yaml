@@ -7,7 +7,7 @@ metadata:
     heritage: {{ .Release.Service }}
     {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoind
     {{- if .Values.deploymentLabels }}
-{{ toYaml .Values.deploymentLabels | indent 4 }}
+    {{- toYaml .Values.deploymentLabels | nindent 4 }}
     {{- end }}
   name: {{ template "bitcoind.fullname" . }}
 spec:
@@ -53,14 +53,21 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
+            {{- if .Values.configExternalSecretName }}
+            - -conf=/config/bitcoin.conf
+            {{- end }}
             {{- range .Values.arguments }}
             - {{ . }}
             {{- end }}
           env:
-            - name: MY_POD_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP
+          {{- range $key, $value := .Values.extraEnv }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+          {{- end }}
+          - name: MY_POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
           ports:
             {{- if .Values.service.enableRpc }}
             - name: rpc
@@ -72,9 +79,16 @@ spec:
               containerPort: {{ .Values.service.ports.p2p }}
               protocol: TCP
             {{- end }}
+            {{- if .Values.service.ports.tcp }}
             {{- range $port := .Values.service.ports.tcp }}
             - name: "{{ $port }}-tcp"
               containerPort: {{ $port }}
+              protocol: TCP
+            {{- end }}
+            {{- else }}
+            # Default fallback
+            - name: tcp-default
+              containerPort: 8333
               protocol: TCP
             {{- end }}
             {{- range $port := .Values.service.ports.udp }}
@@ -101,6 +115,11 @@ spec:
           volumeMounts:
             - mountPath: /data/.bitcoin/
               name: data
+            {{- if .Values.configExternalSecretName }}
+            - mountPath: /config
+              name: config-secret
+              readOnly: true
+            {{- end }}
             {{- if .Values.cookiePersistence.enabled }}
             - mountPath: /authcookie/
               name: authcookie
@@ -119,14 +138,19 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-  {{- if .Values.persistence.enabled }}
-  {{- if .Values.persistence.hostPath }}
-  volumes:
-    - name: data
-      hostPath:
-        path: {{ .Values.persistence.hostPath }}
-        type: DirectoryOrCreate
-  {{- else }}
+      volumes:
+      {{- if .Values.configExternalSecretName }}
+        - name: config-secret
+          secret:
+            secretName: {{ .Values.configExternalSecretName }}
+      {{- end }}
+      {{- if .Values.persistence.enabled }}
+      {{- if .Values.persistence.hostPath }}
+        - name: data
+          hostPath:
+            path: {{ .Values.persistence.hostPath }}
+            type: DirectoryOrCreate
+      {{- else }}
   volumeClaimTemplates:
   - metadata:
       name: data
