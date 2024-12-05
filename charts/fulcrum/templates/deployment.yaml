@@ -60,6 +60,14 @@ spec:
           {{-  range .Values.arguments }}
             - {{ . }}
           {{- end }}
+          env:
+            {{- if .Values.rpcPasswordEnvVarSecretName }}
+            - name: RPCPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.rpcPasswordEnvVarSecretName }}
+                  key: RPCPASSWORD
+            {{- end }}
           ports:
             {{- range $port := .Values.service.ports.tcp }}
             - name: "{{ $port }}-tcp"
