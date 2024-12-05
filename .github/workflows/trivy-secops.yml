@@ -75,6 +75,6 @@ jobs:
 
       - name: Upload Trivy scan results to GitHub Security tab
         if: env.SARIF_COMBINED == 'true'
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'combined-trivy-results.sarif'
