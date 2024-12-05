@@ -19,8 +19,12 @@ config: |
   datadir = /data
   bitcoind = bitcoind:8332
   rpcuser = fulcrum
-  rpcpassword = hunter1
+  rpcpassword = hunter1 # alternatively use the rpcPasswordEnvVarSecretName instead
   #rpccookie = /authcookie/.cookie
+
+# Secret name containing RPCPASSWORD, created from:
+#  kubectl create secret generic thesecretname -n fulcrum-namespace --from-literal=RPCPASSWORD=thepasswordhere
+rpcPasswordEnvVarSecretName: ""
 
 ssl:
   enabled: false
