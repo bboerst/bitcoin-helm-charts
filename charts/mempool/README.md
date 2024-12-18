@@ -25,7 +25,7 @@ A Helm chart for mempool
 | backend.env.LIQUID_ENABLED | string | `"false"` |  |
 | backend.env.MEMPOOL_POOLS_JSON_TREE_URL | string | `"https://api.github.com/repos/mempool/mining-pools/git/trees/master"` |  |
 | backend.env.MEMPOOL_POOLS_JSON_URL | string | `"https://raw.githubusercontent.com/mempool/mining-pools/master/pools-v2.json"` |  |
-| backend.envExternalSecretName | string | `"test"` |  |
+| backend.envExternalSecretName | string | `""` |  |
 | backend.fullnameOverride | string | `""` |  |
 | backend.image.pullPolicy | string | `"IfNotPresent"` |  |
 | backend.image.repository | string | `"mempool/backend"` |  |
