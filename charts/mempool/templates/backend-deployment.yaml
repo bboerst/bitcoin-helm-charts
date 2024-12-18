@@ -56,7 +56,7 @@ spec:
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           command:
             - "./wait-for-it.sh"
-            - "{{ template "mempool.name" . }}-mariadb:3306"
+            - "{{ template "mempool.fullname" . }}-mariadb:3306"
             - "--timeout=720"
             - "--strict"
             - "--"
@@ -89,7 +89,7 @@ spec:
             - name: "DATABASE_ENABLED"
               value: "true"
             - name: "DATABASE_HOST"
-              value: "{{ template "mempool.name" . }}-mariadb"
+              value: "{{ template "mempool.fullname" . }}-mariadb"
             - name: "DATABASE_DATABASE"
               value: "{{ .Values.mariadb.auth.database }}"
             - name: "DATABASE_USERNAME"
