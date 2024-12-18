@@ -1,6 +1,6 @@
 # mempool
 
-![Version: 0.1.9](https://img.shields.io/badge/Version-0.1.9-informational?style=flat-square) ![AppVersion: v3.0.1](https://img.shields.io/badge/AppVersion-v3.0.1-informational?style=flat-square)
+![Version: 0.1.10](https://img.shields.io/badge/Version-0.1.10-informational?style=flat-square) ![AppVersion: v3.0.1](https://img.shields.io/badge/AppVersion-v3.0.1-informational?style=flat-square)
 
 A Helm chart for mempool
 
@@ -8,7 +8,7 @@ A Helm chart for mempool
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | mariadb | 19.1.0 |
+| https://charts.bitnami.com/bitnami | mariadb | 20.1.1 |
 
 ## Values
 
@@ -17,7 +17,7 @@ A Helm chart for mempool
 | backend.affinity | object | `{}` |  |
 | backend.arguments | string | `nil` |  |
 | backend.coreRpcHost | string | `"bitcoind"` |  |
-| backend.coreRpcPassword | string | `"1234567890abcdefg"` |  |
+| backend.coreRpcPassword | string | `""` |  |
 | backend.coreRpcPort | int | `8332` |  |
 | backend.coreRpcUsername | string | `"mempool"` |  |
 | backend.env.BISQ_ENABLED | string | `"false"` |  |
@@ -25,6 +25,7 @@ A Helm chart for mempool
 | backend.env.LIQUID_ENABLED | string | `"false"` |  |
 | backend.env.MEMPOOL_POOLS_JSON_TREE_URL | string | `"https://api.github.com/repos/mempool/mining-pools/git/trees/master"` |  |
 | backend.env.MEMPOOL_POOLS_JSON_URL | string | `"https://raw.githubusercontent.com/mempool/mining-pools/master/pools-v2.json"` |  |
+| backend.envExternalSecretName | string | `""` |  |
 | backend.fullnameOverride | string | `""` |  |
 | backend.image.pullPolicy | string | `"IfNotPresent"` |  |
 | backend.image.repository | string | `"mempool/backend"` |  |
