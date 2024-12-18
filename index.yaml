@@ -392,6 +392,19 @@ entries:
   mempool:
   - apiVersion: v2
     appVersion: v3.0.1
+    created: "2024-12-18T18:43:48.846674366Z"
+    dependencies:
+    - name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 20.1.1
+    description: A Helm chart for mempool
+    digest: 84ba4c5c30fae2e2c8bf2c9183991d21c3409b512d0fcbf08bf375e902d0af82
+    name: mempool
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/mempool-0.1.10/mempool-0.1.10.tgz
+    version: 0.1.10
+  - apiVersion: v2
+    appVersion: v3.0.1
     created: "2024-10-18T12:11:13.677674932Z"
     dependencies:
     - name: mariadb
@@ -605,4 +618,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2024-12-05T23:51:18.211776785Z"
+generated: "2024-12-18T18:43:48.846747923Z"
