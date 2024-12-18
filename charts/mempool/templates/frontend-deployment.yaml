@@ -60,7 +60,7 @@ spec:
           {{ end }}
           env:
             - name: "BACKEND_MAINNET_HTTP_HOST"
-              value: "{{ template "mempool.name" . }}-backend"
+              value: "{{ template "mempool.fullname" . }}-backend"
             - name: "FRONTEND_HTTP_PORT"
               value: "{{ .Values.frontend.service.tcpPort }}"
           {{- range $key, $val := .Values.frontend.env }}

@@ -1,7 +1,7 @@
 apiVersion: v2
 description: A Helm chart for mempool
 name: mempool
-version: 0.1.10
+version: 0.1.11
 # renovate: image=mempool/frontend
 appVersion: "v3.0.1"
 dependencies:
