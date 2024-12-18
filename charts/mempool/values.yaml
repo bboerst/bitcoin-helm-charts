@@ -171,7 +171,7 @@ backend:
   #  kubectl create secret generic mempool-space-env-vars --from-literal=CORE_RPC_PASSWORD=thecoreprcpassword
   #
   # The above example would then use "mempool-space-env-vars" in envExternalSecretName
-  envExternalSecretName: "test"
+  envExternalSecretName: ""
 
   coreRpcHost: bitcoind
   coreRpcPort: 8332
