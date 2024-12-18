@@ -70,14 +70,22 @@ spec:
             - {{ . }}
           {{ end }}
           env:
+            {{- if .Values.backend.coreRpcHost }}
             - name: "CORE_RPC_HOST"
               value: "{{ .Values.backend.coreRpcHost }}"
+            {{- end }}
+            {{- if .Values.backend.coreRpcPort }}
             - name: "CORE_RPC_PORT"
               value: "{{ .Values.backend.coreRpcPort }}"
+            {{- end }}
+            {{- if .Values.backend.coreRpcUsername }}
             - name: "CORE_RPC_USERNAME"
               value: "{{ .Values.backend.coreRpcUsername }}"
+            {{- end }}
+            {{- if .Values.backend.coreRpcPassword }}
             - name: "CORE_RPC_PASSWORD"
               value: "{{ .Values.backend.coreRpcPassword }}"
+            {{- end }}
             - name: "DATABASE_ENABLED"
               value: "true"
             - name: "DATABASE_HOST"
@@ -108,6 +116,11 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+          {{- if .Values.backend.envExternalSecretName }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.backend.envExternalSecretName }}
+          {{- end }}
           ports:
             - name: "tcp"
               containerPort: {{ .Values.backend.service.tcpPort }}

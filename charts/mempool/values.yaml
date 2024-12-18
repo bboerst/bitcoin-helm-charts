@@ -164,11 +164,19 @@ backend:
     BISQ_ENABLED: "false"
     LIQUID_ENABLED: "false"
     LIGHTNING: "false"
+  
+  # This secret can contain environment variables such as CORE_RPC_PASSWORD. Useful for using with a secrets manager like SOPS.
+  #
+  # Example:
+  #  kubectl create secret generic mempool-space-env-vars --from-literal=CORE_RPC_PASSWORD=thecoreprcpassword
+  #
+  # The above example would then use "mempool-space-env-vars" in envExternalSecretName
+  envExternalSecretName: "test"
 
   coreRpcHost: bitcoind
   coreRpcPort: 8332
   coreRpcUsername: mempool
-  coreRpcPassword: 1234567890abcdefg
+  coreRpcPassword: "" # Can also be set using envExternalSecretName above
   statisticsEnabled: true
 
   mempoolBackend:
