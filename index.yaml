@@ -82,6 +82,19 @@ entries:
     version: 3.2.0
   c-lightning:
   - apiVersion: v2
+    appVersion: v24.11.1
+    created: "2024-12-19T17:13:47.097344188Z"
+    description: A specification compliant Lightning Network implementation in C
+    digest: c0d32de7608737aca5448c992c93567592fc4127b916edafd2a0f6387ec10125
+    home: https://github.com/ElementsProject/lightning
+    keywords:
+    - c-lightning
+    - bitcoin
+    name: c-lightning
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/c-lightning-0.1.6/c-lightning-0.1.6.tgz
+    version: 0.1.6
+  - apiVersion: v2
     appVersion: v24.08.2
     created: "2024-12-05T23:51:18.211656511Z"
     description: A specification compliant Lightning Network implementation in C
@@ -644,4 +657,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2024-12-18T19:35:15.927247208Z"
+generated: "2024-12-19T17:13:47.097439728Z"
