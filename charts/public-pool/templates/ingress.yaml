@@ -1,0 +1,113 @@
+{{- if .Values.frontend.ingress.enabled -}}
+{{- /* Determine API versions and supported features */ -}}
+{{- $ingressApiIsStable := eq (include "public-pool.ingress.isStable" .) "true" -}}
+{{- $ingressSupportsIngressClassName := eq (include "public-pool.ingress.supportsIngressClassName" .) "true" -}}
+{{- $ingressSupportsPathType := eq (include "public-pool.ingress.supportsPathType" .) "true" -}}
+
+{{- /* Common names and ports for routes */ -}}
+{{- $fullName := include "public-pool.fullname" . -}}
+{{- $frontendPort := .Values.frontend.service.tcpPort -}}
+{{- $backendPort := .Values.backend.service.apiPort | default 3334 -}}
+{{- $ingressPath := .Values.frontend.ingress.path -}}
+{{- $ingressPathType := .Values.frontend.ingress.pathType -}}
+{{- $extraPaths := .Values.frontend.ingress.extraPaths -}}
+
+apiVersion: {{ include "public-pool.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-frontend
+  namespace: {{ template "public-pool.namespace" . }}
+  labels:
+    {{- include "public-pool.labels" . | nindent 4 }}
+  {{- if .Values.frontend.ingress.labels }}
+{{ toYaml .Values.frontend.ingress.labels | indent 4 }}
+  {{- end }}
+  {{- if .Values.frontend.ingress.annotations }}
+  annotations:
+    {{- range $key, $value := .Values.frontend.ingress.annotations }}
+      {{ $key }}: {{ tpl $value $ | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  {{- if and $ingressSupportsIngressClassName .Values.frontend.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.frontend.ingress.ingressClassName }}
+  {{- end }}
+  {{- if .Values.frontend.ingress.tls }}
+  tls:
+{{ tpl (toYaml .Values.frontend.ingress.tls) $ | indent 4 }}
+  {{- end }}
+  rules:
+    {{- if .Values.frontend.ingress.hosts }}
+      {{- range .Values.frontend.ingress.hosts }}
+    - host: {{ tpl . $ | quote }}
+      http:
+        paths:
+          {{- if $extraPaths }}
+{{ toYaml $extraPaths | indent 10 }}
+          {{- end }}
+          # Primary route for frontend requests.
+          - path: {{ $ingressPath }}
+            {{- if $ingressSupportsPathType }}
+            pathType: {{ $ingressPathType }}
+            {{- end }}
+            backend:
+              {{- if $ingressApiIsStable }}
+              service:
+                name: {{ $fullName }}-frontend
+                port:
+                  number: {{ $frontendPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-frontend
+              servicePort: {{ $frontendPort }}
+              {{- end }}
+          # Route for any "/api" requests routing to backend.
+          - path: /api
+            {{- if $ingressSupportsPathType }}
+            pathType: Prefix
+            {{- end }}
+            backend:
+              {{- if $ingressApiIsStable }}
+              service:
+                name: {{ $fullName }}-backend
+                port:
+                  number: {{ $backendPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-backend
+              servicePort: {{ $backendPort }}
+              {{- end }}
+      {{- end }}
+    {{- else }}
+    - http:
+        paths:
+          # Primary route for frontend requests.
+          - path: {{ $ingressPath }}
+            {{- if $ingressSupportsPathType }}
+            pathType: {{ $ingressPathType }}
+            {{- end }}
+            backend:
+              {{- if $ingressApiIsStable }}
+              service:
+                name: {{ $fullName }}-frontend
+                port:
+                  number: {{ $frontendPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-frontend
+              servicePort: {{ $frontendPort }}
+              {{- end }}
+          # Route for any "/api" requests routing to backend.
+          - path: /api
+            {{- if $ingressSupportsPathType }}
+            pathType: Prefix
+            {{- end }}
+            backend:
+              {{- if $ingressApiIsStable }}
+              service:
+                name: {{ $fullName }}-backend
+                port:
+                  number: {{ $backendPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-backend
+              servicePort: {{ $backendPort }}
+              {{- end }}
+    {{- end }}
+{{- end }}

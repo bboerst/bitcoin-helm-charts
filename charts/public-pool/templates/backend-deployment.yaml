@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "public-pool.fullname" . }}-backend
+  labels:
+    # Standard labels for the chart.
+    app: {{ template "public-pool.name" . }}-backend
+    chart: {{ template "public-pool.chart" . }}
+    heritage: {{ .Release.Service }}
+    # Use a component label to distinguish backend.
+    {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: backend
+    {{- if .Values.deploymentLabels }}
+{{ toYaml .Values.deploymentLabels | indent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.backend.replicaCount | default 1 }}
+  strategy:
+    type: {{ .Values.backend.strategyType }}
+  selector:
+    matchLabels:
+      app: {{ template "public-pool.name" . }}-backend
+    {{- if .Values.backend.useComponentLabel }}
+      {{ .Values.backend.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: backend
+    {{- end }}
+  template:
+    metadata:
+      {{- if or .Values.backend.podAnnotations .Values.backend.podAnnotationConfigChecksum }}
+      annotations:
+        {{- range $key, $value := .Values.backend.podAnnotations }}
+          {{ $key }}: {{ $value | quote }}
+        {{- end }}
+        {{- if .Values.backend.podAnnotationConfigChecksum }}
+          checksum/config: {{ tpl (toYaml .Values) . | sha256sum }}
+        {{- end }}
+      {{- end }}
+      labels:
+        app: {{ template "public-pool.name" . }}-backend
+        component: "backend"
+        {{ .Values.backend.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: backend
+        {{- if .Values.backend.podLabels }}
+{{ toYaml .Values.backend.podLabels | indent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.backend.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ template "public-pool.serviceAccountName" . }}
+      securityContext:
+{{ toYaml .Values.backend.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 300
+      containers:
+        - name: backend
+          securityContext:
+{{ toYaml .Values.backend.securityContext | nindent 12 }}
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          args:
+            {{- range .Values.backend.arguments }}
+            - {{ . }}
+            {{- end }}
+          env:
+            {{- range $key, $val := .Values.backend.env }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          {{- if .Values.backend.envExternalSecretName }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.backend.envExternalSecretName }}
+          {{- end }}
+          ports:
+            - name: "api"
+              containerPort: {{ .Values.backend.service.apiPort }}
+              protocol: TCP
+            - name: "stratum"
+              containerPort: {{ .Values.backend.service.stratumPort }}
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /public-pool/DB
+              name: data
+          resources:
+{{ toYaml .Values.backend.resources | nindent 12 }}
+      {{- with .Values.backend.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backend.affinity }}
+      affinity:
+{{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backend.tolerations }}
+      tolerations:
+{{ toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: data
+          {{- if .Values.backend.persistence.enabled }}
+            {{- if .Values.backend.persistence.hostPath }}
+          hostPath:
+            path: {{ .Values.backend.persistence.hostPath }}
+            type: Directory
+            {{- else }}
+          persistentVolumeClaim:
+            claimName: {{ if .Values.backend.persistence.existingClaim }}{{ .Values.backend.persistence.existingClaim }}{{ else }}{{ template "public-pool.fullname" . }}{{ end }}
+            {{- end }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

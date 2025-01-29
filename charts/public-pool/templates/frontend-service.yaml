@@ -1,0 +1,51 @@
+{{- if .Values.frontend.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "public-pool.fullname" . }}-frontend
+  labels:
+    # Standard labels for the service.
+    app: {{ template "public-pool.name" . }}-frontend
+    chart: {{ template "public-pool.chart" . }}
+    component: "frontend"
+    heritage: {{ .Release.Service }}
+  {{- if .Values.frontend.service.annotations }}
+  annotations:
+{{ toYaml .Values.frontend.service.annotations | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if not .Values.frontend.service.omitClusterIP }}
+    {{- with .Values.frontend.service.clusterIP }}
+  clusterIP: {{ if eq "-" . }}""{{ else }}{{ . | quote }}{{ end }}
+    {{- end }}
+  {{- end }}
+  {{- if .Values.frontend.service.externalIPs }}
+  externalIPs:
+{{ toYaml .Values.frontend.service.externalIPs | nindent 4 }}
+  {{- end }}
+  {{- if .Values.frontend.service.loadBalancerIP }}
+  loadBalancerIP: "{{ .Values.frontend.service.loadBalancerIP }}"
+  {{- end }}
+  {{- if .Values.frontend.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+{{ toYaml .Values.frontend.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if and (semverCompare ">=1.7-0" .Capabilities.KubeVersion.GitVersion) (.Values.frontend.service.externalTrafficPolicy) }}
+  externalTrafficPolicy: "{{ .Values.frontend.service.externalTrafficPolicy }}"
+  {{- end }}
+  {{- if .Values.frontend.service.sessionAffinity }}
+  sessionAffinity: "{{ .Values.frontend.service.sessionAffinity }}"
+  {{- end }}
+  {{- if and (semverCompare ">=1.7-0" .Capabilities.KubeVersion.GitVersion) (.Values.frontend.service.healthCheckNodePort) }}
+  healthCheckNodePort: {{ .Values.frontend.service.healthCheckNodePort }}
+  {{- end }}
+  ports:
+    - name: "tcp"
+      port: {{ .Values.frontend.service.tcpPort }}
+      protocol: TCP
+      targetPort: "tcp"
+  selector:
+    app: {{ template "public-pool.name" . }}-frontend
+    {{ .Values.frontend.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: frontend
+  type: "{{ .Values.frontend.service.type }}"
+{{- end }}

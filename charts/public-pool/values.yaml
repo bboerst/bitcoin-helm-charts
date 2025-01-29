@@ -1,0 +1,203 @@
+# Default values for public-pool.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+serviceAccount:
+  # Specifies whether a service account should be created.
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template.
+  name:
+
+frontend:
+  image:
+    repository: sethforprivacy/public-pool-ui
+    tag: 20798ec
+    pullPolicy: IfNotPresent
+
+  # Deployment strategy can be Recreate or RollingUpdate
+  strategyType: Recreate
+
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+
+  env:
+    DOMAIN: your-domain-here
+
+  # Arguments to pass to the container (example: to print trace/debug info).
+  arguments: []
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+
+  service:
+    enabled: true
+    annotations: {}
+    labels: {}
+    # Do not provide a clusterIP value if you want Kubernetes to assign one.
+    omitClusterIP: false
+    # List of external IP addresses if the service should be available externally.
+    externalIPs: []
+    type: "ClusterIP"
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    # Set external traffic policy to "Local" to preserve the client source IP.
+    externalTrafficPolicy: ""
+    # Session affinity type ("None" or "ClientIP")
+    sessionAffinity: ""
+    healthCheckNodePort: 0
+    tcpPort: 80
+
+  ingress:
+    enabled: false
+    # For Kubernetes >= 1.18, specify the ingress-controller via ingressClassName.
+    # ingressClassName: nginx
+    # Additional annotations for the ingress.
+    annotations:
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    labels: {}
+    path: /
+    # pathType is only for k8s >= 1.18.
+    pathType: Prefix
+    hosts:
+      - chart-example.local
+    # Extra paths can be added here.
+    extraPaths: []
+    # TLS configuration for the ingress.
+    tls: []
+  
+  resources: {}
+    # Uncomment and adjust resources if required.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+backend:
+  image:
+    repository: sethforprivacy/public-pool
+    tag: 5ffea44
+    pullPolicy: IfNotPresent
+
+  strategyType: Recreate
+
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+
+  env:
+    NODE_ENV: "production"
+
+    # bitcoin node running in your private network 192.168.1.0/24
+    BITCOIN_RPC_URL: "http://192.168.1.100"
+
+    BITCOIN_RPC_USER: "rpcuser"
+
+    # You can use this or include it within the envExternalSecretName below
+    # BITCOIN_RPC_PASSWORD: "hunter1"
+    
+    BITCOIN_RPC_PORT: "8332"
+    BITCOIN_RPC_TIMEOUT: "10000"
+
+    # You can use this instead of BITCOIN_RPC_USER and BITCOIN_RPC_PASSWORD
+    #BITCOIN_RPC_COOKIEFILE: ""
+
+    # Enable in bitcoin.conf with
+    # zmqpubrawblock=tcp://*:3000
+    # BITCOIN_ZMQ_HOST: "tcp://192.168.1.100:3000"
+    
+    API_SECURE: "false"
+    API_PORT: "3334"
+    STRATUM_PORT: "3333"
+
+    #optional telegram bot
+    #TELEGRAM_BOT_TOKEN: ""
+
+    #optional discord bot
+    #DISCORD_BOT_CLIENTID: ""
+    #DISCORD_BOT_GUILD_ID: ""
+    #DISCORD_BOT_CHANNEL_ID: ""
+
+    #optional
+    #DEV_FEE_ADDRESS: ""
+
+    # mainnet | testnet
+    NETWORK: "mainnet"
+
+    # Default is "public-pool", you can change it to any string it will be removed if it will make the block or coinbase script too big
+    POOL_IDENTIFIER: "public-pool"
+
+    ENABLE_SOLO: "true"
+    ENABLE_PROXY: "false"
+  
+  # This secret can contain environment variables such as BITCOIN_RPC_PASSWORD. Useful for using with a secrets manager like SOPS.
+  #
+  # Example:
+  #  kubectl create secret generic public-pool-env-vars --from-literal=BITCOIN_RPC_PASSWORD=thecoreprcpassword
+  #
+  # The above example would then use "public-pool-env-vars" in envExternalSecretName
+  envExternalSecretName: ""
+
+  arguments: []
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+
+  service:
+    enabled: true
+    annotations: {}
+    labels: {}
+    omitClusterIP: false
+    externalIPs: []
+    type: "ClusterIP"
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    externalTrafficPolicy: ""
+    sessionAffinity: ""
+    healthCheckNodePort: 0
+    apiPort: 3334
+    stratumPort: 3333
+
+  persistence:
+    enabled: false
+    # Storage settings for backend data.
+    # Uncomment and set storageClass if needed.
+    # storageClass: "-"
+    # Set existingClaim to reuse an existing PVC.
+    # existingClaim: your-claim
+    accessMode: ReadWriteOnce
+    size: 10Gi
+    tls: []
+
+  resources: {}
+    # Uncomment and adjust resources if required.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
