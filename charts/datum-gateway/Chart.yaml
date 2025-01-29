@@ -2,6 +2,6 @@ apiVersion: v2
 type: application
 description: datum-gateway helm chart
 name: datum-gateway
-version: 0.1.1
+version: 0.1.2
 # renovate: image=bboerst/datum-gateway
-appVersion: "v0.2.1beta"
+appVersion: "v0.2.2beta"
