@@ -1,0 +1,4 @@
+apiVersion: v2
+name: public-pool
+description: A Helm chart for installing public-pool
+version: 0.1.0

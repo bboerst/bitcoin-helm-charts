@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "public-pool.fullname" . }}-frontend
+  labels:
+    # Standard labels for the chart.
+    app: {{ template "public-pool.name" . }}-frontend
+    chart: {{ template "public-pool.chart" . }}
+    heritage: {{ .Release.Service }}
+    {{ .Values.frontend.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: frontend
+    {{- if .Values.deploymentLabels }}
+{{ toYaml .Values.deploymentLabels | indent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.frontend.replicaCount | default 1 }}
+  strategy:
+    type: {{ .Values.frontend.strategyType }}
+  selector:
+    matchLabels:
+      app: {{ template "public-pool.name" . }}-frontend
+    {{- if .Values.frontend.useComponentLabel }}
+      {{ .Values.frontend.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: frontend
+    {{- end }}
+  template:
+    metadata:
+      {{- if or .Values.frontend.podAnnotations .Values.frontend.podAnnotationConfigChecksum }}
+      annotations:
+        {{- range $key, $value := .Values.frontend.podAnnotations }}
+          {{ $key }}: {{ $value | quote }}
+        {{- end }}
+        {{- if .Values.frontend.podAnnotationConfigChecksum }}
+          checksum/config: {{ tpl (toYaml .Values) . | sha256sum }}
+        {{- end }}
+      {{- end }}
+      labels:
+        app: {{ template "public-pool.name" . }}-frontend
+        component: "frontend"
+        {{ .Values.frontend.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: frontend
+        {{- if .Values.frontend.podLabels }}
+{{ toYaml .Values.frontend.podLabels | indent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.frontend.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ template "public-pool.serviceAccountName" . }}
+      securityContext:
+{{ toYaml .Values.frontend.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 300
+      containers:
+        - name: frontend
+          securityContext:
+{{ toYaml .Values.frontend.securityContext | nindent 12 }}
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          args:
+            {{- range .Values.frontend.arguments }}
+            - {{ . }}
+            {{- end }}
+          env:
+            {{- range $key, $val := .Values.frontend.env }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          ports:
+            - name: "tcp"
+              containerPort: {{ .Values.frontend.service.tcpPort }}
+              protocol: TCP
+          resources:
+{{ toYaml .Values.frontend.resources | nindent 12 }}
+      {{- with .Values.frontend.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.frontend.affinity }}
+      affinity:
+{{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.frontend.tolerations }}
+      tolerations:
+{{ toYaml . | nindent 8 }}
+      {{- end }}

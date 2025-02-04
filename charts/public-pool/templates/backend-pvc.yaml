@@ -1,0 +1,27 @@
+{{- if .Values.backend.persistence.enabled -}}
+  {{- if not .Values.backend.persistence.existingClaim -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "public-pool.fullname" . }}-backend
+  labels:
+    # Standard labels for the PVC.
+    app.kubernetes.io/name: {{ include "public-pool.name" . }}
+    helm.sh/chart: {{ include "public-pool.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  accessModes:
+    - {{ .Values.backend.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.backend.persistence.size | quote }}
+  {{- if .Values.backend.persistence.storageClass }}
+    {{- if eq "-" .Values.backend.persistence.storageClass }}
+  storageClassName: ""
+    {{- else }}
+  storageClassName: "{{ .Values.backend.persistence.storageClass }}"
+    {{- end }}
+  {{- end }}
+  {{- end -}}
+{{- end -}}

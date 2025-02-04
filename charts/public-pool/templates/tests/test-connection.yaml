@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "public-pool.fullname" . }}-test-connection"
+  labels:
+    {{- include "public-pool.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      # Test connection against the frontend service.
+      args: ['{{ include "public-pool.fullname" . }}-frontend:{{ .Values.frontend.service.tcpPort }}']
+  restartPolicy: Never
