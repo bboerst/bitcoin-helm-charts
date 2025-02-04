@@ -604,6 +604,15 @@ entries:
     urls:
     - https://github.com/bboerst/bitcoin-helm-charts/releases/download/prometheus-tplink-plug-exporter-0.1.0/prometheus-tplink-plug-exporter-0.1.0.tgz
     version: 0.1.0
+  public-pool:
+  - apiVersion: v2
+    created: "2025-02-04T13:03:20.235886362Z"
+    description: A Helm chart for installing public-pool
+    digest: c7a125d509a08cbb77d00e240637552952b6cee9f8e487526e5ccd42d82201c4
+    name: public-pool
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/public-pool-0.1.0/public-pool-0.1.0.tgz
+    version: 0.1.0
   thunderhub:
   - apiVersion: v2
     appVersion: v0.13.30
@@ -657,4 +666,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2024-12-19T17:13:47.097439728Z"
+generated: "2025-02-04T13:03:20.236000696Z"
