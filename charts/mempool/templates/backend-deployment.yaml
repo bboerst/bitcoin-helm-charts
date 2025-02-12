@@ -1,62 +1,67 @@
+{{- /*
+  Iterate over .Values.backends and create a Deployment for each backend.
+*/ -}}
+{{- range $i, $backend := .Values.backends }}
+{{- $root := $ }}
+{{- $backendName := (printf "backend-%s" $backend.name) | default (printf "backend-%d" $i) }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: {{ template "mempool.fullname" $root }}-{{ $backendName }}
   labels:
-    app: {{ template "mempool.name" . }}-backend
-    chart: {{ template "mempool.chart" . }}
-    heritage: {{ .Release.Service }}
-    {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: backend
-
-    {{- if .Values.deploymentLabels }}
-{{ toYaml .Values.deploymentLabels | indent 4 }}
+    app: {{ template "mempool.name" $root }}-{{ $backendName }}
+    chart: {{ template "mempool.chart" $root }}
+    heritage: {{ $root.Release.Service }}
+    {{ $backend.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: backend
+    {{- if $backend.deploymentLabels }}
+{{ toYaml $backend.deploymentLabels | indent 4 }}
     {{- end }}
-  name: {{ template "mempool.fullname" . }}-backend
 spec:
-  replicas: {{ .Values.backend.replicaCount }}
+  replicas: {{ $backend.replicaCount | default $.Values.replicaCount }}
   strategy:
-    type: {{ .Values.backend.strategyType }}
+    type: {{ $backend.strategyType | default "Recreate" }}
   selector:
     matchLabels:
-      app: {{ template "mempool.name" . }}-backend
-    {{- if .Values.backend.useComponentLabel }}
-      {{ .Values.backend.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: backend
+      app: {{ template "mempool.name" $root }}-{{ $backendName }}
+    {{- if $backend.useComponentLabel }}
+      {{ $backend.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: backend
     {{- end }}
   template:
     metadata:
-      {{- if or .Values.backend.podAnnotations .Values.backend.podAnnotationConfigChecksum }}
+      {{- if or $backend.podAnnotations $backend.podAnnotationConfigChecksum }}
       annotations:
-      {{- range $key, $value := .Values.backend.podAnnotations }}
+      {{- range $key, $value := $backend.podAnnotations }}
         {{ $key }}: {{ $value | quote }}
       {{- end }}
-      {{- if .Values.backend.podAnnotationConfigChecksum }}
-        checksum/config: {{ tpl (toYaml .Values) . | sha256sum }}
+      {{- if $backend.podAnnotationConfigChecksum }}
+        checksum/config: {{ tpl (toYaml $.Values) $root | sha256sum }}
       {{- end }}
       {{- end }}
       labels:
-        app: {{ template "mempool.name" . }}-backend
+        app: {{ template "mempool.name" $root }}-{{ $backendName }}
         component: "backend"
-        {{ .Values.backend.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: backend
-        {{- if .Values.backend.podLabels }}
-{{ toYaml .Values.backend.podLabels | indent 8 }}
+        {{ $backend.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: backend
+        {{- if $backend.podLabels }}
+{{ toYaml $backend.podLabels | indent 8 }}
         {{- end }}
     spec:
-    {{- with .Values.backend.imagePullSecrets }}
+      {{- with $backend.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-      serviceAccountName: {{ template "mempool.serviceAccountName" . }}
+      {{- end }}
+      serviceAccountName: {{ template "mempool.serviceAccountName" $root }}
       securityContext:
-        {{- toYaml .Values.backend.podSecurityContext | nindent 8 }}
+        {{- toYaml $backend.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: 300
       containers:
         - name: backend
           securityContext:
-            {{- toYaml .Values.backend.securityContext | nindent 12 }}
-          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
-          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+            {{- toYaml $backend.securityContext | nindent 12 }}
+          image: "{{ $backend.image.repository }}:{{ $backend.image.tag }}"
+          imagePullPolicy: {{ $backend.image.pullPolicy }}
           command:
             - "./wait-for-it.sh"
-            - "{{ template "mempool.fullname" . }}-mariadb:3306"
+            - "{{ template "mempool.fullname" $root }}-mariadb:3306"
             - "--timeout=720"
             - "--strict"
             - "--"
@@ -66,49 +71,49 @@ spec:
               exec:
                 command: ["sh", "-c", "pkill -SIGINT node; while ps | grep node; do sleep 1; done"]
           args:
-          {{ range .Values.backend.arguments }}
+            {{- range $backend.arguments }}
             - {{ . }}
-          {{ end }}
+            {{- end }}
           env:
-            {{- if .Values.backend.coreRpcHost }}
+            {{- if $backend.coreRpcHost }}
             - name: "CORE_RPC_HOST"
-              value: "{{ .Values.backend.coreRpcHost }}"
+              value: "{{ $backend.coreRpcHost }}"
             {{- end }}
-            {{- if .Values.backend.coreRpcPort }}
+            {{- if $backend.coreRpcPort }}
             - name: "CORE_RPC_PORT"
-              value: "{{ .Values.backend.coreRpcPort }}"
+              value: "{{ $backend.coreRpcPort }}"
             {{- end }}
-            {{- if .Values.backend.coreRpcUsername }}
+            {{- if $backend.coreRpcUsername }}
             - name: "CORE_RPC_USERNAME"
-              value: "{{ .Values.backend.coreRpcUsername }}"
+              value: "{{ $backend.coreRpcUsername }}"
             {{- end }}
-            {{- if .Values.backend.coreRpcPassword }}
+            {{- if $backend.coreRpcPassword }}
             - name: "CORE_RPC_PASSWORD"
-              value: "{{ .Values.backend.coreRpcPassword }}"
+              value: "{{ $backend.coreRpcPassword }}"
             {{- end }}
             - name: "DATABASE_ENABLED"
               value: "true"
             - name: "DATABASE_HOST"
-              value: "{{ template "mempool.fullname" . }}-mariadb"
+              value: "{{ template "mempool.fullname" $root }}-mariadb"
             - name: "DATABASE_DATABASE"
-              value: "{{ .Values.mariadb.auth.database }}"
+              value: "{{ $.Values.mariadb.auth.database }}"
             - name: "DATABASE_USERNAME"
-              value: "{{ .Values.mariadb.auth.username }}"
+              value: "{{ $.Values.mariadb.auth.username }}"
             - name: "DATABASE_PASSWORD"
-              value: "{{ .Values.mariadb.auth.password }}"
+              value: "{{ $.Values.mariadb.auth.password }}"
             - name: "STATISTICS_ENABLED"
-              value: "{{ .Values.backend.statisticsEnabled }}"
+              value: "{{ $backend.statisticsEnabled }}"
             - name: "MEMPOOL_BACKEND"
-              value: "{{ .Values.backend.mempoolBackend.type }}"
-            {{- if eq .Values.backend.mempoolBackend.type "electrum" }}
+              value: "{{ $backend.mempoolBackend.type }}"
+            {{- if eq $backend.mempoolBackend.type "electrum" }}
             - name: "ELECTRUM_HOST"
-              value: "{{ .Values.backend.mempoolBackend.electrum.host }}"
+              value: "{{ $backend.mempoolBackend.electrum.host }}"
             - name: "ELECTRUM_PORT"
-              value: "{{ .Values.backend.mempoolBackend.electrum.port }}"
+              value: "{{ $backend.mempoolBackend.electrum.port }}"
             - name: "ELECTRUM_TLS_ENABLED"
-              value: "{{ .Values.backend.mempoolBackend.electrum.tls }}"
+              value: "{{ $backend.mempoolBackend.electrum.tls }}"
             {{- end }}
-            {{- range $key, $val := .Values.backend.env }}
+            {{- range $key, $val := $backend.env }}
             - name: {{ $key }}
               value: {{ $val | quote }}
             {{- end }}
@@ -116,61 +121,28 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
-          {{- if .Values.backend.envExternalSecretName }}
+          {{- if $backend.envExternalSecretName }}
           envFrom:
             - secretRef:
-                name: {{ .Values.backend.envExternalSecretName }}
+                name: {{ $backend.envExternalSecretName }}
           {{- end }}
           ports:
             - name: "tcp"
-              containerPort: {{ .Values.backend.service.tcpPort }}
+              containerPort: {{ $backend.service.tcpPort }}
               protocol: TCP
-          # livenessProbe:
-          #   exec:
-          #     command:
-          #     - sh
-          #     - -c
-          #     - grep -r mempool /proc/1/cmdline
-          #   initialDelaySeconds: 10
-          #   periodSeconds: 30
-          # readinessProbe:
-          #   exec:
-          #     command:
-          #     - sh
-          #     - -c
-          #     - grep -r mempool /proc/1/cmdline
-          #   initialDelaySeconds: 10
-          #   periodSeconds: 30
-          # volumeMounts:
-          # - mountPath: /data/.bitcoin/
-          #   name: data
-          # - mountPath: /authcookie/
-          #   name: authcookie
           resources:
-            {{- toYaml .Values.backend.resources | nindent 12 }}
-      {{- with .Values.backend.nodeSelector }}
+            {{- toYaml $backend.resources | nindent 12 }}
+      {{- with $backend.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.backend.affinity }}
+      {{- with $backend.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.backend.tolerations }}
+      {{- end }}
+      {{- with $backend.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-      # volumes:
-      # - name: data
-      # {{- if .Values.backend.persistence.enabled }}
-      #   {{- if .Values.backend.persistence.hostPath }}
-      #   hostPath:
-      #     path: {{.Values.backend.persistence.hostPath}}
-      #     type: Directory
-      #   {{- else }}
-      #   persistentVolumeClaim:
-      #     claimName: {{ if .Values.backend.persistence.existingClaim }}{{ .Values.backend.persistence.existingClaim }}{{- else }}{{ template "mempool.fullname" . }}{{- end }}
-      #   {{- end }}
-      # {{- else }}
-      #   emptyDir: {}
-      # {{ end }}
+      {{- end }}
+---
+{{- end }}
