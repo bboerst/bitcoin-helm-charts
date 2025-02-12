@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
-    app: {{ template "bitcoind.name" . }}
+    app: {{ template "bitcoind.fullname" . }}
     chart: {{ template "bitcoind.chart" . }}
     heritage: {{ .Release.Service }}
     {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoind
@@ -15,7 +15,7 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "bitcoind.name" . }}
+      app: {{ template "bitcoind.fullname" . }}
     {{- if .Values.useComponentLabel }}
       {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoind
     {{- end }}
@@ -31,7 +31,7 @@ spec:
       {{- end }}
       {{- end }}
       labels:
-        app: {{ template "bitcoind.name" . }}
+        app: {{ template "bitcoind.fullname" . }}
         component: "{{ .Values.name }}"
         {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoind
         {{- if .Values.podLabels }}

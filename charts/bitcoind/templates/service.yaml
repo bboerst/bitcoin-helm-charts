@@ -13,7 +13,7 @@ metadata:
 {{- if .Values.service.labels }}
 {{ toYaml .Values.service.labels | indent 4 }}
 {{- end }}
-    app: {{ template "bitcoind.name" . }}
+    app: {{ template "bitcoind.fullname" . }}
     chart: {{ template "bitcoind.chart" . }}
     component: "{{ .Values.name }}"
     heritage: {{ .Release.Service }}
@@ -87,7 +87,7 @@ spec:
      {{- end }}
   {{- end }}
   selector:
-    app: {{ template "bitcoind.name" . }}
+    app: {{ template "bitcoind.fullname" . }}
     {{ .Values.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: bitcoind
   type: "{{ .Values.service.type }}"
 {{- end }}
