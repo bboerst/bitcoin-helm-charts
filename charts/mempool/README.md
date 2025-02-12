@@ -1,6 +1,6 @@
 # mempool
 
-![Version: 0.1.12](https://img.shields.io/badge/Version-0.1.12-informational?style=flat-square) ![AppVersion: v3.0.1](https://img.shields.io/badge/AppVersion-v3.0.1-informational?style=flat-square)
+![Version: 0.1.13](https://img.shields.io/badge/Version-0.1.13-informational?style=flat-square) ![AppVersion: v3.0.1](https://img.shields.io/badge/AppVersion-v3.0.1-informational?style=flat-square)
 
 A Helm chart for mempool
 
@@ -8,55 +8,52 @@ A Helm chart for mempool
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | mariadb | 20.1.1 |
+| https://charts.bitnami.com/bitnami | mariadb | 20.2.2 |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| backend.affinity | object | `{}` |  |
-| backend.arguments | string | `nil` |  |
-| backend.coreRpcHost | string | `"bitcoind"` |  |
-| backend.coreRpcPassword | string | `""` |  |
-| backend.coreRpcPort | int | `8332` |  |
-| backend.coreRpcUsername | string | `"mempool"` |  |
-| backend.env.BISQ_ENABLED | string | `"false"` |  |
-| backend.env.LIGHTNING | string | `"false"` |  |
-| backend.env.LIQUID_ENABLED | string | `"false"` |  |
-| backend.env.MEMPOOL_POOLS_JSON_TREE_URL | string | `"https://api.github.com/repos/mempool/mining-pools/git/trees/master"` |  |
-| backend.env.MEMPOOL_POOLS_JSON_URL | string | `"https://raw.githubusercontent.com/mempool/mining-pools/master/pools-v2.json"` |  |
-| backend.envExternalSecretName | string | `""` |  |
-| backend.fullnameOverride | string | `""` |  |
-| backend.image.pullPolicy | string | `"IfNotPresent"` |  |
-| backend.image.repository | string | `"mempool/backend"` |  |
-| backend.image.tag | string | `"v3.0.1"` |  |
-| backend.imagePullSecrets | list | `[]` |  |
-| backend.mempoolBackend.type | string | `"none"` |  |
-| backend.nameOverride | string | `""` |  |
-| backend.nodeSelector | object | `{}` |  |
-| backend.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| backend.persistence.enabled | bool | `false` |  |
-| backend.persistence.size | string | `"5Gi"` |  |
-| backend.persistence.tls | list | `[]` |  |
-| backend.podSecurityContext | object | `{}` |  |
-| backend.resources | object | `{}` |  |
-| backend.securityContext.allowPrivilegeEscalation | bool | `false` |  |
-| backend.securityContext.runAsNonRoot | bool | `true` |  |
-| backend.securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
-| backend.service.annotations | object | `{}` |  |
-| backend.service.enabled | bool | `true` |  |
-| backend.service.externalIPs | list | `[]` |  |
-| backend.service.externalTrafficPolicy | string | `""` |  |
-| backend.service.healthCheckNodePort | int | `0` |  |
-| backend.service.labels | object | `{}` |  |
-| backend.service.loadBalancerIP | string | `""` |  |
-| backend.service.loadBalancerSourceRanges | list | `[]` |  |
-| backend.service.omitClusterIP | bool | `false` |  |
-| backend.service.sessionAffinity | string | `""` |  |
-| backend.service.tcpPort | int | `8999` |  |
-| backend.statisticsEnabled | bool | `true` |  |
-| backend.strategyType | string | `"Recreate"` |  |
-| backend.tolerations | list | `[]` |  |
+| backends[0].affinity | object | `{}` |  |
+| backends[0].arguments | string | `nil` |  |
+| backends[0].coreRpcHost | string | `"bitcoind"` |  |
+| backends[0].coreRpcPassword | string | `""` |  |
+| backends[0].coreRpcPort | int | `8332` |  |
+| backends[0].coreRpcUsername | string | `"mempool"` |  |
+| backends[0].env.BISQ_ENABLED | string | `"false"` |  |
+| backends[0].env.LIGHTNING | string | `"false"` |  |
+| backends[0].env.LIQUID_ENABLED | string | `"false"` |  |
+| backends[0].env.MEMPOOL_POOLS_JSON_TREE_URL | string | `"https://api.github.com/repos/mempool/mining-pools/git/trees/master"` |  |
+| backends[0].env.MEMPOOL_POOLS_JSON_URL | string | `"https://raw.githubusercontent.com/mempool/mining-pools/master/pools-v2.json"` |  |
+| backends[0].envExternalSecretName | string | `""` |  |
+| backends[0].fullnameOverride | string | `""` |  |
+| backends[0].image.pullPolicy | string | `"IfNotPresent"` |  |
+| backends[0].image.repository | string | `"mempool/backend"` |  |
+| backends[0].image.tag | string | `"v3.0.1"` |  |
+| backends[0].imagePullSecrets | list | `[]` |  |
+| backends[0].mempoolBackend.type | string | `"none"` |  |
+| backends[0].name | string | `"mainnet"` |  |
+| backends[0].nameOverride | string | `""` |  |
+| backends[0].nodeSelector | object | `{}` |  |
+| backends[0].podSecurityContext | object | `{}` |  |
+| backends[0].resources | object | `{}` |  |
+| backends[0].securityContext.allowPrivilegeEscalation | bool | `false` |  |
+| backends[0].securityContext.runAsNonRoot | bool | `true` |  |
+| backends[0].securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
+| backends[0].service.annotations | object | `{}` |  |
+| backends[0].service.enabled | bool | `true` |  |
+| backends[0].service.externalIPs | list | `[]` |  |
+| backends[0].service.externalTrafficPolicy | string | `""` |  |
+| backends[0].service.healthCheckNodePort | int | `0` |  |
+| backends[0].service.labels | object | `{}` |  |
+| backends[0].service.loadBalancerIP | string | `""` |  |
+| backends[0].service.loadBalancerSourceRanges | list | `[]` |  |
+| backends[0].service.omitClusterIP | bool | `false` |  |
+| backends[0].service.sessionAffinity | string | `""` |  |
+| backends[0].service.tcpPort | int | `8999` |  |
+| backends[0].statisticsEnabled | bool | `true` |  |
+| backends[0].strategyType | string | `"Recreate"` |  |
+| backends[0].tolerations | list | `[]` |  |
 | frontend.affinity | object | `{}` |  |
 | frontend.arguments | string | `nil` |  |
 | frontend.fullnameOverride | string | `""` |  |
