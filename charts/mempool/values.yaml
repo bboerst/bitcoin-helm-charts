@@ -24,7 +24,7 @@ frontend:
   fullnameOverride: ""
 
   env:
-    BACKEND_MAINNET_HTTP_HOST: "mempool-space-mainnet-backend-mainnet"
+    BACKEND_MAINNET_HTTP_HOST: "mempool-backend-mainnet"
 
   arguments:
     # Send trace/debug info to console instead of debug.log file
@@ -255,6 +255,16 @@ mariadb:
     username: mempool
     password: mempool
     rootPassword: admin
+
+  # Ensure that a database is created for each backend 'name' in the backends list
+  initdbScripts:
+    create_databases.sql: |-
+      CREATE DATABASE IF NOT EXISTS mainnet;
+      GRANT ALL PRIVILEGES ON mainnet.* TO 'mempool'@'%';
+      
+      # CREATE DATABASE IF NOT EXISTS testnet;
+      # GRANT ALL PRIVILEGES ON testnet.* TO 'mempool'@'%';
+      FLUSH PRIVILEGES;
 
   primary:
     resourcesPreset: "small"
