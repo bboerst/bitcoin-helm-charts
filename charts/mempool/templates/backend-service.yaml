@@ -52,4 +52,5 @@ spec:
     app: {{ template "mempool.name" $root }}-{{ $backendName }}
     {{ $backend.componentLabelKeyOverride | default "app.kubernetes.io/component" }}: backend
 {{- end }}
+---
 {{- end }}
