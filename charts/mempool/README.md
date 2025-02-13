@@ -1,6 +1,6 @@
 # mempool
 
-![Version: 0.1.15](https://img.shields.io/badge/Version-0.1.15-informational?style=flat-square) ![AppVersion: v3.0.1](https://img.shields.io/badge/AppVersion-v3.0.1-informational?style=flat-square)
+![Version: 0.1.16](https://img.shields.io/badge/Version-0.1.16-informational?style=flat-square) ![AppVersion: v3.0.1](https://img.shields.io/badge/AppVersion-v3.0.1-informational?style=flat-square)
 
 A Helm chart for mempool
 
@@ -56,7 +56,7 @@ A Helm chart for mempool
 | backends[0].tolerations | list | `[]` |  |
 | frontend.affinity | object | `{}` |  |
 | frontend.arguments | string | `nil` |  |
-| frontend.env.BACKEND_MAINNET_HTTP_HOST | string | `"mempool-space-mainnet-backend-mainnet"` |  |
+| frontend.env.BACKEND_MAINNET_HTTP_HOST | string | `"mempool-backend-mainnet"` |  |
 | frontend.fullnameOverride | string | `""` |  |
 | frontend.image.pullPolicy | string | `"IfNotPresent"` |  |
 | frontend.image.repository | string | `"mempool/frontend"` |  |
@@ -97,6 +97,7 @@ A Helm chart for mempool
 | mariadb.auth.password | string | `"mempool"` |  |
 | mariadb.auth.rootPassword | string | `"admin"` |  |
 | mariadb.auth.username | string | `"mempool"` |  |
+| mariadb.initdbScripts."create_databases.sql" | string | `"CREATE DATABASE IF NOT EXISTS mainnet;\nGRANT ALL PRIVILEGES ON mainnet.* TO 'mempool'@'%';\n\n# CREATE DATABASE IF NOT EXISTS testnet;\n# GRANT ALL PRIVILEGES ON testnet.* TO 'mempool'@'%';\nFLUSH PRIVILEGES;"` |  |
 | mariadb.primary.persistence.enabled | bool | `false` |  |
 | mariadb.primary.persistence.size | string | `"8Gi"` |  |
 | mariadb.primary.resourcesPreset | string | `"small"` |  |
