@@ -146,6 +146,7 @@ frontend:
   affinity: {}
 
 backends:
+# Ensure that a database is created for each backend 'name' in the mariadb.initdbScripts below
   - name: mainnet
     image:
       repository: mempool/backend
