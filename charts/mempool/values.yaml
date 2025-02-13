@@ -23,9 +23,8 @@ frontend:
   nameOverride: ""
   fullnameOverride: ""
 
-  # env:
-  #   ENV1: "value1"
-  #   ENV2: "value2"
+  env:
+    BACKEND_MAINNET_HTTP_HOST: "mempool-space-mainnet-backend-mainnet"
 
   arguments:
     # Send trace/debug info to console instead of debug.log file

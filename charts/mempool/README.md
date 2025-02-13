@@ -1,6 +1,6 @@
 # mempool
 
-![Version: 0.1.13](https://img.shields.io/badge/Version-0.1.13-informational?style=flat-square) ![AppVersion: v3.0.1](https://img.shields.io/badge/AppVersion-v3.0.1-informational?style=flat-square)
+![Version: 0.1.14](https://img.shields.io/badge/Version-0.1.14-informational?style=flat-square) ![AppVersion: v3.0.1](https://img.shields.io/badge/AppVersion-v3.0.1-informational?style=flat-square)
 
 A Helm chart for mempool
 
@@ -56,6 +56,7 @@ A Helm chart for mempool
 | backends[0].tolerations | list | `[]` |  |
 | frontend.affinity | object | `{}` |  |
 | frontend.arguments | string | `nil` |  |
+| frontend.env.BACKEND_MAINNET_HTTP_HOST | string | `"mempool-space-mainnet-backend-mainnet"` |  |
 | frontend.fullnameOverride | string | `""` |  |
 | frontend.image.pullPolicy | string | `"IfNotPresent"` |  |
 | frontend.image.repository | string | `"mempool/frontend"` |  |
