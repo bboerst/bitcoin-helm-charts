@@ -1,9 +1,9 @@
 apiVersion: v2
 name: lnd
 description: A golang implementation of a Lightning Network node
-version: 0.1.7
+version: 0.1.8
 # renovate: image=lightninglabs/lnd
-appVersion: v0.18.3-beta
+appVersion: v0.18.5-beta
 keywords:
   - lnd
   - bitcoin
