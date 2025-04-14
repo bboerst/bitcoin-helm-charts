@@ -14,7 +14,7 @@ serviceAccount:
 frontend:
   image:
     repository: mempool/frontend
-    tag: v3.0.1
+    tag: v3.2.1
     pullPolicy: IfNotPresent
 
   strategyType: Recreate
