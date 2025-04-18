@@ -1,0 +1,19 @@
+sleep: 30
+secretName: your-lnd-credentials-secret
+env:
+  RPC_HOST: alby-simnet-lnd-1
+  MACAROON_PATH: /credentials
+  TLS_CERT_PATH: /credentials/tls.cert
+  NETWORK: regtest
+  BUCKET_URL: s3://bucket-url/sub/folder
+  S3_REGION: eu-central-1
+secrets:
+  S3_KEY:
+    secretName: s3-credentials
+    secretKey: key
+  S3_SECRET:
+    secretName: s3-credentials
+    secretKey: secret
+image:
+  repository: ghcr.io/flitz-be/lndbackup
+  tag: master-b154e35

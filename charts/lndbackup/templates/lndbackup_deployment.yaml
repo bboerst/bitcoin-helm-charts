@@ -1,0 +1,51 @@
+{{- if .Values.lndbackup.enable -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "lnd.fullname" . }}-backup
+  labels:
+    app: {{ template "lnd.name" . }}-backup
+    chart: {{ template "lnd.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "lnd.name" . }}-backup
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "lnd.name" . }}-backup
+        release: {{ .Release.Name }}
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: lndbackup
+          image: "{{ .Values.lndbackup.image.repository }}:{{ .Values.lndbackup.image.tag }}"
+          command: ['/bin/sh']
+          args:
+            - "-c"
+            - "sleep {{ .Values.lndbackup.sleep }} && /bin/lndbackup"
+          env:
+            {{- range $key, $value := .Values.lndbackup.env }}
+            - name: {{ $key | quote }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.lndbackup.secrets }}
+            - name: {{ $key | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $value.secretName }}
+                  key: {{ $value.secretKey }}
+            {{- end }}
+          volumeMounts:
+          - name: credentials
+            mountPath: /credentials/
+      volumes:
+        - name: credentials
+          secret:
+            secretName: {{ .Values.lndbackup.secretName}}
+{{- end }}
