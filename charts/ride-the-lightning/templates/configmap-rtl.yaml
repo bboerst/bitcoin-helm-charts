@@ -1,0 +1,13 @@
+{{- if .Values.rtl.enable -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "lnd.fullname" . }}-rtl
+  labels:
+    app: {{ template "lnd.name" . }}-rtl
+    chart: {{ template "lnd.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+{{ toYaml .Values.rtl.config | indent 2 }}
+{{- end }}
