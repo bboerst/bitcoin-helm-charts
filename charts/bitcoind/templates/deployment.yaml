@@ -124,6 +124,9 @@ spec:
             - mountPath: /authcookie/
               name: authcookie
             {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -143,6 +146,9 @@ spec:
         - name: config-secret
           secret:
             secretName: {{ .Values.configExternalSecretName }}
+      {{- end }}
+      {{- with .Values.extraVolumes }}
+      {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- if .Values.persistence.enabled }}
       {{- if .Values.persistence.hostPath }}
