@@ -18,12 +18,12 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@v4
         with:
-          version: 'v3.12.3'
+          version: 'v3.21.2'
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.10'
+          python-version: '3.14'
 
       - name: Get list of changed directories
         id: changed_dirs
@@ -75,6 +75,6 @@ jobs:
 
       - name: Upload Trivy scan results to GitHub Security tab
         if: env.SARIF_COMBINED == 'true'
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'combined-trivy-results.sarif'
