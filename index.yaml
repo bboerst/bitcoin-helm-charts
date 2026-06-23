@@ -75,6 +75,18 @@ entries:
     version: 0.1.5
   btc-rpc-explorer:
   - apiVersion: v2
+    appVersion: 3.5.1
+    created: "2026-06-23T01:35:25.004740019Z"
+    description: btc-rpc-explorer helm chart. The container can be started as middle(guard)-
+      , bridge- , exit-relay or as proxy exposing only the Socks5 Port per default
+      when running.
+    digest: 49dce98951c98c0fe164256017060b444afcebb35d966bb7453198da5e5e0be0
+    name: btc-rpc-explorer
+    type: application
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/btc-rpc-explorer-3.5.1/btc-rpc-explorer-3.5.1.tgz
+    version: 3.5.1
+  - apiVersion: v2
     appVersion: 3.4.0
     created: "2024-03-02T16:25:06.794807714Z"
     description: btc-rpc-explorer helm chart. The container can be started as middle(guard)-
@@ -379,6 +391,20 @@ entries:
   lndhub:
   - apiVersion: v2
     appVersion: v1.4.1
+    created: "2026-06-23T01:35:25.149800713Z"
+    dependencies:
+    - name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 19.6.4
+    description: A Helm chart for Kubernetes
+    digest: 343be3987363625e30ad9b2ec5cea230b2932121b3af40fb1eb8552b578a432c
+    name: lndhub
+    type: application
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/lndhub-0.1.6/lndhub-0.1.6.tgz
+    version: 0.1.6
+  - apiVersion: v2
+    appVersion: v1.4.1
     created: "2024-04-26T23:12:44.799764829Z"
     dependencies:
     - name: redis
@@ -434,6 +460,19 @@ entries:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/lndhub-0.1.1/lndhub-0.1.1.tgz
     version: 0.1.1
   mempool:
+  - apiVersion: v2
+    appVersion: v3.3.1
+    created: "2026-06-23T01:35:25.304279052Z"
+    dependencies:
+    - name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 20.5.9
+    description: A Helm chart for mempool
+    digest: 90fe61ea8d071149e438d5f61269641a87ed755f682ed3b042c1f4fc1e4e3236
+    name: mempool
+    urls:
+    - https://github.com/bboerst/bitcoin-helm-charts/releases/download/mempool-0.1.17/mempool-0.1.17.tgz
+    version: 0.1.17
   - apiVersion: v2
     appVersion: v3.0.1
     created: "2025-02-13T21:28:02.419455059Z"
@@ -749,4 +788,4 @@ entries:
     urls:
     - https://github.com/genesisplatformstack/bitcoin-helm-charts/releases/download/tor-0.1.2/tor-0.1.2.tgz
     version: 0.1.2
-generated: "2025-05-30T23:18:23.796165849Z"
+generated: "2026-06-23T01:35:25.304394553Z"
