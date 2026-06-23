@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: getumbrel/btc-rpc-explorer
-  tag: v3.4.0@sha256:e85a1fe80919d308b1f80de2dc7174e7b61ec79384d695304fbf259b67b53594
+  tag: v3.5.1@sha256:ebf4cdafc189761b909bb3e211b01a6b50d2f08097f3493543ed9c3174d83d89
   pullPolicy: Always
 
 imagePullSecrets: []

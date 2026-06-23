@@ -1,10 +1,10 @@
 apiVersion: v2
 description: A Helm chart for mempool
 name: mempool
-version: 0.1.16
+version: 0.1.17
 # renovate: image=mempool/frontend
-appVersion: "v3.0.1"
+appVersion: "v3.3.1"
 dependencies:
 - name: mariadb
-  version: "20.2.2"
+  version: "20.5.9"
   repository: "https://charts.bitnami.com/bitnami"
