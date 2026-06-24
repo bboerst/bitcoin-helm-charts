@@ -1,0 +1,70 @@
+{{- if .Values.rtl.enable -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "lnd.fullname" . }}-rtl
+  labels:
+    app: {{ template "lnd.name" . }}-rtl
+    chart: {{ template "lnd.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "lnd.name" . }}-rtl
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        app: {{ template "lnd.name" . }}-rtl
+        release: {{ .Release.Name }}
+    spec:
+      terminationGracePeriodSeconds: 60
+      initContainers:
+        - name: copy-config
+          image: busybox
+          command: ['sh', '-c', 'cp /config/* /RTL/']
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: rtl
+              mountPath: /RTL
+        - name: copy-macaroons
+          image: busybox
+          command: ['sh', '-c', 'for m in /nodes/*.macaroon; do mkdir -p "/credentials${m%.*}" && cp "$m" "/credentials/${m%.*}/admin.macaroon"; done']
+          volumeMounts:
+            - name: nodes
+              mountPath: /nodes
+            - name: credentials
+              mountPath: /credentials
+      containers:
+        - name: rtl
+          image: {{ .Values.rtl.image.repository }}:{{ .Values.rtl.image.tag }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.rtl.port }}
+          volumeMounts:
+            - name: rtl
+              mountPath: /RTL/RTL-Config.json
+              subPath: RTL-Config.json
+            - name: credentials
+              mountPath: /credentials
+          resources:
+            requests:
+              cpu: "10m"
+      volumes:
+        - name: rtl
+          emptyDir: {}
+        - name: credentials
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: {{ template "lnd.fullname" . }}-rtl
+        - name: nodes
+          secret:
+            secretName: {{ .Values.rtl.nodeMacaroonSecret}}
+{{- end }}
