@@ -1,0 +1,75 @@
+name: Nightly Test
+
+# on:
+#   schedule:
+#     - cron: '0 0 * * *' # runs daily at midnight
+on: 
+  pull_request:
+    branches:
+      - '**'
+
+env:
+  KIND_VERSION: v0.20.0
+  HELM_VERSION: v3.12.3
+  HELMFILE_VERSION: v0.144.0
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Kind
+        run: |
+          wget -q https://github.com/kubernetes-sigs/kind/releases/download/${{ env.KIND_VERSION }}/kind-linux-amd64
+          chmod +x kind-linux-amd64
+          sudo mv kind-linux-amd64 /usr/local/bin/kind
+
+      - name: Create Kind Cluster
+        run: |
+          kind create cluster
+
+      - name: Install Helm
+        run: |
+          wget -q https://get.helm.sh/helm-${{ env.HELM_VERSION }}-linux-amd64.tar.gz
+          tar -zxvf helm-${{ env.HELM_VERSION }}-linux-amd64.tar.gz
+          sudo mv linux-amd64/helm /usr/local/bin/helm
+
+      - name: Install Helmfile
+        run: |
+          wget -q https://github.com/roboll/helmfile/releases/download/${{ env.HELMFILE_VERSION }}/helmfile_linux_amd64
+          chmod +x helmfile_linux_amd64
+          sudo mv helmfile_linux_amd64 /usr/local/bin/helmfile
+
+      - name: Setup Helmfile Configuration
+        run: |
+          cat > helmfile.yaml <<EOF
+          environments:
+            nightly:
+
+          releases:
+            - name: bitcoind
+              namespace: bitcon
+              chart: ./bitcoind
+              values:
+                - .github/helmfile_configs/nightly/bitcoind/values.yaml
+            - name: fulcrum
+              namespace: bitcon
+              chart: ./fulcrum
+              values:
+                - .github/helmfile_configs/nightly/fulcrum/values.yaml
+          EOF
+
+      - name: Deploy and Test Charts using Helmfile
+        run: |
+          helmfile -e nightly sync
+
+      - name: Inspect cluster
+        run: |
+          kubectl get events -A
+          kubectl get po -A
+          kubectl get svc -A
+          kubectl get no
+          kubectl logs -l app=bitcoind -n bitcoin
+          kubectl logs -l app=fulcrum -n bitcoin
