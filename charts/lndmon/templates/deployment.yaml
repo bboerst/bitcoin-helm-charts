@@ -1,0 +1,49 @@
+{{- if .Values.lndmon.enable -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "lnd.fullname" . }}-lndmon
+  labels:
+    app: {{ template "lnd.name" . }}-lndmon
+    chart: {{ template "lnd.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "lnd.name" . }}-lndmon
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      {{- with .Values.lndmon.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app: {{ template "lnd.name" . }}-lndmon
+        release: {{ .Release.Name }}
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: lndmon
+          image: {{ .Values.lndmon.image.repository }}:{{ .Values.lndmon.image.tag }}
+          command: ['/bin/sh']
+          args:
+            - "-c"
+            - "sleep {{ .Values.lndmon.sleep }} && /bin/lndmon --lnd.network={{ .Values.lndmon.lndNetwork }} --lnd.host={{ .Values.lndmon.lndHost }} --lnd.macaroondir={{ .Values.lndmon.macaroonDir }} --lnd.tlspath={{ .Values.lndmon.tlsPath }} --prometheus.listenaddr={{ .Values.lndmon.listenaddr }} {{.Values.lndmon.extraOptions}}"
+          volumeMounts:
+            - name: credentials
+              mountPath: /credentials/
+          ports:
+            - name: lndmon
+              containerPort: {{ .Values.lndmon.port }}
+          resources:
+            requests:
+              cpu: "10m"
+      volumes:
+        - name: credentials
+          secret:
+            secretName: {{ .Values.lndmon.secretName}}
+{{- end }}
